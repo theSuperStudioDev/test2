@@ -391,7 +391,7 @@ namespace nuker
             WriteLogo();
             WriteLine("1", "Delete all roles");
             WriteLine("2", "Remove all bans");
-            WriteLine("3", "Delete all channe;s");
+            WriteLine("3", "Delete all channels");
             WriteLine("4", "Delete all emojis");
             WriteLine("5", "Delete all invites");
             WriteLine("6", "Mass create roles");
