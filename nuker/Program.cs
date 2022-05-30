@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading;
 using Discord;
@@ -41,7 +41,7 @@ namespace nuker
         }
 
         static DiscordSocketClient client = new DiscordSocketClient();
-        static ulong guildid;
+        static string guildid;
 
         static void WriteLogo()
         {
@@ -56,6 +56,12 @@ namespace nuker
         static void Main(string[] args)
         {
             WriteLogo();
+            string config = "config.json";
+            if (!File.Exists(config))
+            {
+                File.Create(config).Dispose();
+                File.WriteAllText(config, "{\"token\":\"\"}");
+            }
             GetConfig();
             if (string.IsNullOrEmpty(token))
             {
@@ -90,8 +96,9 @@ namespace nuker
                     break;
                 case 2:
                     Console.Write("Guild ID: ");
-                    string guildid = Console.ReadLine();
-                    DiscordGuild guild = client.GetGuild(ulong.Parse(guildid));
+                    string GuildID = Console.ReadLine();
+                    guildid = GuildID;
+                    DiscordGuild guild = client.GetGuild(ulong.Parse(GuildID));
                     Console.Title = $"github.com/extatent | {client.User} | {guild.Name}";
                     Console.Clear();
                     ServerNuker();
@@ -169,6 +176,14 @@ namespace nuker
             AccountNuker();
         }
 
+        static void DoneMethod2()
+        {
+            Console.WriteLine("Done");
+            Thread.Sleep(2000);
+            Console.Clear();
+            ServerNuker();
+        }
+
         static void AccountNuker()
         {
             string[] options =
@@ -238,10 +253,7 @@ namespace nuker
                         catch
                         { }
                     }
-                    Console.WriteLine("Done");
-                    Thread.Sleep(2000);
-                    Console.Clear();
-                    AccountNuker();
+                    DoneMethod();
                     break;
                 case 4:
                     client.User.SetHypesquad(Hypesquad.None);
@@ -364,7 +376,7 @@ namespace nuker
             }
             Console.Write("Your choice: ");
             int option = Convert.ToInt32(Console.ReadLine());
-            DiscordGuild guild = client.GetGuild(guildid);
+            DiscordGuild guild = client.GetGuild(ulong.Parse(guildid));
             switch(option)
             {
                 default:
@@ -383,7 +395,7 @@ namespace nuker
                         }
                         catch { }
                     }
-                    DoneMethod();
+                    DoneMethod2();
                     break;
                 case 2:
                     foreach (var bans in guild.GetBans())
@@ -395,7 +407,7 @@ namespace nuker
                         }
                         catch { }
                     }
-                    DoneMethod();
+                    DoneMethod2();
                     break;
                 case 3:
                     foreach (var channels in guild.GetChannels())
@@ -407,7 +419,7 @@ namespace nuker
                         }
                         catch { }
                     }
-                    DoneMethod();
+                    DoneMethod2();
                     break;
                 case 4:
                     foreach (var emojis in guild.GetEmojis())
@@ -419,7 +431,7 @@ namespace nuker
                         }
                         catch { }
                     }
-                    DoneMethod();
+                    DoneMethod2();
                     break;
                 case 5:
                     foreach (var invites in guild.GetInvites())
@@ -431,7 +443,7 @@ namespace nuker
                         }
                         catch { }
                     }
-                    DoneMethod();
+                    DoneMethod2();
                     break;
                 case 6:
                     try
@@ -448,7 +460,7 @@ namespace nuker
                     }
                     catch
                     { }
-                    DoneMethod();
+                    DoneMethod2();
                     break;
                 case 7:
                     try
@@ -467,7 +479,7 @@ namespace nuker
                     }
                     catch
                     { }
-                    DoneMethod();
+                    DoneMethod2();
                     break;
                 case 8:
                     try
@@ -480,7 +492,7 @@ namespace nuker
                     }
                     catch
                     { }
-                    DoneMethod();
+                    DoneMethod2();
                     break;
                 case 9:
                     try
@@ -493,7 +505,7 @@ namespace nuker
                     }
                     catch
                     { }
-                    DoneMethod();
+                    DoneMethod2();
                     break;
                 case 10:
                     Console.Write("Message: ");
@@ -508,7 +520,7 @@ namespace nuker
                         client.SendMessage(channel, message);
                         Thread.Sleep(200);
                     }
-                    DoneMethod();
+                    DoneMethod2();
                     break;
             }
         }
