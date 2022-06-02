@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Threading;
 using Discord;
@@ -26,6 +26,7 @@ namespace nuker
             string json = read.ReadToEnd();
             config config = JsonConvert.DeserializeObject<config>(json);
             token = config.token;
+            read.Close();
         }
 
         public static void SaveConfig(string token)
