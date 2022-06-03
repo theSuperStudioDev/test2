@@ -33,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Anarchy, Version=0.8.1.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Anarchy-wrapper.0.8.1.2\lib\net47\Anarchy.dll</HintPath>
+    <Reference Include="Anarchy, Version=0.8.1.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Anarchy-wrapper.0.8.1.1\lib\net47\Anarchy.dll</HintPath>
     </Reference>
     <Reference Include="Colorful.Console, Version=1.2.15.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Colorful.Console.1.2.15\lib\net461\Colorful.Console.dll</HintPath>
