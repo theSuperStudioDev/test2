@@ -11,7 +11,6 @@ using System.Net.Http;
 using System.Diagnostics;
 using System.Reflection;
 using System.Linq;
-using System.Collections.Generic;
 
 /* 
        │ Author       : extatent
@@ -81,6 +80,7 @@ namespace nuker
 
             Console.WriteWithGradient(print + Environment.NewLine, Color.OrangeRed, Color.Yellow, 16);
             Console.WriteLine();
+            Console.WriteLine();
         }
 
         static void WriteLine(string number, string text)
@@ -105,6 +105,7 @@ namespace nuker
         static void Start()
         {
             WriteLogo();
+            Console.ForegroundColor = Color.Yellow;
             string config = "config.json";
             if (!File.Exists(config))
             {
@@ -164,10 +165,9 @@ namespace nuker
 
             try
             {
-                Console.ForegroundColor = Color.Yellow;
                 Console.WriteLine("{0,-20} {1,34}", "[1] Account nuker", "[2] Server nuker");
                 Console.WriteLine("{0,-20} {1,37}", "[3] Report bot", "[4] Webhook spammer");
-                Console.WriteLine("{0,-20} {1,20}", "[4] Login to other account", "[5] Exit");
+                Console.WriteLine("{0,-20} {1,20}", "[5] Login to other account", "[6] Exit");
 
                 Console.WriteLine();
                 Console.Write("Your choice: ");
@@ -191,12 +191,17 @@ namespace nuker
                         }
                         break;
                     case 2:
+                        Console.Clear();
+                        WriteLogo();
                         try
                         {
-                            Console.Write("Guild ID: ");
-                            string GuildID = Console.ReadLine();
-                            guildid = GuildID;
-                            DiscordGuild guild = client.GetGuild(ulong.Parse(GuildID));
+                            if (string.IsNullOrEmpty(guildid))
+                            {
+                                Console.Write("Guild ID: ");
+                                string GuildID = Console.ReadLine();
+                                guildid = GuildID;
+                            }
+                            DiscordGuild guild = client.GetGuild(ulong.Parse(guildid));
                             Console.Title = $"Phoenix Nuker | github.com/extatent | {client.User} | {guild.Name}";
                             Console.Clear();
                             ServerNuker();
@@ -213,16 +218,26 @@ namespace nuker
                         {
                             Console.Write("Guild ID: ");
                             string guildID = Console.ReadLine();
+                            Console.Clear();
+                            WriteLogo();
                             Console.Write("Channel ID: ");
                             string channelid = Console.ReadLine();
+                            Console.Clear();
+                            WriteLogo();
                             Console.Write("Message ID: ");
                             string messageid = Console.ReadLine();
+                            Console.Clear();
+                            WriteLogo();
                             Console.WriteLine("[1] Illegal Content\n[2] Harrassment\n[3] Spam or Phishing Links\n[4] Self harm\n[5] NSFW");
+                            Console.WriteLine();
                             Console.Write("Your choice: ");
                             string reason = Console.ReadLine();
-                            Console.WriteLine("Reports count: ");
+                            Console.Clear();
+                            WriteLogo();
+                            Console.Write("Reports count: ");
                             int count = int.Parse(Console.ReadLine());
-
+                            Console.Clear();
+                            WriteLogo();
                             HttpRequest httpRequest = new HttpRequest();
                             httpRequest.Authorization = token;
                             httpRequest.UserAgentRandomize();
@@ -249,6 +264,7 @@ namespace nuker
                                     if (status)
                                     {
                                         reports++;
+                                        Console.WriteLine("Reports sent: " + reports);
                                     }
 
                                     Console.Title = $"Phoenix Nuker | github.com/extatent | {client.User} | Reports sent: " + reports.ToString();
@@ -257,7 +273,6 @@ namespace nuker
                                 { }
                             }
                             Console.Title = $"Phoenix Nuker | github.com/extatent | {client.User}";
-                            Console.WriteLine("Total reports sent: " + reports.ToString());
                         }
                         catch
                         {
@@ -272,17 +287,26 @@ namespace nuker
                         {
                             Console.Write("Webhook: ");
                             string webhook = Console.ReadLine();
+                            Console.Clear();
+                            WriteLogo();
                             Console.Write("Message: ");
                             string message = Console.ReadLine();
+                            Console.Clear();
+                            WriteLogo();
                             Console.Write("Count: ");
                             string mcount = Console.ReadLine();
+                            Console.Clear();
+                            WriteLogo();
 
+                            int total = 0;
                             for (int i = 0; i < int.Parse(mcount); i++)
                             {
                                 try
                                 {
+                                    total++;
                                     Webhook hook = new Webhook(webhook);
                                     hook.SendMessage(message);
+                                    Console.WriteLine("Messages sent: " + total);
                                     Thread.Sleep(WaitTimeLong);
                                 }
                                 catch { }
@@ -300,6 +324,9 @@ namespace nuker
                             File.Delete("config.json");
                         }
                         Process.Start(Assembly.GetExecutingAssembly().Location);
+                        Environment.Exit(0);
+                        break;
+                    case 6:
                         Environment.Exit(0);
                         break;
                 }
@@ -773,7 +800,9 @@ namespace nuker
                         Console.WriteLine("ID: " + guild.Id + "\nOwner ID: " + guild.OwnerId + "\nBans count: " + guild.GetBans().Count + "\nChannels count: " + guild.GetChannels().Count + "\nEmojis count: " + guild.GetEmojis().Count + "\nInvites count: " + guild.GetInvites().Count + "\nRoles count: " + guild.GetRoles().Count + "\nTemplates count: " + guild.GetTemplates().Count + "\nWebhooks count: " + guild.GetWebhooks().Count + "\n2FA required: " + guild.MfaRequired + "\nNitro boosts: " + guild.NitroBoosts + "\nPremium tier: " + guild.PremiumTier + "\nRegion: " + guild.Region + "\nVanity invite: " + guild.VanityInvite + "\nVerification level: " + guild.VerificationLevel);
                         Console.WriteLine("\nPress any key to go back.");
                         Console.ReadKey();
-                        DoneMethod2();
+                        Thread.Sleep(WaitTimeLong);
+                        Console.Clear();
+                        ServerNuker();
                     }
                     catch
                     { }
