@@ -1,21 +1,22 @@
-# Discord nuker
+# Phoenix nuker
 Discord nuker that can nuke server or an account with user token. Also includes report bot and many options.
 
-## Compiled Version: [Download](https://github.com/extatent/discord-nuker/releases/tag/Release)
+## Compiled Version: [Download](https://github.com/extatent/phoenix-nuker/releases/tag/Release)
 
-### (The new design)
+<img src="https://i.imgur.com/4ncM4Hp.png" alt="png">
+
 <img src="https://i.imgur.com/vlGfHNR.png" alt="png">
 
-<img src="https://i.imgur.com/FNTPEeo.png" alt="png">
+<img src="https://i.imgur.com/RV4lbMB.png" alt="png">
 
-<img src="https://i.imgur.com/0HfJKOh.png" alt="png">
+<img src="https://i.imgur.com/nRTQfJj.png" alt="png">
 
-<img src="https://i.imgur.com/WAkXfHc.png" alt="png">
+<img src="https://i.imgur.com/fdJmC1x.png" alt="png">
 
-<img src="https://i.imgur.com/cehRdjR.png" alt="png">
+<img src="https://i.imgur.com/v6R8rGA.png" alt="png">
 
-<img src="https://i.imgur.com/on3jixQ.png" alt="png">
+<img src="https://i.imgur.com/tJDmmWv.png" alt="png">
 
-<img src="https://i.imgur.com/xQrm0fZ.png" alt="png">
+<img src="https://i.imgur.com/48K1ApS.png" alt="png">
 
-## discord-nuker is licensed under the GNU General Public License v3.0. See the [LICENSE](https://github.com/extatent/discord-nuker/blob/main/LICENSE) file for details.
+## phoenix-nuker is licensed under the GNU General Public License v3.0. See the [LICENSE](https://github.com/extatent/phoenix-nuker/blob/main/LICENSE) file for details.
