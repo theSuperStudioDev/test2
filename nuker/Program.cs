@@ -10,10 +10,12 @@ using Console = Colorful.Console;
 using System.Net.Http;
 using System.Diagnostics;
 using System.Reflection;
+using System.Linq;
+using System.Collections.Generic;
 
 /* 
        │ Author       : extatent
-       │ Name         : discord-nuker
+       │ Name         : phoenix-nuker
        │ GitHub       : https://github.com/extatent
 */
 
@@ -60,26 +62,41 @@ namespace nuker
         static void WriteLogo()
         {
             Console.Clear();
-            Console.WriteLine(@"        _ _   _           _                            __        _        _             _   
-   __ _(_) |_| |__  _   _| |__   ___ ___  _ __ ___    / /____  _| |_ __ _| |_ ___ _ __ | |_ 
-  / _` | | __| '_ \| | | | '_ \ / __/ _ \| '_ ` _ \  / / _ \ \/ / __/ _` | __/ _ \ '_ \| __|
- | (_| | | |_| | | | |_| | |_) | (_| (_) | | | | | |/ /  __/>  <| || (_| | ||  __/ | | | |_ 
-  \__, |_|\__|_| |_|\__,_|_.__(_)___\___/|_| |_| |_/_/ \___/_/\_\\__\__,_|\__\___|_| |_|\__|
-  |___/                                                                                     " + Environment.NewLine, Color.BlueViolet);
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            string phoenix = @"██████╗ ██╗  ██╗ ██████╗ ███████╗███╗   ██╗██╗██╗  ██╗
+██╔══██╗██║  ██║██╔═══██╗██╔════╝████╗  ██║██║╚██╗██╔╝
+██████╔╝███████║██║   ██║█████╗  ██╔██╗ ██║██║ ╚███╔╝ 
+██╔═══╝ ██╔══██║██║   ██║██╔══╝  ██║╚██╗██║██║ ██╔██╗ 
+██║     ██║  ██║╚██████╔╝███████╗██║ ╚████║██║██╔╝ ██╗
+╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
+                                                      ";
+
+            var lines = phoenix.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            var longestLength = lines.Max(line => line.Length);
+            var leadingSpaces = new string(' ', (Console.WindowWidth - longestLength) / 2);
+            var print = string.Join(Environment.NewLine, lines.Select(line => leadingSpaces + line));
+
+            Console.WriteWithGradient(print + Environment.NewLine, Color.OrangeRed, Color.Yellow, 16);
+            Console.WriteLine();
         }
 
         static void WriteLine(string number, string text)
         {
             Console.Write("[");
-            Console.Write(number, Color.BlueViolet);
-            Console.WriteLine("] " + text);
+            Console.Write(number, Color.OrangeRed);
+            Console.Write("] ");
+            Console.WriteLine(text, Color.Yellow);
+
         }
         #endregion
 
         #region Main
         static void Main(string[] args)
         {
-            Console.Title = "github.com/extatent";
+            Console.Title = "Phoenix Nuker | github.com/extatent";
             Start();
         }
         #endregion
@@ -143,15 +160,16 @@ namespace nuker
             }
 
             WriteLogo();
-            Console.Title = $"github.com/extatent | {client.User}";
+            Console.Title = $"Phoenix Nuker | github.com/extatent | {client.User}";
 
             try
             {
-                WriteLine("1", "Account nuker");
-                WriteLine("2", "Server nuker");
-                WriteLine("3", "Report bot");
-                WriteLine("4", "Webhook spammer");
-                WriteLine("5", "Login to other account");
+                Console.ForegroundColor = Color.Yellow;
+                Console.WriteLine("{0,-20} {1,34}", "[1] Account nuker", "[2] Server nuker");
+                Console.WriteLine("{0,-20} {1,37}", "[3] Report bot", "[4] Webhook spammer");
+                Console.WriteLine("{0,-20} {1,20}", "[4] Login to other account", "[5] Exit");
+
+                Console.WriteLine();
                 Console.Write("Your choice: ");
                 int option = Convert.ToInt32(Console.ReadLine());
                 switch (option)
@@ -163,7 +181,7 @@ namespace nuker
                     case 1:
                         try
                         {
-                            Console.Title = $"github.com/extatent | {client.User}";
+                            Console.Title = $"Phoenix Nuker | github.com/extatent | {client.User}";
                             Console.Clear();
                             AccountNuker();
                         }
@@ -179,7 +197,7 @@ namespace nuker
                             string GuildID = Console.ReadLine();
                             guildid = GuildID;
                             DiscordGuild guild = client.GetGuild(ulong.Parse(GuildID));
-                            Console.Title = $"github.com/extatent | {client.User} | {guild.Name}";
+                            Console.Title = $"Phoenix Nuker | github.com/extatent | {client.User} | {guild.Name}";
                             Console.Clear();
                             ServerNuker();
                         }
@@ -233,12 +251,12 @@ namespace nuker
                                         reports++;
                                     }
 
-                                    Console.Title = $"github.com/extatent | {client.User} | Reports sent: " + reports.ToString();
+                                    Console.Title = $"Phoenix Nuker | github.com/extatent | {client.User} | Reports sent: " + reports.ToString();
                                 }
                                 catch
                                 { }
                             }
-                            Console.Title = $"github.com/extatent | {client.User}";
+                            Console.Title = $"Phoenix Nuker | github.com/extatent | {client.User}";
                             Console.WriteLine("Total reports sent: " + reports.ToString());
                         }
                         catch
@@ -354,18 +372,18 @@ namespace nuker
         #region Account nuker
         static void AccountNuker()
         {
-            string[] options =
-            {
-                "Terminate Account", "Leave/Delete Guilds", "Clear Relationships", "Leave HypeSquad", "Remove Connections", "Deauthorize Apps", 
-                "Mass Create Guilds", "Seizure Mode", "Confuse Mode", "Mass DM", "User Info", "Block Relationships", "Go Back"
-            };
-            int j = 0;
             WriteLogo();
-            foreach (string opt in options)
-            {
-                j += 1;
-                WriteLine(j.ToString(), opt.ToString());
-            }
+
+            Console.ForegroundColor = Color.Yellow;
+            Console.WriteLine("{0,-20} {1,33}", "[1] Terminate Account", "[2] Leave/Delete Guilds");
+            Console.WriteLine("{0,-20} {1,27}", "[3] Clear Relationships", "[4] Leave HypeSquad");
+            Console.WriteLine("{0,-20} {1,29}", "[5] Remove connections", "[6] Deauthorize apps");
+            Console.WriteLine("{0,-20} {1,25}", "[7] Mass Create Guilds", "[8] Seizure Mode");
+            Console.WriteLine("{0,-20} {1,23}", "[9] Confuse Mode", "[10] Mass DM");
+            Console.WriteLine("{0,-20} {1,34}", "[11] User Info", "[12] Block Relationshps");
+            Console.WriteLine("{0,-20} {1,20}", "[13] Go Back", "[14] Exit");
+
+            Console.WriteLine();
             Console.Write("Your choice: ");
             int option = Convert.ToInt32(Console.ReadLine());
             switch(option)
@@ -576,6 +594,9 @@ namespace nuker
                 case 13:
                     Start();
                     break;
+                case 14:
+                    Environment.Exit(0);
+                    break;
             }
         }
         #endregion
@@ -583,18 +604,18 @@ namespace nuker
         #region Server Nuker
         static void ServerNuker()
         {
-            string[] options =
-            {
-                "Delete All Roles", "Remove All Bans", "Delete All Channels", "Delete All Emojis", "Delete All Invites", "Mass Create Roles",
-                "Mass Create Channels", "Ban All Members", "Kick All Members", "Mass DM", "Server Info", "Leave Server", "Go Back"
-            };
-            int j = 0;
             WriteLogo();
-            foreach (string opt in options)
-            {
-                j += 1;
-                WriteLine(j.ToString(), opt.ToString());
-            }
+
+            Console.ForegroundColor = Color.Yellow;
+            Console.WriteLine("{0,-20} {1,30}", "[1] Delete All Roles", "[2] Remove All Bans");
+            Console.WriteLine("{0,-20} {1,29}", "[3] Delete All Channels", "[4] Delete All Emojis");
+            Console.WriteLine("{0,-20} {1,30}", "[5] Delete All Invites", "[6] Mass Create Roles");
+            Console.WriteLine("{0,-20} {1,26}", "[7] Mass Create Channels", "[8] Ban All Members");
+            Console.WriteLine("{0,-20} {1,23}", "[9] Kick All Members", "[10] Mass DM");
+            Console.WriteLine("{0,-20} {1,28}", "[11] Server Info", "[12] Leave Server");
+            Console.WriteLine("{0,-20} {1,20}", "[13] Go Back", "[14] Exit");
+
+            Console.WriteLine();
             Console.Write("Your choice: ");
             int option = Convert.ToInt32(Console.ReadLine());
             DiscordGuild guild = client.GetGuild(ulong.Parse(guildid));
@@ -770,6 +791,9 @@ namespace nuker
                     break;
                 case 13:
                     Start();
+                    break;
+                case 14:
+                    Environment.Exit(0);
                     break;
             }
         }
