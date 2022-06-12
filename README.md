@@ -3,7 +3,8 @@ Discord nuker that can nuke server or an account with user token. Also includes 
 
 ## Compiled Version: [Download](https://github.com/extatent/discord-nuker/releases/tag/Release)
 
-<img src="https://i.imgur.com/MS8kjdV.png" alt="png">
+### (The new design)
+<img src="https://i.imgur.com/vlGfHNR.png" alt="png">
 
 <img src="https://i.imgur.com/FNTPEeo.png" alt="png">
 
