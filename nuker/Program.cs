@@ -78,15 +78,6 @@ namespace nuker
             Console.WriteLine();
             Console.WriteLine();
         }
-
-        static void WriteLine(string number, string text)
-        {
-            Console.Write("[");
-            Console.Write(number, Color.OrangeRed);
-            Console.Write("] ");
-            Console.WriteLine(text, Color.Yellow);
-
-        }
         #endregion
 
         #region Main
@@ -101,19 +92,30 @@ namespace nuker
         #region Update
         static void CheckVersion()
         {
-            WebClient dw = new WebClient();
-
-            if (dw.DownloadString("https://raw.githubusercontent.com/extatent/phoenix-nuker/main/version").Contains(version))
+            try
             {
-                int v2 = int.Parse(version) + 1;
-                Console.Title = "Phoenix Nuker | New version is available";
+                WebClient dw = new WebClient();
+
+                if (dw.DownloadString("https://raw.githubusercontent.com/extatent/phoenix-nuker/main/version").Contains(version))
+                {
+                    int v2 = int.Parse(version) + 1;
+                    Console.Title = "Phoenix Nuker | New version is available";
+                    Console.Clear();
+                    WriteLogo();
+                    Console.WriteLine("New update is available: " + version + " > " + v2);
+                    Console.WriteLine();
+                    Console.WriteLine("Press any key to open Phoenix Nuker GitHub.");
+                    Console.ReadKey();
+                    Process.Start("https://github.com/extatent/phoenix-nuker/");
+                    Environment.Exit(0);
+                }
+            }
+            catch
+            {
                 Console.Clear();
                 WriteLogo();
-                Console.WriteLine("New update is available: " + version + " > " + v2);
-                Console.WriteLine();
-                Console.WriteLine("Press any key to open Phoenix Nuker GitHub.");
+                Console.WriteLine("Please check your internet connection.");
                 Console.ReadKey();
-                Process.Start("https://github.com/extatent/phoenix-nuker/");
                 Environment.Exit(0);
             }
         }
@@ -179,7 +181,7 @@ namespace nuker
             }
 
             WriteLogo();
-            Console.Title = $"Phoenix Nuker | github.com/extatent | {client.User}";
+            Console.Title = $"Phoenix Nuker | {client.User}";
 
             try
             {
@@ -199,7 +201,7 @@ namespace nuker
                     case 1:
                         try
                         {
-                            Console.Title = $"Phoenix Nuker | github.com/extatent | {client.User}";
+                            Console.Title = $"Phoenix Nuker | {client.User}";
                             Console.Clear();
                             AccountNuker();
                         }
@@ -220,7 +222,7 @@ namespace nuker
                                 guildid = GuildID;
                             }
                             DiscordGuild guild = client.GetGuild(ulong.Parse(guildid));
-                            Console.Title = $"Phoenix Nuker | github.com/extatent | {client.User} | {guild.Name}";
+                            Console.Title = $"Phoenix Nuker | {client.User} | {guild.Name}";
                             Console.Clear();
                             ServerNuker();
                         }
@@ -285,12 +287,12 @@ namespace nuker
                                         Console.WriteLine("Reports sent: " + reports);
                                     }
 
-                                    Console.Title = $"Phoenix Nuker | github.com/extatent | {client.User} | Reports sent: " + reports.ToString();
+                                    Console.Title = $"Phoenix Nuker | {client.User} | Reports sent: " + reports.ToString();
                                 }
                                 catch
                                 { }
                             }
-                            Console.Title = $"Phoenix Nuker | github.com/extatent | {client.User}";
+                            Console.Title = $"Phoenix Nuker | {client.User}";
                         }
                         catch
                         {
