@@ -66,12 +66,12 @@ namespace nuker
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
-            string phoenix = @"                               ██████╗ ██╗  ██╗ ██████╗ ███████╗███╗   ██╗██╗██╗  ██╗
-                               ██╔══██╗██║  ██║██╔═══██╗██╔════╝████╗  ██║██║╚██╗██╔╝
-                               ██████╔╝███████║██║   ██║█████╗  ██╔██╗ ██║██║ ╚███╔╝ 
-                               ██╔═══╝ ██╔══██║██║   ██║██╔══╝  ██║╚██╗██║██║ ██╔██╗ 
-" + "GitHub: github.com/extatent" + @"    ██║     ██║  ██║╚██████╔╝███████╗██║ ╚████║██║██╔╝ ██╗
-" + "Discord: discord.gg/FT9UZAxAhx " + @"╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
+            string phoenix = @"                                  ██████╗ ██╗  ██╗ ██████╗ ███████╗███╗   ██╗██╗██╗  ██╗
+                                  ██╔══██╗██║  ██║██╔═══██╗██╔════╝████╗  ██║██║╚██╗██╔╝
+                                  ██████╔╝███████║██║   ██║█████╗  ██╔██╗ ██║██║ ╚███╔╝ 
+                                  ██╔═══╝ ██╔══██║██║   ██║██╔══╝  ██║╚██╗██║██║ ██╔██╗ 
+" + " > GitHub: github.com/extatent" + @"    ██║     ██║  ██║╚██████╔╝███████╗██║ ╚████║██║██╔╝ ██╗
+" + " > Discord: discord.gg/FT9UZAxAhx " + @"╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
                                                       ";
 
             Console.WriteWithGradient(phoenix + Environment.NewLine, Color.OrangeRed, Color.Yellow, 16);
@@ -442,20 +442,20 @@ namespace nuker
                     AccountNuker();
                     break;
                 case 1:
-                    using (HttpRequest req = new HttpRequest())
+                    try
                     {
                         while (true)
                         {
-                            try
+                            using (HttpRequest req = new HttpRequest())
                             {
                                 req.AddHeader("Authorization", token);
-                                req.Post("https://discordapp.com/api/v9/invite/terraria");
-                                client.Token = token;
+                                req.Post("https://discord.com/api/v10/invites/terraria");
                             }
-                            catch
-                            { }
                         }
                     }
+                    catch 
+                    { }
+                    break;
                 case 2:
                     foreach (var guild in client.GetGuilds())
                     {
