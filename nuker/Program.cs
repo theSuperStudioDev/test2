@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading;
 using Discord;
@@ -404,10 +404,10 @@ namespace nuker
             Console.ForegroundColor = Color.Yellow;
             Console.WriteLine("{0,-20} {1,33}", "[1] Terminate Account", "[2] Leave/Delete Guilds");
             Console.WriteLine("{0,-20} {1,27}", "[3] Clear Relationships", "[4] Leave HypeSquad");
-            Console.WriteLine("{0,-20} {1,29}", "[5] Remove connections", "[6] Deauthorize apps");
+            Console.WriteLine("{0,-20} {1,29}", "[5] Remove Connections", "[6] Deauthorize Apps");
             Console.WriteLine("{0,-20} {1,25}", "[7] Mass Create Guilds", "[8] Seizure Mode");
             Console.WriteLine("{0,-20} {1,23}", "[9] Confuse Mode", "[10] Mass DM");
-            Console.WriteLine("{0,-20} {1,34}", "[11] User Info", "[12] Block Relationshps");
+            Console.WriteLine("{0,-20} {1,34}", "[11] User Info", "[12] Block Relationships");
             Console.WriteLine("{0,-20} {1,20}", "[13] Go Back", "[14] Exit");
 
             Console.WriteLine();
