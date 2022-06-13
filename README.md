@@ -35,7 +35,7 @@ Discord nuker that can nuke server or account with user token. Also has mass rep
 ## Installation 
 
 #### Compiled version
-> Go to [Releases](https://github.com/extatent/phoenix-nuker/releases/tag/Release) and download the Debug.rar file.
+> Go to [Releases](https://github.com/extatent/phoenix-nuker/releases/tag/Release) and download the Debug.zip file.
 
 #### Source Code
 >Click the green "Code" button. 
