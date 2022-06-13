@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.IO;
+using System.Net;
 using System.Threading;
 using Discord;
 using Discord.Gateway;
@@ -10,7 +11,6 @@ using Console = Colorful.Console;
 using System.Net.Http;
 using System.Diagnostics;
 using System.Reflection;
-using System.Linq;
 
 /* 
        │ Author       : extatent
@@ -23,6 +23,7 @@ namespace nuker
     class Program
     {
         #region Configs
+        public static string version = "2";
         public static string token;
         public static int WaitTimeShort = 200;
         public static int WaitTimeLong = 2000;
@@ -65,20 +66,15 @@ namespace nuker
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
-            string phoenix = @"██████╗ ██╗  ██╗ ██████╗ ███████╗███╗   ██╗██╗██╗  ██╗
-██╔══██╗██║  ██║██╔═══██╗██╔════╝████╗  ██║██║╚██╗██╔╝
-██████╔╝███████║██║   ██║█████╗  ██╔██╗ ██║██║ ╚███╔╝ 
-██╔═══╝ ██╔══██║██║   ██║██╔══╝  ██║╚██╗██║██║ ██╔██╗ 
-██║     ██║  ██║╚██████╔╝███████╗██║ ╚████║██║██╔╝ ██╗
-╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
+            string phoenix = @"                               ██████╗ ██╗  ██╗ ██████╗ ███████╗███╗   ██╗██╗██╗  ██╗
+                               ██╔══██╗██║  ██║██╔═══██╗██╔════╝████╗  ██║██║╚██╗██╔╝
+                               ██████╔╝███████║██║   ██║█████╗  ██╔██╗ ██║██║ ╚███╔╝ 
+                               ██╔═══╝ ██╔══██║██║   ██║██╔══╝  ██║╚██╗██║██║ ██╔██╗ 
+" + "GitHub: github.com/extatent" + @"    ██║     ██║  ██║╚██████╔╝███████╗██║ ╚████║██║██╔╝ ██╗
+" + "Discord: discord.gg/FT9UZAxAhx " + @"╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
                                                       ";
 
-            var lines = phoenix.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-            var longestLength = lines.Max(line => line.Length);
-            var leadingSpaces = new string(' ', (Console.WindowWidth - longestLength) / 2);
-            var print = string.Join(Environment.NewLine, lines.Select(line => leadingSpaces + line));
-
-            Console.WriteWithGradient(print + Environment.NewLine, Color.OrangeRed, Color.Yellow, 16);
+            Console.WriteWithGradient(phoenix + Environment.NewLine, Color.OrangeRed, Color.Yellow, 16);
             Console.WriteLine();
             Console.WriteLine();
         }
@@ -96,8 +92,30 @@ namespace nuker
         #region Main
         static void Main(string[] args)
         {
-            Console.Title = "Phoenix Nuker | github.com/extatent";
+            Console.Title = "Phoenix Nuker";
+            CheckVersion();
             Start();
+        }
+        #endregion
+
+        #region Update
+        static void CheckVersion()
+        {
+            WebClient dw = new WebClient();
+
+            if (dw.DownloadString("https://raw.githubusercontent.com/extatent/phoenix-nuker/main/version").Contains(version))
+            {
+                int v2 = int.Parse(version) + 1;
+                Console.Title = "Phoenix Nuker | New version is available";
+                Console.Clear();
+                WriteLogo();
+                Console.WriteLine("New update is available: " + version + " > " + v2);
+                Console.WriteLine();
+                Console.WriteLine("Press any key to open Phoenix Nuker GitHub.");
+                Console.ReadKey();
+                Process.Start("https://github.com/extatent/phoenix-nuker/");
+                Environment.Exit(0);
+            }
         }
         #endregion
 
