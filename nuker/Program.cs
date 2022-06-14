@@ -248,6 +248,14 @@ namespace nuker
 
                         clients.Add(client);
                     }
+                    if (count == 0)
+                    {
+                        Console.Clear();
+                        WriteLogo();
+                        Console.WriteLine("Paste your tokens in tokens.txt file.");
+                        Thread.Sleep(WaitTimeLong);
+                        Start();
+                    }
                     Raider();
                     break;
                 case 4:
