@@ -15,7 +15,11 @@ Discord nuker that can nuke server or account with user token. Also has mass rep
 
 <details>
 <summary>Preview</summary>
+<img src="https://i.imgur.com/jBx3SCs.png" alt="png">
+  
 <img src="https://i.imgur.com/4ncM4Hp.png" alt="png">
+  
+<img src="https://i.imgur.com/x5KiiFU.png" alt="png">
 
 <img src="https://i.imgur.com/vlGfHNR.png" alt="png">
 
