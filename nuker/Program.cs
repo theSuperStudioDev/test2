@@ -926,7 +926,7 @@ namespace nuker
                 case 6:
                     try
                     {
-                        for (int i = 0; i < 100; i++)
+                        for (int i = 0; i < 250; i++)
                         {
                             try
                             {
