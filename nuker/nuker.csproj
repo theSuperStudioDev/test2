@@ -7,7 +7,7 @@
     <ProjectGuid>{707C835C-6EDB-49E4-BF86-7836661F171E}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>nuker</RootNamespace>
-    <AssemblyName>nuker</AssemblyName>
+    <AssemblyName>Phoenix Nuker</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
