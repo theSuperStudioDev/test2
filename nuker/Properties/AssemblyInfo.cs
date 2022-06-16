@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("nuker")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Phoenix Nuker")]
+[assembly: AssemblyDescription("Discord nuker that can nuke/raid server or account with user token(s). Also has mass report bot, webhook spammer and many more.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("nuker")]
+[assembly: AssemblyCompany("extatent")]
+[assembly: AssemblyProduct("Phoenix Nuker")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
