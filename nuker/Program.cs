@@ -248,7 +248,6 @@ namespace nuker
 
                         clients.Add(client);
                     }
-                    Console.Title = "Phoenix Nuker | Total Accounts: " + count;
                     if (count == 0)
                     {
                         Console.Clear();
@@ -257,6 +256,7 @@ namespace nuker
                         Thread.Sleep(WaitTimeLong);
                         Start();
                     }
+                    Console.Title = "Phoenix Nuker | Total Accounts: " + count;
                     Raider();
                     break;
                 case 4:
