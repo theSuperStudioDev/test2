@@ -19,7 +19,7 @@ Discord nuker that can nuke server or account with user token. Also has mass rep
   
 <img src="https://i.imgur.com/4ncM4Hp.png" alt="png">
   
-<img src="https://i.imgur.com/x5KiiFU.png" alt="png">
+<img src="https://i.imgur.com/V2AhsvS.png" alt="png">
 
 <img src="https://i.imgur.com/vlGfHNR.png" alt="png">
 
@@ -52,7 +52,7 @@ Discord nuker that can nuke server or account with user token. Also has mass rep
   
 >Go to bin>debug folder and open the nuker.exe file.
 
->NOTE: Make sure you have [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/) and [.NET Framework 4.7.2](https://dotnet.microsoft.com/en-us/download/dotnet-framework) and above installed.
+>NOTE: Make sure you have [Visual Studio 2019 or Visual Studio 2022](https://visualstudio.microsoft.com/downloads/) and [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework) installed.
 
 ---
 ### phoenix-nuker is licensed under the GNU General Public License v3.0. See the [LICENSE](https://github.com/extatent/phoenix-nuker/blob/main/LICENSE) file for details.
