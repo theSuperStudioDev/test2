@@ -40,6 +40,8 @@ Discord nuker that can nuke server or account with user token. Also has mass rep
 
 #### Compiled version
 > Go to [Releases](https://github.com/extatent/phoenix-nuker/releases/tag/Release) and download the Debug.zip file.
+  
+> Extract the Debug folder and open the Phoenix Nuker.exe file.
 
 #### Source Code
 >Click the green "Code" button. 
@@ -50,7 +52,7 @@ Discord nuker that can nuke server or account with user token. Also has mass rep
 
 >Open the nuker.sln, in Visual Studio click Build>Build Solution
   
->Go to bin>debug folder and open the nuker.exe file.
+>Go to bin>debug folder and open the Phoenix Nuker.exe file.
 
 >NOTE: Make sure you have [Visual Studio 2019 or Visual Studio 2022](https://visualstudio.microsoft.com/downloads/) and [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework) installed.
 
