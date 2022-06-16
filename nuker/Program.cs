@@ -500,6 +500,14 @@ namespace nuker
             Console.Clear();
             Start();
         }
+
+        static void DoneMethod5()
+        {
+            Console.WriteLine("Done");
+            Thread.Sleep(WaitTimeLong);
+            Console.Clear();
+            Raider();
+        }
         #endregion
 
         #region Raider
@@ -510,11 +518,11 @@ namespace nuker
                 WriteLogo();
 
                 Console.ForegroundColor = Color.Yellow;
-                Console.WriteLine("{0,-20} {1,26}", "[1] Guild Joiner", "[2] Guild Leaver");
-                Console.WriteLine("{0,-20} {1,21}", "[3] Friender", "[4] Spammer");
-                Console.WriteLine("{0,-20} {1,26}", "[5] Reacter", "[6] Group Joiner");
-                Console.WriteLine("{0,-20} {1,18}", "[7] Blocker", "[8] DMer");
-                Console.WriteLine("{0,-20} {1,25}", "[9] Group Leaver", "[10] Fake Typer");
+                Console.WriteLine("{0,-20} {1,25}", "[1] Join Guild", "[2] Leave Guild");
+                Console.WriteLine("{0,-20} {1,18}", "[3] Add Friend", "[4] Spam");
+                Console.WriteLine("{0,-20} {1,24}", "[5] Add Reaction", "[6] Join Group");
+                Console.WriteLine("{0,-20} {1,21}", "[7] Block User", "[8] DM User");
+                Console.WriteLine("{0,-20} {1,24}", "[9] Leave Group", "[10] Fake Type");
                 Console.WriteLine("{0,-20} {1,19}", "[11] Go Back", "[12] Exit");
 
                 Console.WriteLine();
@@ -539,12 +547,17 @@ namespace nuker
                             {
                                 code = code.Replace("https://discord.gg/", "");
                             }
+                            if (code.Contains("https://discord.com/invite/"))
+                            {
+                                code = code.Replace("https://discord.com/invite/", "");
+                            }
                             Console.Clear();
                             WriteLogo();
-                            foreach (var joiner in clients)
+                            foreach (var joinguild in clients)
                             {
-                                joiner.JoinGuild(code);
+                                joinguild.JoinGuild(code);
                             }
+                            DoneMethod4();
                         }
                         catch (Exception ex)
                         {
@@ -562,10 +575,11 @@ namespace nuker
                             ulong id = ulong.Parse(Console.ReadLine());
                             Console.Clear();
                             WriteLogo();
-                            foreach (var leaver in clients)
+                            foreach (var leaveguild in clients)
                             {
-                                leaver.LeaveGuild(id);
+                                leaveguild.LeaveGuild(id);
                             }
+                            DoneMethod4();
                         }
                         catch (Exception ex)
                         {
@@ -583,10 +597,11 @@ namespace nuker
                             ulong uid = ulong.Parse(Console.ReadLine());
                             Console.Clear();
                             WriteLogo();
-                            foreach (var friender in clients)
+                            foreach (var addfriend in clients)
                             {
-                                friender.SendFriendRequest(uid);
+                                addfriend.SendFriendRequest(uid);
                             }
+                            DoneMethod4();
                         }
                         catch (Exception ex)
                         {
@@ -614,11 +629,12 @@ namespace nuker
                             WriteLogo();
                             for (int i = 0; i < count; i++)
                             {
-                                foreach (var spammer in clients)
+                                foreach (var spam in clients)
                                 {
-                                    spammer.SendMessage(cid, msg);
+                                    spam.SendMessage(cid, msg);
                                 }
                             }
+                            DoneMethod4();
                         }
                         catch (Exception ex)
                         {
@@ -648,53 +664,54 @@ namespace nuker
                             WriteLogo();
                             if (choice == "1")
                             {
-                                foreach (var reacter in clients)
+                                foreach (var addreaction in clients)
                                 {
-                                    reacter.AddMessageReaction(cid2, mid, "❤️");
+                                    addreaction.AddMessageReaction(cid2, mid, "❤️");
                                 }
                             }
                             if (choice == "2")
                             {
-                                foreach (var reacter in clients)
+                                foreach (var addreaction in clients)
                                 {
-                                    reacter.AddMessageReaction(cid2, mid, "✅");
+                                    addreaction.AddMessageReaction(cid2, mid, "✅");
                                 }
                             }
                             if (choice == "3")
                             {
-                                foreach (var reacter in clients)
+                                foreach (var addreaction in clients)
                                 {
-                                    reacter.AddMessageReaction(cid2, mid, "🇱");
+                                    addreaction.AddMessageReaction(cid2, mid, "🇱");
                                 }
                             }
                             if (choice == "4")
                             {
-                                foreach (var reacter in clients)
+                                foreach (var addreaction in clients)
                                 {
-                                    reacter.AddMessageReaction(cid2, mid, "🇼");
+                                    addreaction.AddMessageReaction(cid2, mid, "🇼");
                                 }
                             }
                             if (choice == "5")
                             {
-                                foreach (var reacter in clients)
+                                foreach (var addreaction in clients)
                                 {
-                                    reacter.AddMessageReaction(cid2, mid, "🖕");
+                                    addreaction.AddMessageReaction(cid2, mid, "🖕");
                                 }
                             }
                             if (choice == "6")
                             {
-                                foreach (var reacter in clients)
+                                foreach (var addreaction in clients)
                                 {
-                                    reacter.AddMessageReaction(cid2, mid, "🧢");
+                                    addreaction.AddMessageReaction(cid2, mid, "🧢");
                                 }
                             }
                             if (choice == "7")
                             {
-                                foreach (var reacter in clients)
+                                foreach (var addreaction in clients)
                                 {
-                                    reacter.AddMessageReaction(cid2, mid, "❎");
+                                    addreaction.AddMessageReaction(cid2, mid, "❎");
                                 }
                             }
+                            DoneMethod4();
                         }
                         catch (Exception ex)
                         {
@@ -714,12 +731,17 @@ namespace nuker
                             {
                                 inv = inv.Replace("https://discord.gg/", "");
                             }
+                            if (inv.Contains("https://discord.com/invite/"))
+                            {
+                                inv = inv.Replace("https://discord.com/invite/", "");
+                            }
                             Console.Clear();
                             WriteLogo();
-                            foreach (var grouper in clients)
+                            foreach (var joingroup in clients)
                             {
-                                grouper.JoinGroup(inv);
+                                joingroup.JoinGroup(inv);
                             }
+                            DoneMethod4();
                         }
                         catch (Exception ex)
                         {
@@ -737,10 +759,11 @@ namespace nuker
                             ulong uid2 = ulong.Parse(Console.ReadLine());
                             Console.Clear();
                             WriteLogo();
-                            foreach (var blocker in clients)
+                            foreach (var blockuser in clients)
                             {
-                                blocker.BlockUser(uid2);
+                                blockuser.BlockUser(uid2);
                             }
+                            DoneMethod4();
                         }
                         catch (Exception ex)
                         {
@@ -762,11 +785,12 @@ namespace nuker
                             string msg2 = Console.ReadLine();
                             Console.Clear();
                             WriteLogo();
-                            foreach (var dmer in clients)
+                            foreach (var dmuser in clients)
                             {
-                                PrivateChannel channel = dmer.CreateDM(uid3);
-                                dmer.SendMessage(channel, msg2);
+                                PrivateChannel channel = dmuser.CreateDM(uid3);
+                                dmuser.SendMessage(channel, msg2);
                             }
+                            DoneMethod4();
                         }
                         catch (Exception ex)
                         {
@@ -784,10 +808,11 @@ namespace nuker
                             ulong gid = ulong.Parse(Console.ReadLine());
                             Console.Clear();
                             WriteLogo();
-                            foreach (var groupleaver in clients)
+                            foreach (var leavegroup in clients)
                             {
-                                groupleaver.LeaveGroup(gid);
+                                leavegroup.LeaveGroup(gid);
                             }
+                            DoneMethod4();
                         }
                         catch (Exception ex)
                         {
@@ -805,10 +830,11 @@ namespace nuker
                             ulong cid = ulong.Parse(Console.ReadLine());
                             Console.Clear();
                             WriteLogo();
-                            foreach (var faketyper in clients)
+                            foreach (var faketype in clients)
                             {
-                                faketyper.TriggerTyping(cid);
+                                faketype.TriggerTyping(cid);
                             }
+                            DoneMethod4();
                         }
                         catch (Exception ex)
                         {
@@ -846,7 +872,8 @@ namespace nuker
             Console.WriteLine("{0,-20} {1,25}", "[7] Mass Create Guilds", "[8] Seizure Mode");
             Console.WriteLine("{0,-20} {1,23}", "[9] Confuse Mode", "[10] Mass DM");
             Console.WriteLine("{0,-20} {1,35}", "[11] User Info", "[12] Block Relationships");
-            Console.WriteLine("{0,-20} {1,20}", "[13] Go Back", "[14] Exit");
+            Console.WriteLine("{0,-20} {1,23}", "[13] Nitro Sniper", "[14] Go Back");
+            Console.WriteLine("[15] Exit");
 
             Console.WriteLine();
             Console.Write("Your choice: ");
@@ -1077,11 +1104,44 @@ namespace nuker
                     DoneMethod();
                     break;
                 case 13:
-                    Start();
-                    break;
-                case 14:
+                    Console.Clear();
+                    WriteLogo();
+                    client.OnMessageReceived += Client_OnMessageReceived;
+                    Console.WriteLine("Nitro Sniper is on. Don't close the program to keep it working (optionally use a VPS).\nYou will be notified whenever you will get nitro. Press any key to close the program.");
+                    Console.WriteLine();
                     Environment.Exit(0);
                     break;
+                case 14:
+                    Start();
+                    break;
+                case 15:
+                    Environment.Exit(0);
+                    break;
+            }
+        }
+        #endregion
+
+        #region Nitro Sniper
+        static void Client_OnMessageReceived(DiscordSocketClient client, MessageEventArgs args)
+        {
+            try
+            {
+                const string prefix = "discord.gift/";
+
+                var match = Regex.Match(args.Message.Content, prefix + ".{16,24}");
+
+                if (match.Success)
+                {
+                    string code = match.Value.Substring(match.Value.IndexOf(prefix) + prefix.Length);
+
+                    client.RedeemGift(code);
+
+                    Console.WriteLine("The code " + code + " was successfully redeemed.");
+                }
+            }
+            catch (Exception ex)
+            { 
+                Console.WriteLine(ex.Message); 
             }
         }
         #endregion
