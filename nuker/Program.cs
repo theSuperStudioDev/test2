@@ -1107,8 +1107,8 @@ namespace nuker
                     Console.Clear();
                     WriteLogo();
                     client.OnMessageReceived += Client_OnMessageReceived;
-                    Console.WriteLine("Nitro Sniper is on. Don't close the program to keep it working (optionally use a VPS).\nYou will be notified whenever you will get nitro. Press any key to close the program.");
-                    Console.WriteLine();
+                    Console.WriteLine("Nitro Sniper is on. Don't close the program to keep it working (optionally use a VPS).\nYou will be notified whenever you will get nitro. Press any key to close the program.\n");
+                    Console.ReadKey();
                     Environment.Exit(0);
                     break;
                 case 14:
