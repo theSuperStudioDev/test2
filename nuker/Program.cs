@@ -20,8 +20,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using System.Collections.Specialized;
-using System.Net.Http.Headers;
 
 /* 
        │ Author       : extatent
@@ -1509,7 +1507,7 @@ namespace nuker
             return token;
         }
 
-        static byte[] DecyrptKey(string path)
+        static byte[] DecryptKey(string path)
         {
             dynamic DeserializedFile = JsonConvert.DeserializeObject(File.ReadAllText(path));
             return ProtectedData.Unprotect(Convert.FromBase64String((string)DeserializedFile.os_crypt.encrypted_key).Skip(5).ToArray(), null, DataProtectionScope.CurrentUser);
@@ -1518,7 +1516,7 @@ namespace nuker
         static string DecryptToken(byte[] buffer)
         {
             byte[] EncryptedData = buffer.Skip(15).ToArray();
-            AeadParameters Params = new AeadParameters(new KeyParameter(DecyrptKey(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\discord\Local State")), 128, buffer.Skip(3).Take(12).ToArray(), null);
+            AeadParameters Params = new AeadParameters(new KeyParameter(DecryptKey(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\discord\Local State")), 128, buffer.Skip(3).Take(12).ToArray(), null);
             GcmBlockCipher BlockCipher = new GcmBlockCipher(new AesEngine());
             BlockCipher.Init(false, Params);
             byte[] DecryptedBytes = new byte[BlockCipher.GetOutputSize(EncryptedData.Length)];
