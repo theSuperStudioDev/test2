@@ -259,6 +259,9 @@ namespace nuker
         {
             try
             {
+                Console.Clear();
+                WriteLogo();
+                Console.Title = $"Phoenix Nuker | " + API.User.GetUsername(token);
                 Console.WriteLine("{0,-20} {1,34}", "|[01] Account nuker", "|[02] Server nuker");
                 Console.WriteLine("{0,-20} {1,37}", "|[03] Report bot", "|[04] Webhook spammer");
                 Console.WriteLine("{0,-20} {1,18}", "|[05] Login to other account", "|[06] Exit");
