@@ -1009,6 +1009,8 @@ namespace nuker
                     DoneMethod();
                     break;
                 case 14:
+                    Console.Clear();
+                    WriteLogo();
                     Options();
                     break;
                 case 15:
@@ -1228,6 +1230,8 @@ namespace nuker
                     DoneMethod2();
                     break;
                 case 15:
+                    Console.Clear();
+                    WriteLogo();
                     Options();
                     break;
                 case 16:
