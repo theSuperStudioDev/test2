@@ -1,5 +1,5 @@
 # Phoenix Nuker
-Discord nuker that can nuke server or account with user token. Also has mass report bot, webhook spammer and many more.
+Discord nuker that can nuke/raid server or account with user token(s). Also has mass report bot, webhook spammer and many more.
 
 <p align="center">
 <img src="https://img.shields.io/github/languages/top/extatent/phoenix-nuker?style=flat-square" </a>
@@ -15,25 +15,19 @@ Discord nuker that can nuke server or account with user token. Also has mass rep
 
 <details>
 <summary>Preview</summary>
-<img src="https://i.imgur.com/jBx3SCs.png" alt="png">
+<img src="https://i.imgur.com/apcOpdG.png" alt="png">
   
-<img src="https://i.imgur.com/4ncM4Hp.png" alt="png">
+<img src="https://i.imgur.com/I2DKIsS.png" alt="png">
   
-<img src="https://i.imgur.com/e0GPLeM.png" alt="png">
+<img src="https://i.imgur.com/5H79J6J.png" alt="png">
 
-<img src="https://i.imgur.com/vlGfHNR.png" alt="png">
+<img src="https://i.imgur.com/QDyqgqb.png" alt="png">
 
-<img src="https://i.imgur.com/Bm4ZMaL.png" alt="png">
+<img src="https://i.imgur.com/O0qqpiS.png" alt="png">
 
-<img src="https://i.imgur.com/nRTQfJj.png" alt="png">
+<img src="https://i.imgur.com/cSd6x3w.png" alt="png">
 
-<img src="https://i.imgur.com/fdJmC1x.png" alt="png">
-
-<img src="https://i.imgur.com/v6R8rGA.png" alt="png">
-
-<img src="https://i.imgur.com/tJDmmWv.png" alt="png">
-
-<img src="https://i.imgur.com/48K1ApS.png" alt="png">
+<img src="https://i.imgur.com/8KWAR7Y.png" alt="png">
 </details>
 
 ## Installation 
