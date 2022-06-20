@@ -1,5 +1,4 @@
 ﻿using Leaf.xNet;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,7 +7,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using Console = Colorful.Console;
-using RestSharp;
 using Newtonsoft.Json.Linq;
 
 /* 
@@ -21,7 +19,6 @@ namespace API
 {
     public class Raid
     {
-        public static RestClient client;
         public static string apiv = Config.APIVersion;
         public static int WaitTimeShort = Config.WaitTimeShort;
         public static int WaitTimeLong = Config.WaitTimeLong;
@@ -166,35 +163,6 @@ namespace API
                 }
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
-        }
-
-        public static string GetResponseString(string text)
-        {
-            var httpClient = new HttpClient();
-
-            var parameters = new Dictionary<string, string>();
-            parameters["text"] = text;
-
-            var response = httpClient.PostAsync("https://discord.com/api/v{apiv}/users/{uid}/channels", new System.Net.Http.FormUrlEncodedContent(parameters)).Result;
-            var contents = response.Content.ReadAsStringAsync().Result;
-
-            return contents;
-        }
-
-        public static string GetUserID(string token)
-        {
-            try
-            {
-                using (HttpRequest req = new HttpRequest())
-                {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse uid = req.Get($"https://discord.com/api/v{apiv}/users/@me");
-                    var id = JObject.Parse(uid.ToString())["id"];
-                    req.Close();
-                    return id.ToString();
-                }
-            }
-            catch { return "N/A"; }
         }
     }
 }
