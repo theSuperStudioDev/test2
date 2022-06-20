@@ -29,8 +29,6 @@ namespace API
                     req.AddHeader("Authorization", token);
                     HttpResponse r3quest = req.Get($"https://discord.com/api/v{apiv}/users/@me/channels");
                     var array = JArray.Parse(r3quest.ToString());
-                    Console.WriteLine(array);
-                    Console.ReadLine();
                     req.Close();
                     foreach (dynamic entry in array)
                     {
