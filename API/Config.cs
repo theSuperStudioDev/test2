@@ -6,7 +6,7 @@
 
 namespace API
 {
-    class Config
+    public class Config
     {
         public static string APIVersion = "10";
         public static int WaitTimeShort = 200;

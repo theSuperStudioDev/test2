@@ -328,8 +328,6 @@ namespace API
                     req.AddHeader("Authorization", token);
                     HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{guildid}/integrations");
                     var array = JArray.Parse(request.ToString());
-                    Console.WriteLine(array);
-                    Console.ReadLine();
                     req.Close();
                     foreach (dynamic entry in array)
                     {

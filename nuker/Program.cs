@@ -249,7 +249,6 @@ namespace nuker
             }
 
             WriteLogo();
-            Console.Title = $"Phoenix Nuker | " + API.User.GetUsername(token);
             Options();
         }
         #endregion
@@ -298,6 +297,14 @@ namespace nuker
                                 string GuildID = Console.ReadLine();
                                 guildid = GuildID;
                             }
+                            if (API.Server.GetServerName(token, guildid) == "N/A")
+                            {
+                                Console.Clear();
+                                WriteLogo();
+                                Console.WriteLine("Invalid ID or you're not in the server.");
+                                Thread.Sleep(WaitTimeLong);
+                                Options();
+                            }
                             Console.Title = $"Phoenix Nuker | {API.User.GetUsername(token)} | {API.Server.GetServerName(token, guildid)}";
                             Console.Clear();
                             ServerNuker();
@@ -337,7 +344,7 @@ namespace nuker
                             HttpRequest httpRequest = new HttpRequest();
                             httpRequest.Authorization = token;
                             httpRequest.UserAgentRandomize();
-                            string url = "https://discord.com/api/v10/report";
+                            string url = $"https://discord.com/api/v{API.Config.APIVersion}/report";
 
                             string jsonData = string.Concat(new string[]
                             {
@@ -364,8 +371,6 @@ namespace nuker
                                         reports++;
                                         Console.WriteLine("Reports sent: " + reports);
                                     }
-
-                                    Console.Title = $"Phoenix Nuker | {API.User.GetUsername(token)} | Reports sent: " + reports.ToString();
                                 }
                                 catch
                                 { }
@@ -453,7 +458,7 @@ namespace nuker
             public bool SendMessage(string content)
             {
                 MultipartFormDataContent data = new MultipartFormDataContent();
-                data.Add(new System.Net.Http.StringContent("github.com/extatent"), "username");
+                data.Add(new System.Net.Http.StringContent("Phoenix Nuker"), "username");
                 data.Add(new System.Net.Http.StringContent(content), "content");
                 var resp = Client.PostAsync(Url, data).Result;
                 return resp.StatusCode == System.Net.HttpStatusCode.NoContent;
@@ -507,6 +512,7 @@ namespace nuker
         {
             try
             {
+                Console.Clear();
                 WriteLogo();
 
                 Console.ForegroundColor = Color.Yellow;
@@ -650,7 +656,7 @@ namespace nuker
                             ulong mid = ulong.Parse(Console.ReadLine());
                             Console.Clear();
                             WriteLogo();
-                            Console.WriteLine("[1] Heart\n[2] White Check Mark\n[3] Regional Indicator L\n[4] Regional Indicator W\n[5] Middle Finger\n[6] Billed Cap\n[7] Negative Squared Cross Mark");
+                            Console.WriteLine("[1] Heart\n[2] White Check Mark\n[3] Regional Indicator L\n[4] Regional Indicator W\n[5] Middle Finger\n[6] Billed Cap\n[7] Negative Squared Cross Mark\n[8] Neutral Face\n[9] Nerd Face\n[10] Joy");
                             Console.WriteLine();
                             Console.Write("Your choice: ");
                             string choice = Console.ReadLine();
@@ -703,6 +709,27 @@ namespace nuker
                                 foreach (var token in clients)
                                 {
                                     API.Raid.AddReaction(token, cid2, mid, "❎");
+                                }
+                            }
+                            if (choice == "8")
+                            {
+                                foreach (var token in clients)
+                                {
+                                    API.Raid.AddReaction(token, cid2, mid, "😐");
+                                }
+                            }
+                            if (choice == "9")
+                            {
+                                foreach (var token in clients)
+                                {
+                                    API.Raid.AddReaction(token, cid2, mid, "🤓");
+                                }
+                            }
+                            if (choice == "10")
+                            {
+                                foreach (var token in clients)
+                                {
+                                    API.Raid.AddReaction(token, cid2, mid, "😂");
                                 }
                             }
                             DoneMethod5();
