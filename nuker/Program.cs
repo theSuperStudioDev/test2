@@ -17,6 +17,8 @@ using Org.BouncyCastle.Crypto.Engines;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using System.Net.Http.Headers;
 
 /* 
        │ Author       : extatent
@@ -162,7 +164,8 @@ namespace nuker
             try
             {
                 Console.WriteLine("{0,-20} {1,32}", "|[01] Login with config token", "|[02] Login with your token");
-                Console.WriteLine("{0,-20} {1,21}", "|[03] MultiToken Raider", "|[04] Exit");
+                Console.WriteLine("{0,-20} {1,31}", "|[03] MultiToken Raider", "|[04] Fetch User IDs");
+                Console.WriteLine("|[05] Exit");
 
                 Console.WriteLine();
                 Console.Write("Your choice: ");
@@ -237,6 +240,26 @@ namespace nuker
                         Raider();
                         break;
                     case 4:
+                        if (!File.Exists("serverids.txt"))
+                        {
+                            File.Create("serverids.txt").Dispose();
+                        }
+                        var ids = File.ReadAllLines("serverids.txt");
+                        foreach (string id in ids)
+                        {
+                            GetIDs(token, id);
+                        }
+                        if (string.IsNullOrEmpty(File.ReadAllText("serverids.txt")))
+                        {
+                            Console.Clear();
+                            WriteLogo();
+                            Console.WriteLine("Paste server IDs in serverids.txt file.");
+                            Thread.Sleep(WaitTimeLong);
+                            Start();
+                        }
+                        Start();
+                        break;
+                    case 5:
                         Environment.Exit(0);
                         break;
                 }
@@ -504,6 +527,96 @@ namespace nuker
             Thread.Sleep(WaitTimeLong);
             Console.Clear();
             Raider();
+        }
+        #endregion
+
+        #region Get IDs
+        static void GetIDs(string token, string guildid)
+        {
+            try
+            {
+                if (!File.Exists("ids.txt"))
+                {
+                    File.Create("ids.txt").Dispose();
+                }
+
+                using (HttpRequest req = new HttpRequest())
+                {
+                    req.AddHeader("Authorization", token);
+                    HttpResponse request = req.Get($"https://discord.com/api/v{API.Config.APIVersion}/guilds/{guildid}/channels");
+                    var array = JArray.Parse(request.ToString());
+                    req.Close();
+                    foreach (dynamic entry in array)
+                    {
+                        req.AddHeader("Authorization", token);
+                        HttpResponse request2 = req.Get($"https://discord.com/api/v{API.Config.APIVersion}/channels/{entry.id}/messages?limit=100");
+                        var array2 = JArray.Parse(request2.ToString());
+                        Console.WriteLine(array2);
+                        Console.ReadKey();
+                        req.Close();
+
+                        foreach (dynamic entry2 in array2)
+                        {
+                            string id = entry2.author["id"];
+
+                            if (!File.ReadAllLines("ids.txt").Contains(id))
+                            {
+                                File.AppendAllText("ids.txt", id + Environment.NewLine);
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+        }
+        #endregion
+
+        #region Mass Server DM
+        static void ServerDM(string token, string message)
+        {
+            try
+            {
+                if (!File.Exists("dmed.txt"))
+                {
+                    File.Create("dmed.txt").Dispose();
+                }
+                string[] list = File.ReadAllLines("dmed.txt");
+                foreach (var id in File.ReadAllLines("ids.txt"))
+                {
+                    HttpClient client = new HttpClient();
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+                    client.BaseAddress = new Uri($"https://discord.com/api/v{API.Config.APIVersion}/users/@me/channels");
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpRequestMessage request = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, $"https://discord.com/api/v{API.Config.APIVersion}/users/@me/channels");
+                    request.Content = new System.Net.Http.StringContent($"{{\"recipient_id\":\"{id}\"}}", Encoding.UTF8, "application/json");
+                    client.SendAsync(request).Wait();
+                }
+                using (HttpRequest req = new HttpRequest())
+                {
+                    req.AddHeader("Authorization", token);
+                    HttpResponse r3quest = req.Get($"https://discord.com/api/v{API.Config.APIVersion}/users/@me/channels");
+                    var array = JArray.Parse(r3quest.ToString());
+                    req.Close();
+                    foreach (dynamic entry in array)
+                    {
+                        string id = entry.id;
+                        if (!File.ReadAllLines("dmed.txt").Contains(id))
+                        {
+                            HttpClient client2 = new HttpClient();
+                            client2.DefaultRequestHeaders.Add("Authorization", token);
+                            client2.BaseAddress = new Uri($"https://discord.com/api/v{API.Config.APIVersion}/channels/{entry.id}/messages");
+                            client2.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                            HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, $"https://discord.com/api/v{API.Config.APIVersion}/channels/{entry.id}/messages");
+                            request2.Content = new System.Net.Http.StringContent($"{{\"content\":\"{message}\"}}", Encoding.UTF8, "application/json");
+                            client2.SendAsync(request2);
+                            Console.WriteLine($"Messaged: {entry.recipients[0].username}#{entry.recipients[0].discriminator}");
+                            Thread.Sleep(200);
+                            File.AppendAllText("dmed.txt", id + Environment.NewLine);
+                        }
+                    }
+                }
+            }
+            catch { }
         }
         #endregion
 
@@ -799,16 +912,16 @@ namespace nuker
                             Console.Clear();
                             WriteLogo();
                             Console.Write("User ID: ");
-                            ulong uid3 = ulong.Parse(Console.ReadLine());
+                            ulong uid = ulong.Parse(Console.ReadLine());
                             Console.Clear();
                             WriteLogo();
                             Console.Write("Message: ");
-                            string msg2 = Console.ReadLine();
+                            string msg = Console.ReadLine();
                             Console.Clear();
                             WriteLogo();
                             foreach (var token in clients)
                             {
-                                
+
                             }
                             DoneMethod5();
                         }
@@ -864,8 +977,8 @@ namespace nuker
                         Raider();
                         break;
                     case 11:
-                        Start();
                         Console.Title = "Phoenix Nuker";
+                        Start();
                         break;
                     case 12:
                         Environment.Exit(0);
@@ -1063,7 +1176,8 @@ namespace nuker
             Console.WriteLine("{0,-20} {1,32}", "|[09] Remove Integrations", "|[10] Delete All Reactions");
             Console.WriteLine("{0,-20} {1,36}", "|[11] Server Info", "|[12] Leave/Delete Server");
             Console.WriteLine("{0,-20} {1,26}", "|[13] Msg in every channel", "|[14] Delete Stickers");
-            Console.WriteLine("{0,-20} {1,21}", "|[15] Go Back", "|[16] Exit");
+            Console.WriteLine("{0,-20} {1,24}", "|[15] Mass DM", "|[16] Go Back");
+            Console.WriteLine("|[17] Exit");
 
             Console.WriteLine();
             Console.Write("Your choice: ");
@@ -1177,17 +1291,21 @@ namespace nuker
                     DoneMethod2();
                     break;
                 case 10:
-                    Console.Clear();
-                    WriteLogo();
-                    Console.Write("Channel ID: ");
-                    ulong cid = ulong.Parse(Console.ReadLine());
-                    Console.Clear();
-                    WriteLogo();
-                    Console.Write("Message ID: ");
-                    ulong mid = ulong.Parse(Console.ReadLine());
-                    Console.Clear();
-                    WriteLogo();
-                    API.Server.DeleteAllReactions(token, cid, mid);
+                    try
+                    {
+                        Console.Clear();
+                        WriteLogo();
+                        Console.Write("Message: ");
+                        string msgs = Console.ReadLine();
+                        Console.Clear();
+                        WriteLogo();
+                        ServerDM(token, msgs);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        Thread.Sleep(WaitTimeLong);
+                    }
                     DoneMethod2();
                     break;
                 case 11:
@@ -1211,45 +1329,53 @@ namespace nuker
                     catch { }
                     break;
                 case 13:
-                    Console.Clear();
-                    WriteLogo();
-                    Console.WriteLine("[1] Spam");
-                    Console.WriteLine("[2] One Message");
-                    Console.WriteLine();
-                    Console.Write("Your choice: ");
-                    string choice = Console.ReadLine();
-                    if (choice == "1")
+                    try
                     {
                         Console.Clear();
                         WriteLogo();
-                        Console.Write("Message: ");
-                        string msg = Console.ReadLine();
-                        Console.Clear();
-                        WriteLogo();
-                        Console.Write("Messages count: ");
-                        string count = Console.ReadLine();
-                        Console.Clear();
-                        WriteLogo();
-                        int total = 0;
-                        for (int i = 0; i < int.Parse(count); i++)
+                        Console.WriteLine("[1] Spam");
+                        Console.WriteLine("[2] One Message");
+                        Console.WriteLine();
+                        Console.Write("Your choice: ");
+                        string choice = Console.ReadLine();
+                        if (choice == "1")
                         {
-                            try
+                            Console.Clear();
+                            WriteLogo();
+                            Console.Write("Message: ");
+                            string msg = Console.ReadLine();
+                            Console.Clear();
+                            WriteLogo();
+                            Console.Write("Messages count: ");
+                            string count = Console.ReadLine();
+                            Console.Clear();
+                            WriteLogo();
+                            int total = 0;
+                            for (int i = 0; i < int.Parse(count); i++)
                             {
-                                total++;
-                                API.Server.MsgInEveryChannel(token, guildid, msg);
+                                try
+                                {
+                                    total++;
+                                    API.Server.MsgInEveryChannel(token, guildid, msg);
+                                }
+                                catch { }
                             }
-                            catch { }
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            WriteLogo();
+                            Console.Write("Message: ");
+                            string msg = Console.ReadLine();
+                            Console.Clear();
+                            WriteLogo();
+                            API.Server.MsgInEveryChannel(token, guildid, msg);
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        Console.Clear();
-                        WriteLogo();
-                        Console.Write("Message: ");
-                        string msg = Console.ReadLine();
-                        Console.Clear();
-                        WriteLogo();
-                        API.Server.MsgInEveryChannel(token, guildid, msg);
+                        Console.WriteLine(ex.Message);
+                        Thread.Sleep(WaitTimeLong);
                     }
                     DoneMethod2();
                     break;
@@ -1260,11 +1386,28 @@ namespace nuker
                     DoneMethod2();
                     break;
                 case 15:
+                    try
+                    {
+                        Console.Clear();
+                        WriteLogo();
+                        Console.Write("Message: ");
+                        string msgs = Console.ReadLine();
+                        Console.Clear();
+                        WriteLogo();
+                        ServerDM(token, msgs);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        Thread.Sleep(WaitTimeLong);
+                    }
+                    break;
+                case 16:
                     Console.Clear();
                     WriteLogo();
                     Options();
                     break;
-                case 16:
+                case 17:
                     Environment.Exit(0);
                     break;
             }

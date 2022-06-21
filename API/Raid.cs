@@ -1,13 +1,11 @@
 ﻿using Leaf.xNet;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using Console = Colorful.Console;
-using Newtonsoft.Json.Linq;
 
 /* 
        │ Author       : extatent
