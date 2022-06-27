@@ -13,10 +13,7 @@ Discord nuker that can nuke/raid server or account with user token(s). Also has 
 
 **NOTE:** ⭐ If you like the project, feel free to star it ⭐
   
-### I got an issue!
-There is two options:
-- [Issues](https://github.com/extatent/phoenix-nuker/issues) (*most preferably*)
-- [Discord server](https://discord.gg/FT9UZAxAhx) (don't leave the ticket empty, after creating a new ticket, describe your issue in detail.)
+### If you caught any issues, please report it in [issues](https://github.com/extatent/phoenix-nuker/issues) (it helps a lot)
 
 <details>
 <summary>Preview</summary>
