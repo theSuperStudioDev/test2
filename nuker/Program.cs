@@ -100,7 +100,7 @@ namespace nuker
             {
                 WebClient web = new WebClient();
 
-                if (web.DownloadString("https://raw.githubusercontent.com/extatent/phoenix-nuker/main/version").Contains(version))
+                if (!web.DownloadString("https://raw.githubusercontent.com/extatent/phoenix-nuker/main/version").Contains(version))
                 {
                     int v2 = int.Parse(version) + 1;
                     Console.Title = "Phoenix Nuker | New version is available";
