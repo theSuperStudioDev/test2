@@ -32,6 +32,11 @@ Discord nuker that can nuke/raid server or account with user token(s). Also has 
 <img src="https://i.imgur.com/8KWAR7Y.png" alt="png">
 </details>
 
+## QnA
+Q: How to get Guild/User ID?
+  
+A: Settings > Advanced > Enable Developer Mode. After that, right click on a guild/user > Copy ID
+  
 ## Installation 
 
 #### Compiled version
