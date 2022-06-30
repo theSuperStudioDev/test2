@@ -38,7 +38,7 @@ namespace nuker
             public string token { get; set; }
         }
 
-        public static void GetConfig()
+        static void GetConfig()
         {
             StreamReader read = new StreamReader("config.json");
             string json = read.ReadToEnd();
@@ -47,15 +47,11 @@ namespace nuker
             read.Close();
         }
 
-        public static void SaveConfig(string token)
+        static void SaveConfig(string token)
         {
-            config config = new config
-            {
-                token = token,
-            };
-
-            var responseData = config;
-            string jsonData = JsonConvert.SerializeObject(responseData);
+            config config = new config { token = token };
+            var response = config;
+            string jsonData = JsonConvert.SerializeObject(response);
             File.WriteAllText("config.json", jsonData);
         }
 
@@ -323,6 +319,7 @@ namespace nuker
                                 Console.Clear();
                                 WriteLogo();
                                 Console.WriteLine("Invalid ID or you're not in the server.");
+                                guildid = "";
                                 Thread.Sleep(WaitTimeLong);
                                 Options();
                             }
@@ -1084,8 +1081,11 @@ namespace nuker
             Console.WriteLine("{0,-20} {1,32}", "|[09] Remove Integrations", "|[10] Delete All Reactions");
             Console.WriteLine("{0,-20} {1,36}", "|[11] Server Info", "|[12] Leave/Delete Server");
             Console.WriteLine("{0,-20} {1,26}", "|[13] Msg in every channel", "|[14] Delete Stickers");
-            Console.WriteLine("{0,-20} {1,24}", "|[15] Mass DM", "|[16] Go Back");
-            Console.WriteLine("|[17] Exit");
+            Console.WriteLine("{0,-20} {1,45}", "|[15] Mass DM", "|[16] Delete Auto Moderation Rules");
+            Console.WriteLine("{0,-20} {1,41}", "|[17] Mass Create Invites", "|[18] Delete Guild Scheduled Events");
+            Console.WriteLine("{0,-20} {1,32}", "|[19] Delete Guild Template", "|[20] Delete Stage Instances");
+            Console.WriteLine("{0,-20} {1,23}", "|[21] Delete Webhooks", "|[22] Go Back");
+            Console.WriteLine("|[23] Exit");
 
             Console.WriteLine();
             Console.Write("Your choice: ");
@@ -1203,11 +1203,15 @@ namespace nuker
                     {
                         Console.Clear();
                         WriteLogo();
-                        Console.Write("Message: ");
-                        string msgs = Console.ReadLine();
+                        Console.Write("Channel ID: ");
+                        ulong cid = ulong.Parse(Console.ReadLine());
                         Console.Clear();
                         WriteLogo();
-                        Server.ServerDM(token, msgs);
+                        Console.Write("Message ID: ");
+                        ulong mid = ulong.Parse(Console.ReadLine());
+                        Console.Clear();
+                        WriteLogo();
+                        Server.DeleteAllReactions(token, cid, mid);
                     }
                     catch (Exception ex)
                     {
@@ -1234,7 +1238,11 @@ namespace nuker
                         Server.LeaveDeleteGuild(token, guildid, owner);
                         DoneMethod2();
                     }
-                    catch { }
+                    catch 
+                    {
+                        Console.WriteLine("Wrong response");
+                        Thread.Sleep(WaitTimeLong);
+                    }
                     break;
                 case 13:
                     try
@@ -1313,9 +1321,45 @@ namespace nuker
                 case 16:
                     Console.Clear();
                     WriteLogo();
-                    Options();
+                    Server.DeleteAutoModerationRules(token, guildid);
+                    DoneMethod2();
                     break;
                 case 17:
+                    Console.Clear();
+                    WriteLogo();
+                    Server.CreateInvite(token, guildid);
+                    DoneMethod2();
+                    break;
+                case 18:
+                    Console.Clear();
+                    WriteLogo();
+                    Server.DeleteGuildScheduledEvents(token, guildid);
+                    DoneMethod2();
+                    break;
+                case 19:
+                    Console.Clear();
+                    WriteLogo();
+                    Server.DeleteGuildTemplate(token, guildid);
+                    DoneMethod2();
+                    break;
+                case 20:
+                    Console.Clear();
+                    WriteLogo();
+                    Server.DeleteStageInstances(token, guildid);
+                    DoneMethod2();
+                    break;
+                case 21:
+                    Console.Clear();
+                    WriteLogo();
+                    Server.DeleteWebhooks(token, guildid);
+                    DoneMethod2();
+                    break;
+                case 22:
+                    Console.Clear();
+                    WriteLogo();
+                    Options();
+                    break;
+                case 23:
                     Environment.Exit(0);
                     break;
             }

