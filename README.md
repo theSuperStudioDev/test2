@@ -37,7 +37,7 @@ Q: How to get Guild/User ID?
   
 A: User Settings > Advanced > Enable Developer Mode. After that, right click on a guild/user > Copy ID
 
-Q: How to get your Discord token?
+Q: How to get my Discord token?
 
 A: There is two options:
 
