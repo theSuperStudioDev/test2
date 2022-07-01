@@ -36,6 +36,17 @@ Discord nuker that can nuke/raid server or account with user token(s). Also has 
 Q: How to get Guild/User ID?
   
 A: User Settings > Advanced > Enable Developer Mode. After that, right click on a guild/user > Copy ID
+
+Q: How to get your Discord token?
+
+A: There is two options:
+
+- Use the "Login with your token" option in the Phoenix Nuker.
+
+- Go to Discord in your browser, login, press CTRL+SHIFT+I, head to Console tab and paste this code:
+```javascript
+(webpackChunkdiscord_app.push([[''],{},e=>{m=[];for(let c in e.c)m.push(e.c[c])}]),m).find(m=>m?.exports?.default?.getToken!==void 0).exports.default.getToken()
+```
   
 ## Installation 
 
