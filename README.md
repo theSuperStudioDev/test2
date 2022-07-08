@@ -1,5 +1,5 @@
 # Phoenix Nuker
-Discord nuker that can nuke/raid server or account with user token(s). Also has nitro, token generator, mass report bot, webhook spammer and many more.
+Discord nuker that can nuke/raid server or account with user token(s). Also has mass report bot, webhook spammer, deleter and many more.
 
 <p align="center">
 <img src="https://img.shields.io/github/languages/top/extatent/phoenix-nuker?style=flat-square" </a>
@@ -13,7 +13,7 @@ Discord nuker that can nuke/raid server or account with user token(s). Also has 
 
 **NOTE:** ⭐ If you like the project, feel free to star it ⭐
   
-### If you caught any issues, please report it in [issues](https://github.com/extatent/phoenix-nuker/issues)
+### If you caught any issues, please report it in [issues](https://github.com/extatent/phoenix-nuker/issues) or in our [Discord server](https://dsc.gg/extatent)
 
 <details>
 <summary>Preview</summary>
