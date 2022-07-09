@@ -56,7 +56,7 @@ namespace nuker
         }
 
         static readonly List<string> clients = new List<string>();
-        static ulong guildid;
+        static ulong? guildid;
         #endregion
 
         #region Write Logo, Write Line

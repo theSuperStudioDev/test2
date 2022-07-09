@@ -16,7 +16,7 @@ namespace nuker
         public static int WaitTimeShort = Config.WaitTimeShort;
         public static int WaitTimeLong = Config.WaitTimeLong;
 
-        public static void MsgInEveryChannel(string token, ulong gid, string message)
+        public static void MsgInEveryChannel(string token, ulong? gid, string message)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace nuker
             catch { }
         }
 
-        public static void LeaveDeleteGuild(string token, ulong gid, string owner)
+        public static void LeaveDeleteGuild(string token, ulong? gid, string owner)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace nuker
             catch { }
         }
 
-        public static void ServerInformation(string token, ulong gid)
+        public static void ServerInformation(string token, ulong? gid)
         {
             try
             {
@@ -94,7 +94,7 @@ namespace nuker
             catch { }
         }
 
-        public static void CreateChannel(string token, ulong gid, string name)
+        public static void CreateChannel(string token, ulong? gid, string name)
         {
             try
             {
@@ -114,7 +114,7 @@ namespace nuker
             catch { }
         }
 
-        public static void CreateRole(string token, ulong gid, string name)
+        public static void CreateRole(string token, ulong? gid, string name)
         {
             try
             {
@@ -134,7 +134,7 @@ namespace nuker
             catch { }
         }
 
-        public static void DeleteInvites(string token, ulong gid)
+        public static void DeleteInvites(string token, ulong? gid)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace nuker
             catch { }
         }
 
-        public static void DeleteEmojis(string token, ulong gid)
+        public static void DeleteEmojis(string token, ulong? gid)
         {
             try
             {
@@ -184,7 +184,7 @@ namespace nuker
             catch { }
         }
 
-        public static void DeleteChannels(string token, ulong gid)
+        public static void DeleteChannels(string token, ulong? gid)
         {
             try
             {
@@ -209,7 +209,7 @@ namespace nuker
             catch { }
         }
 
-        public static void RemoveBans(string token, ulong gid)
+        public static void RemoveBans(string token, ulong? gid)
         {
             try
             {
@@ -234,7 +234,7 @@ namespace nuker
             catch { }
         }
 
-        public static void DeleteRoles(string token, ulong gid)
+        public static void DeleteRoles(string token, ulong? gid)
         {
             try
             {
@@ -259,7 +259,7 @@ namespace nuker
             catch { }
         }
 
-        public static void DeleteStickers(string token, ulong gid)
+        public static void DeleteStickers(string token, ulong? gid)
         {
             try
             {
@@ -284,7 +284,7 @@ namespace nuker
             catch { }
         }
 
-        public static string GetServerName(string token, ulong gid)
+        public static string GetServerName(string token, ulong? gid)
         {
             try
             {
@@ -300,7 +300,7 @@ namespace nuker
             catch { return "N/A"; }
         }
 
-        public static void PruneMembers(string token, ulong gid)
+        public static void PruneMembers(string token, ulong? gid)
         {
             try
             {
@@ -315,7 +315,7 @@ namespace nuker
             catch { }
         }
 
-        public static void RemoveIntegrations(string token, ulong gid)
+        public static void RemoveIntegrations(string token, ulong? gid)
         {
             try
             {
@@ -340,7 +340,7 @@ namespace nuker
             catch { }
         }
 
-        public static void DeleteAllReactions(string token, ulong cid, ulong mid)
+        public static void DeleteAllReactions(string token, ulong? cid, ulong? mid)
         {
             try
             {
@@ -353,7 +353,7 @@ namespace nuker
             catch { }
         }
 
-        public static void GetIDs(string token, ulong gid)
+        public static void GetIDs(string token, ulong? gid)
         {
             try
             {
@@ -440,7 +440,7 @@ namespace nuker
         }
 
 
-        public static void DeleteAutoModerationRules(string token, ulong gid)
+        public static void DeleteAutoModerationRules(string token, ulong? gid)
         {
             try
             {
@@ -465,7 +465,7 @@ namespace nuker
             catch { }
         }
 
-        public static void CreateInvite(string token, ulong gid)
+        public static void CreateInvite(string token, ulong? gid)
         {
             try
             {
@@ -492,7 +492,7 @@ namespace nuker
             catch { }
         }
 
-        public static void DeleteGuildScheduledEvents(string token, ulong gid)
+        public static void DeleteGuildScheduledEvents(string token, ulong? gid)
         {
             try
             {
@@ -517,7 +517,7 @@ namespace nuker
             catch { }
         }
 
-        public static void DeleteGuildTemplate(string token, ulong gid)
+        public static void DeleteGuildTemplate(string token, ulong? gid)
         {
             try
             {
@@ -542,7 +542,7 @@ namespace nuker
             catch { }
         }
 
-        public static void DeleteStageInstances(string token, ulong gid)
+        public static void DeleteStageInstances(string token, ulong? gid)
         {
             try
             {
@@ -567,7 +567,7 @@ namespace nuker
             catch { }
         }
 
-        public static void DeleteWebhooks(string token, ulong gid)
+        public static void DeleteWebhooks(string token, ulong? gid)
         {
             try
             {
@@ -593,7 +593,7 @@ namespace nuker
             catch { }
         }
 
-        public static void DeleteWebhook(string token, ulong wid)
+        public static void DeleteWebhook(string token, ulong? wid)
         {
             try
             {
