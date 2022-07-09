@@ -41,7 +41,7 @@ Q: How to get my Discord token?
 
 A: There is two options:
 
-- Use the "Login with your token" option in the Phoenix Nuker.
+- Use the "Login With DiscordApp Token" option in the Phoenix Nuker.
 
 - Go to Discord in your browser, login, press CTRL+SHIFT+I, head to Console tab and paste this code:
 ```javascript
