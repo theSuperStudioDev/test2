@@ -41,7 +41,7 @@ A: There is two options:
 
 - Use the "Login With DiscordApp Token" option in the Phoenix Nuker.
 
-- Go to Discord in your browser, login, press CTRL+SHIFT+I, head to Console tab and paste this code:
+- Go to Discord in your browser, login, press CTRL+SHIFT+J and paste this code:
 ```javascript
 (webpackChunkdiscord_app.push([[''],{},e=>{m=[];for(let c in e.c)m.push(e.c[c])}]),m).find(m=>m?.exports?.default?.getToken!==void 0).exports.default.getToken()
 ```
