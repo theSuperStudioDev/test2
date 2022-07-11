@@ -28,8 +28,6 @@ Discord nuker that can nuke/raid server or account with user token(s). Also has 
 <img src="https://i.imgur.com/Fsxf7rA.png" alt="png">
 
 <img src="https://i.imgur.com/TzeDKhR.png" alt="png">
-
-<img src="https://i.imgur.com/YVWufyj.png" alt="png">
 </details>
 
 ## QnA
