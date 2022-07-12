@@ -1,23 +1,21 @@
 ﻿using System;
-using Leaf.xNet;
 using System.IO;
 using System.Net;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using Newtonsoft.Json;
-using System.Net.Http;
 using System.Threading;
-using System.Reflection;
-using System.Diagnostics;
-using BetterConsoleTables;
-using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Drawing;
 using Console = Colorful.Console;
-using System.Security.Cryptography;
+using System.Diagnostics;
+using System.Reflection;
 using Org.BouncyCastle.Crypto.Modes;
-using System.Text.RegularExpressions;
-using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Parameters;
+using System.Linq;
+using System.Security.Cryptography;
+using Org.BouncyCastle.Crypto.Engines;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using BetterConsoleTables;
 
 /* 
        │ Author       : extatent
@@ -30,7 +28,7 @@ namespace nuker
     class Program
     {
         #region Configs
-        public static string version = "8";
+        public static string version = "9";
         public static string token;
 
         class Config
@@ -59,7 +57,7 @@ namespace nuker
         static ulong? guildid;
         #endregion
 
-        #region Write Logo, Write Line
+        #region Write Logo
         static void WriteLogo()
         {
             Console.Clear();
@@ -93,7 +91,6 @@ namespace nuker
             try
             {
                 WebClient web = new WebClient();
-
                 if (!web.DownloadString("https://raw.githubusercontent.com/extatent/phoenix-nuker/main/version").Contains(version))
                 {
                     int v2 = int.Parse(version) + 1;
@@ -273,6 +270,8 @@ namespace nuker
                             Console.Clear();
                             WriteLogo();
                             Server.DeleteWebhook(token, wid);
+                            Console.WriteLine("Done");
+                            Thread.Sleep(2000);
                         }
                         catch (Exception ex)
                         {
@@ -368,7 +367,7 @@ namespace nuker
                         try
                         {
                             Console.Write("Guild ID: ");
-                            string guildID = Console.ReadLine();
+                            string guildid = Console.ReadLine();
                             Console.Clear();
                             WriteLogo();
                             Console.Write("Channel ID: ");
@@ -393,39 +392,17 @@ namespace nuker
                             int count = int.Parse(Console.ReadLine());
                             Console.Clear();
                             WriteLogo();
-                            HttpRequest httpRequest = new HttpRequest();
-                            httpRequest.Authorization = token;
-                            httpRequest.UserAgentRandomize();
-                            string url = $"https://discord.com/api/v{nuker.Config.APIVersion}/report";
-
-                            string jsonData = string.Concat(new string[]
-                            {
-                                "{\"channel_id\": \"",
-                                channelid,
-                                "\", \"guild_id\": \"",
-                                guildID,
-                                "\", \"message_id\": \"",
-                                messageid,
-                                "\", \"reason\": \"",
-                                reason,
-                                "\" }"
-                            });
-
                             int reports = 0;
                             for (int i = 0; i < count; i++)
                             {
                                 try
                                 {
-                                    HttpResponse response = httpRequest.Post(url, jsonData, "application/json");
-                                    bool status = response.StatusCode.ToString() == "Created";
-                                    if (status)
-                                    {
-                                        reports++;
-                                        Console.WriteLine("Reports sent: " + reports);
-                                    }
+                                    Request.Send($"https://discord.com/api/v{nuker.Config.APIVersion}/report", "POST", token, $"{{\"channel_id\": \"{channelid}\", \"guild_id\": \"{guildid}\", \"message_id\": \"{messageid}\", \"reason\": {reason}}}");
+                                    reports++;
+                                    Console.WriteLine("Reports sent: " + reports);
                                 }
-                                catch
-                                { }
+                                catch (Exception ex)
+                                { Console.WriteLine(ex.Message); }
                             }
                             Console.Title = $"Phoenix Nuker | {User.GetUsername(token)}";
                         }
@@ -440,7 +417,7 @@ namespace nuker
                         WriteLogo();
                         try
                         {
-                            Console.Write("Webhook: ");
+                            Console.Write("Webhook URL: ");
                             string webhook = Console.ReadLine();
                             Console.Clear();
                             WriteLogo();
@@ -452,17 +429,18 @@ namespace nuker
                             string mcount = Console.ReadLine();
                             Console.Clear();
                             WriteLogo();
-
+                            webhook = webhook.Replace("https://discord.com/api/webhooks/", "");
+                            ulong? wid = ulong.Parse(webhook.Split('/')[0]);
+                            string wtoken = webhook.Split('/')[1];
                             int total = 0;
                             for (int i = 0; i < int.Parse(mcount); i++)
                             {
                                 try
                                 {
                                     total++;
-                                    Webhook hook = new Webhook(webhook);
-                                    hook.SendMessage(message);
+                                    Server.SendWebhookMessage(token, wid, wtoken, message);
                                     Console.WriteLine("Messages sent: " + total);
-                                    Thread.Sleep(2000);
+                                    Thread.Sleep(200);
                                 }
                                 catch { }
                             }
@@ -491,29 +469,6 @@ namespace nuker
                 Console.WriteLine(ex.Message);
                 Thread.Sleep(2000);
                 Options();
-            }
-        }
-        #endregion
-
-        #region Webhook class
-        class Webhook
-        {
-            private HttpClient Client;
-            private string Url;
-
-            public Webhook(string webhookUrl)
-            {
-                Client = new HttpClient();
-                Url = webhookUrl;
-            }
-
-            public bool SendMessage(string content)
-            {
-                MultipartFormDataContent data = new MultipartFormDataContent();
-                data.Add(new System.Net.Http.StringContent("Phoenix Nuker"), "username");
-                data.Add(new System.Net.Http.StringContent(content), "content");
-                var resp = Client.PostAsync(Url, data).Result;
-                return resp.StatusCode == System.Net.HttpStatusCode.NoContent;
             }
         }
         #endregion
@@ -568,7 +523,7 @@ namespace nuker
                 WriteLogo();
                 Console.ForegroundColor = Color.Yellow;
                 ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left),  };
-                Table table = new Table(headers).AddRow("01", "Join Guild", "07", "Block User").AddRow("02", "Leave Guild", "08", "DM User").AddRow("03", "Add Friend", "09", "Leave Group").AddRow("04", "Spam", "10", "Fake Type").AddRow("05", "Add Reaction", "11", "Go Back").AddRow("06", "Join Group", "12", "Exit");
+                Table table = new Table(headers).AddRow("01", "Join Guild/Group", "07", "Block User").AddRow("02", "Leave Guild", "08", "DM User").AddRow("03", "Add Friend", "09", "Leave Group").AddRow("04", "Spam", "10", "Trigger Typing").AddRow("05", "Add Reaction", "11", "Go Back").AddRow("06", "*soon*", "12", "Exit");
                 table.Config = TableConfiguration.Unicode();
                 Console.Write(table.ToString());
                 Console.WriteLine();
@@ -681,6 +636,7 @@ namespace nuker
                                 foreach (var token in clients)
                                 {
                                     Raid.SendMessage(token, cid, msg);
+                                    Thread.Sleep(200);
                                 }
                             }
                             DoneMethod5();
@@ -795,33 +751,6 @@ namespace nuker
                         Raider();
                         break;
                     case 6:
-                        try
-                        {
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Invite code: ");
-                            string inv = Console.ReadLine();
-                            if (inv.Contains("https://discord.gg/"))
-                            {
-                                inv = inv.Replace("https://discord.gg/", "");
-                            }
-                            if (inv.Contains("https://discord.com/invite/"))
-                            {
-                                inv = inv.Replace("https://discord.com/invite/", "");
-                            }
-                            Console.Clear();
-                            WriteLogo();
-                            foreach (var token in clients)
-                            {
-                                Raid.JoinGroup(token, inv);
-                            }
-                            DoneMethod5();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(2000);
-                        }
                         Raider();
                         break;
                     case 7:
@@ -1028,6 +957,7 @@ namespace nuker
                             numb++;
                             User.CreateGuild(token, name);
                             Console.WriteLine($"Created: {numb}");
+                            Thread.Sleep(200);
                         }
 
                     }
@@ -1041,16 +971,17 @@ namespace nuker
                         Console.Clear();
                         WriteLogo();
                         Console.Write("Count: ");
-                        string count = Console.ReadLine();
+                        int count = int.Parse(Console.ReadLine());
                         Console.Clear();
                         WriteLogo();
                         int numb = 0;
-                        for (int i = 0; i < int.Parse(count); i++)
+                        for (int i = 0; i < count; i++)
                         {
                             numb++;
                             User.ChangeTheme(token, "light");
                             User.ChangeTheme(token, "dark");
                             Console.WriteLine($"Changed: {numb}");
+                            Thread.Sleep(200);
                         }
                     }
                     catch { }
@@ -1108,7 +1039,7 @@ namespace nuker
             WriteLogo();
             Console.ForegroundColor = Color.Yellow;
             ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-            Table table = new Table(headers).AddRow("01", "Delete All Roles", "09", "Remove Integrations", "17", "Mass Create Invites").AddRow("02", "Remove All Bans", "10", "Delete All Reactions", "18", "Delete Guild Scheduled Events").AddRow("03", "Delete All Channels", "11", "Server Info", "19", "Delete Guild Template").AddRow("04", "Delete All Emojis", "12", "Leave/Delete Server", "20", "Delete Stage Instances").AddRow("05", "Delete All Invites", "13", "Msg In Every Channel", "21", "Delete Webhooks").AddRow("06", "Mass Create Roles", "14", "Delete Stickers", "22", "Go Back").AddRow("07", "Mass Create Channels", "15", "Mass DM", "23", "Exit").AddRow("08", "Prune Members", "16", "Delete Auto Moderation Rules");
+            Table table = new Table(headers).AddRow("01", "Delete All Roles", "09", "Remove Integrations", "17", "Mass Create Invites").AddRow("02", "Remove All Bans", "10", "Delete All Reactions", "18", "Delete Guild Scheduled Events").AddRow("03", "Delete All Channels", "11", "Server Info", "19", "Delete Guild Template").AddRow("04", "Delete All Emojis", "12", "Leave/Delete Server", "20", "Delete Stage Instances").AddRow("05", "Delete All Invites", "13", "Msg In Every Channel", "21", "Delete Webhooks").AddRow("06", "Mass Create Roles", "14", "Delete Stickers", "22", "Switch To Other Server").AddRow("07", "Mass Create Channels", "15", "Mass DM", "23", "Go Back").AddRow("08", "Prune Members", "16", "Delete Auto Moderation Rules", "24", "Exit");
             table.Config = TableConfiguration.Unicode();
             Console.Write(table.ToString());
             Console.WriteLine();
@@ -1229,11 +1160,11 @@ namespace nuker
                         Console.Clear();
                         WriteLogo();
                         Console.Write("Channel ID: ");
-                        ulong cid = ulong.Parse(Console.ReadLine());
+                        ulong? cid = ulong.Parse(Console.ReadLine());
                         Console.Clear();
                         WriteLogo();
                         Console.Write("Message ID: ");
-                        ulong mid = ulong.Parse(Console.ReadLine());
+                        ulong? mid = ulong.Parse(Console.ReadLine());
                         Console.Clear();
                         WriteLogo();
                         Server.DeleteAllReactions(token, cid, mid);
@@ -1385,9 +1316,35 @@ namespace nuker
                 case 22:
                     Console.Clear();
                     WriteLogo();
-                    Options();
+                    try
+                    {
+                        Console.Write("Guild ID: ");
+                        ulong GuildID = ulong.Parse(Console.ReadLine());
+                        guildid = GuildID;
+                        if (Server.GetServerName(token, guildid) == "N/A")
+                        {
+                            Console.Clear();
+                            WriteLogo();
+                            Console.WriteLine("Invalid ID or you're not in the server.");
+                            guildid = ulong.Parse("");
+                            Thread.Sleep(2000);
+                            Options();
+                        }
+                        Console.Title = $"Phoenix Nuker | {User.GetUsername(token)} | {Server.GetServerName(token, guildid)}";
+                        Console.Clear();
+                        ServerNuker();
+                    }
+                    catch
+                    {
+                        DoneMethod4();
+                    }
                     break;
                 case 23:
+                    Console.Clear();
+                    WriteLogo();
+                    Options();
+                    break;
+                case 24:
                     Environment.Exit(0);
                     break;
             }

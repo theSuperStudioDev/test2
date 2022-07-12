@@ -1,12 +1,10 @@
-﻿using Leaf.xNet;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading;
+using Console = Colorful.Console;
+using System.Drawing;
 
 namespace nuker
 {
@@ -18,382 +16,305 @@ namespace nuker
 
         public static void MsgInEveryChannel(string token, ulong? gid, string message)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/channels", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/channels");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
+                    if (entry.type == "0")
                     {
-                        if (entry.type == "0")
-                        {
-                            HttpClient client = new HttpClient();
-                            client.DefaultRequestHeaders.Add("Authorization", token);
-                            client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/channels/{entry.id}/messages");
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                            HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, $"https://discord.com/api/v{apiv}/channels/{entry.id}/messages");
-                            request2.Content = new System.Net.Http.StringContent("{\"content\":\"" + message + "\"}", Encoding.UTF8, "application/json");
-                            client.SendAsync(request2);
-                            Thread.Sleep(WaitTimeShort);
-                        }
+                        Request.Send($"https://discord.com/api/v{apiv}/channels/{entry.id}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
+                        Thread.Sleep(WaitTimeShort);
                     }
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void LeaveDeleteGuild(string token, ulong? gid, string owner)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                if (owner == "y")
                 {
-                    if (owner == "y")
-                    {
-                        req.AddHeader("Authorization", token);
-                        req.Delete($"https://discord.com/api/v{apiv}/guilds/{gid}");
-                        Thread.Sleep(WaitTimeShort);
-                    }
-                    else if (owner == "n")
-                    {
-                        req.AddHeader("Authorization", token);
-                        req.Delete($"https://discord.com/api/v{apiv}/users/@me/guilds/{gid}");
-                        Thread.Sleep(WaitTimeShort);
-                    }
+                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}", "DELETE", token);
+                }
+                else if (owner == "n")
+                {
+                    Request.Send($"https://discord.com/api/v{apiv}/users/@me/guilds/{gid}", "DELETE", token);
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void ServerInformation(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}", token);
+                var id = JObject.Parse(request)["id"];
+                var ownerid = JObject.Parse(request)["owner_id"];
+                var region = JObject.Parse(request)["region"];
+                var vanityurl = JObject.Parse(request)["vanity_url_code"];
+                var iconid = JObject.Parse(request)["icon"].ToString();
+                var bannerid = JObject.Parse(request)["banner"].ToString();
+                string icon;
+                if (string.IsNullOrEmpty(iconid))
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse serverinfo = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}");
-                    var id = JObject.Parse(serverinfo.ToString())["id"];
-                    var ownerid = JObject.Parse(serverinfo.ToString())["owner_id"].ToString();
-                    var region = JObject.Parse(serverinfo.ToString())["region"].ToString();
-                    var iconid = JObject.Parse(serverinfo.ToString())["icon"].ToString();
-                    string avatar = $"https://cdn.discordapp.com/icons/{id}/{iconid}.webp";
-                    var vanityurl = JObject.Parse(serverinfo.ToString())["vanity_url_code"].ToString();
-                    req.Close();
-
-                    Console.WriteLine("Server Information:\n");
-                    Console.WriteLine($"ID: {id}\nOwner ID: {ownerid}\nRegion: {region}\nVanity Code: {vanityurl}\nAvatar: {avatar}");
-                    Console.WriteLine("\nPress any key to go back.");
-                    Console.ReadKey();
-                    Console.Clear();
+                    icon = "N/A";
                 }
+                else
+                {
+                    icon = $"https://cdn.discordapp.com/icons/{id}/{iconid}.webp";
+                }
+                string banner;
+                if (string.IsNullOrEmpty(bannerid))
+                {
+                    banner = "N/A";
+                }
+                else
+                {
+                    banner = $"https://cdn.discordapp.com/banners/{id}/{bannerid}.webp?size=240";
+                }
+                var verificationlevel = JObject.Parse(request)["verification_level"].ToString();
+                if (verificationlevel == "0")
+                {
+                    verificationlevel = "None";
+                }
+                else if (verificationlevel == "1")
+                {
+                    verificationlevel = "Low";
+                }
+                else if (verificationlevel == "2")
+                {
+                    verificationlevel = "Medium";
+                }
+                else if (verificationlevel == "3")
+                {
+                    verificationlevel = "High";
+                }
+                else if (verificationlevel == "4")
+                {
+                    verificationlevel = "Highest";
+                }
+                var preferredlocale = JObject.Parse(request)["preferred_locale"];
+                var nsfw = JObject.Parse(request)["nsfw"];
+
+                Console.WriteLine("Server Information:\n");
+                Console.WriteLine($"Owner ID: {ownerid}\nRegion: {region}\nVerification Level: {verificationlevel}\nPreferred Locale: {preferredlocale}\nNSFW: {nsfw}\nVanity Code: {vanityurl}\nServer Icon: {icon}\nBanner: {banner}");
+                Console.WriteLine("\nPress any key to go back.");
+                Console.ReadKey();
+                Console.Clear();
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void CreateChannel(string token, ulong? gid, string name)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
-                {
-                    HttpClient client = new HttpClient();
-                    client.DefaultRequestHeaders.Add("Authorization", token);
-                    client.DefaultRequestHeaders.Add("X-Audit-Log-Reason", "Phoenix Nuker");
-                    client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/guilds/{gid}/channels");
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpRequestMessage request = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, $"https://discord.com/api/v{apiv}/guilds/{gid}/channels");
-                    request.Content = new System.Net.Http.StringContent("{\"name\":\"" + name + "\"}", Encoding.UTF8, "application/json");
-                    client.SendAsync(request);
-                    Thread.Sleep(WaitTimeShort);
-                }
+                Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/channels", "POST", token, $"{{\"name\":\"{name}\"}}");
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void CreateRole(string token, ulong? gid, string name)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
-                {
-                    HttpClient client = new HttpClient();
-                    client.DefaultRequestHeaders.Add("Authorization", token);
-                    client.DefaultRequestHeaders.Add("X-Audit-Log-Reason", "Phoenix Nuker");
-                    client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/guilds/{gid}/roles");
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpRequestMessage request = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, $"https://discord.com/api/v{apiv}/guilds/{gid}/roles");
-                    request.Content = new System.Net.Http.StringContent("{\"name\":\"" + name + "\"}", Encoding.UTF8, "application/json");
-                    client.SendAsync(request);
-                    Thread.Sleep(WaitTimeShort);
-                }
+                Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/roles", "POST", token, $"{{\"name\":\"{name}\"}}");
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void DeleteInvites(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/invites", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/invites");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
-                    {
-                        HttpClient client = new HttpClient();
-                        client.DefaultRequestHeaders.Add("Authorization", token);
-                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/invites/{entry.code}");
-                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/invites/{entry.code}");
-                        client.SendAsync(request2);
-                        Console.WriteLine($"Deleted: {entry.code}");
-                        Thread.Sleep(WaitTimeShort);
-                    }
+                    Request.Send($"https://discord.com/api/v{apiv}/invites/{entry.code}", "DELETE", token);
+                    Console.WriteLine($"Deleted: {entry.code}", Color.Lime);
+                    Thread.Sleep(WaitTimeShort);
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void DeleteEmojis(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/emojis", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/emojis");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
-                    {
-                        HttpClient client = new HttpClient();
-                        client.DefaultRequestHeaders.Add("Authorization", token);
-                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/guilds/{gid}/emojis/{entry.id}");
-                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/guilds/{gid}/emojis/{entry.id}");
-                        client.SendAsync(request2);
-                        Console.WriteLine($"Deleted: {entry.name}");
-                        Thread.Sleep(WaitTimeShort);
-                    }
+                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/emojis/{entry.id}", "DELETE", token);
+                    Console.WriteLine($"Deleted: {entry.name}", Color.Lime);
+                    Thread.Sleep(WaitTimeShort);
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void DeleteChannels(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/channels", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/channels");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
-                    {
-                        HttpClient client = new HttpClient();
-                        client.DefaultRequestHeaders.Add("Authorization", token);
-                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/channels/{entry.id}");
-                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/channels/{entry.id}");
-                        client.SendAsync(request2);
-                        Console.WriteLine($"Deleted: {entry.name}");
-                        Thread.Sleep(WaitTimeShort);
-                    }
+                    Request.Send($"https://discord.com/api/v{apiv}/channels/{entry.id}", "DELETE", token);
+                    Console.WriteLine($"Deleted: {entry.name}", Color.Lime);
+                    Thread.Sleep(WaitTimeShort);
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void RemoveBans(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/bans", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/bans");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
-                    {
-                        HttpClient client = new HttpClient();
-                        client.DefaultRequestHeaders.Add("Authorization", token);
-                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/guilds/{gid}/bans/" + entry.user["id"]);
-                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/guilds/{gid}/bans/" + entry.user["id"]);
-                        client.SendAsync(request2);
-                        Console.WriteLine("Removed: " + entry.user["username"] + "#" + entry.user["discriminator"]);
-                        Thread.Sleep(WaitTimeShort);
-                    }
+                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/bans/" + entry.user["id"], "DELETE", token);
+                    Console.WriteLine("Removed: " + entry.user["username"] + "#" + entry.user["discriminator"], Color.Lime);
+                    Thread.Sleep(WaitTimeShort);
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void DeleteRoles(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/roles", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/roles");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
-                    {
-                        HttpClient client = new HttpClient();
-                        client.DefaultRequestHeaders.Add("Authorization", token);
-                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/guilds/{gid}/roles/" + entry["id"]);
-                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/guilds/{gid}/roles/" + entry["id"]);
-                        client.SendAsync(request2);
-                        Console.WriteLine("Deleted: " + entry["name"]);
-                        Thread.Sleep(WaitTimeShort);
-                    }
+                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/roles/" + entry["id"], "DELETE", token);
+                    Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Thread.Sleep(WaitTimeShort);
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void DeleteStickers(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/stickers", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/stickers");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
-                    {
-                        HttpClient client = new HttpClient();
-                        client.DefaultRequestHeaders.Add("Authorization", token);
-                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/guilds/{gid}/stickers/" + entry["id"]);
-                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/guilds/{gid}/stickers/" + entry["id"]);
-                        client.SendAsync(request2);
-                        Console.WriteLine("Deleted: " + entry["name"]);
-                        Thread.Sleep(WaitTimeShort);
-                    }
+                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/stickers/" + entry["id"], "DELETE", token);
+                    Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Thread.Sleep(WaitTimeShort);
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static string GetServerName(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
-                {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse servername = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}");
-                    var name = JObject.Parse(servername.ToString())["name"];
-                    req.Close();
-                    return name.ToString();
-                }
+                string request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}", token);
+                var name = JObject.Parse(request)["name"].ToString();
+                return name;
             }
             catch { return "N/A"; }
         }
 
         public static void PruneMembers(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                HttpClient client = new HttpClient();
-                client.DefaultRequestHeaders.Add("Authorization", token);
-                client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/guilds/{gid}/prune");
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpRequestMessage request = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, $"https://discord.com/api/v{apiv}/guilds/{gid}/prune");
-                request.Content = new System.Net.Http.StringContent("{\"days\": 1}", Encoding.UTF8, "application/json");
-                client.SendAsync(request);
+                Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/prune", "POST", token, $"{{\"days\": 1}}");
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void RemoveIntegrations(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/integrations", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/integrations");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
-                    {
-                        HttpClient client = new HttpClient();
-                        client.DefaultRequestHeaders.Add("Authorization", token);
-                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/guilds/{gid}/integrations/" + entry["id"]);
-                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/guilds/{gid}/integrations/" + entry["id"]);
-                        client.SendAsync(request2);
-                        Console.WriteLine("Deleted: " + entry["name"]);
-                        Thread.Sleep(WaitTimeShort);
-                    }
+                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/integrations/" + entry["id"], "DELETE", token);
+                    Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Thread.Sleep(WaitTimeShort);
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void DeleteAllReactions(string token, ulong? cid, ulong? mid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
-                {
-                    req.AddHeader("Authorization", token);
-                    req.Delete($"https://discord.com/api/v{apiv}/channels/{cid}/messages/{mid}/reactions");
-                }
+                Request.Send($"https://discord.com/api/v{apiv}/channels/{cid}/messages/{mid}/reactions", "DELETE", token);
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void GetIDs(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
                 if (!File.Exists("ids.txt"))
                 {
                     File.Create("ids.txt").Dispose();
                 }
-
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/channels", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/channels");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
+                    string request2 = Request.SendGet($"https://discord.com/api/v{apiv}/channels/{entry.id}/messages?limit=100", token);
+                    var array2 = JArray.Parse(request2);
+                    foreach (dynamic entry2 in array)
                     {
-                        req.AddHeader("Authorization", token);
-                        HttpResponse request2 = req.Get($"https://discord.com/api/v{apiv}/channels/{entry.id}/messages?limit=100");
-                        var array2 = JArray.Parse(request2.ToString());
-                        Console.WriteLine(array2);
-                        Console.ReadKey();
-                        req.Close();
-
-                        foreach (dynamic entry2 in array2)
+                        string id = entry2.author["id"];
+                        if (!File.ReadAllLines("ids.txt").Contains(id))
                         {
-                            string id = entry2.author["id"];
-
-                            if (!File.ReadAllLines("ids.txt").Contains(id))
-                            {
-                                File.AppendAllText("ids.txt", id + Environment.NewLine);
-                            }
+                            File.AppendAllText("ids.txt", id + Environment.NewLine);
                         }
                     }
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void ServerDM(string token, string message)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
                 if (!File.Exists("dmed.txt"))
@@ -403,210 +324,147 @@ namespace nuker
                 string[] list = File.ReadAllLines("dmed.txt");
                 foreach (var id in File.ReadAllLines("ids.txt"))
                 {
-                    HttpClient client = new HttpClient();
-                    client.DefaultRequestHeaders.Add("Authorization", token);
-                    client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/users/@me/channels");
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpRequestMessage request = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, $"https://discord.com/api/v{apiv}/users/@me/channels");
-                    request.Content = new System.Net.Http.StringContent($"{{\"recipient_id\":\"{id}\"}}", Encoding.UTF8, "application/json");
-                    client.SendAsync(request).Wait();
+                    Request.Send($"https://discord.com/api/v{apiv}/users/@me/channels", "POST", token, $"{{\"recipient_id\":\"{id}\"}}");
                 }
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/users/@me/channels", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse r3quest = req.Get($"https://discord.com/api/v{apiv}/users/@me/channels");
-                    var array = JArray.Parse(r3quest.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
+                    string id = entry.id;
+                    if (!File.ReadAllLines("dmed.txt").Contains(id))
                     {
-                        string id = entry.id;
-                        if (!File.ReadAllLines("dmed.txt").Contains(id))
-                        {
-                            HttpClient client2 = new HttpClient();
-                            client2.DefaultRequestHeaders.Add("Authorization", token);
-                            client2.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/channels/{entry.id}/messages");
-                            client2.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                            HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, $"https://discord.com/api/v{Config.APIVersion}/channels/{entry.id}/messages");
-                            request2.Content = new System.Net.Http.StringContent($"{{\"content\":\"{message}\"}}", Encoding.UTF8, "application/json");
-                            client2.SendAsync(request2);
-                            Console.WriteLine($"Messaged: {entry.recipients[0].username}#{entry.recipients[0].discriminator}");
-                            Thread.Sleep(200);
-                            File.AppendAllText("dmed.txt", id + Environment.NewLine);
-                        }
+                        Request.Send($"https://discord.com/api/v{apiv}/channels/{entry.id}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
+                        Console.WriteLine($"Messaged: {entry.recipients[0].username}#{entry.recipients[0].discriminator}", Color.Lime);
+                        Thread.Sleep(WaitTimeShort);
+                        File.AppendAllText("dmed.txt", id + Environment.NewLine);
                     }
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
-
 
         public static void DeleteAutoModerationRules(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/auto-moderation/rules", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/auto-moderation/rules");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
-                    {
-                        HttpClient client = new HttpClient();
-                        client.DefaultRequestHeaders.Add("Authorization", token);
-                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/guilds/{gid}/auto-moderation/rules/" + entry["id"]);
-                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/guilds/{gid}/auto-moderation/rules/" + entry["id"]);
-                        client.SendAsync(request2);
-                        Console.WriteLine("Deleted: " + entry["name"]);
-                        Thread.Sleep(WaitTimeShort);
-                    }
+                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/auto-moderation/rules/" + entry["id"], "DELETE", token);
+                    Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Thread.Sleep(WaitTimeShort);
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void CreateInvite(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/channels", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/channels");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
-                    {
-                        HttpClient client = new HttpClient();
-                        client.DefaultRequestHeaders.Add("Authorization", token);
-                        client.DefaultRequestHeaders.Add("X-Audit-Log-Reason", "Phoenix Nuker");
-                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/channels/{entry.id}/invites");
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, $"https://discord.com/api/v{apiv}/channels/{entry.id}/invites");
-                        request2.Content = new System.Net.Http.StringContent($"{{\"max_age\": 0}}", Encoding.UTF8, "application/json");
-                        client.SendAsync(request2).Wait();
-                        Thread.Sleep(WaitTimeShort);
-                    }
+                    Request.Send($"https://discord.com/api/v{apiv}/channels/{entry.id}/invites", "POST", token, $"{{\"max_age\": 0}}");
+                    Thread.Sleep(WaitTimeShort);
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void DeleteGuildScheduledEvents(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/scheduled-events", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/scheduled-events");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
-                    {
-                        HttpClient client = new HttpClient();
-                        client.DefaultRequestHeaders.Add("Authorization", token);
-                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/guilds/{gid}/scheduled-events/{entry.id}");
-                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/guilds/{gid}/scheduled-events/{entry.id}");
-                        client.SendAsync(request2).Wait();
-                        Console.WriteLine("Deleted: " + entry["name"]);
-                        Thread.Sleep(WaitTimeShort);
-                    }
+                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/scheduled-events/{entry.id}", "DELETE", token);
+                    Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Thread.Sleep(WaitTimeShort);
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void DeleteGuildTemplate(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/templates", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/templates");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
-                    {
-                        HttpClient client = new HttpClient();
-                        client.DefaultRequestHeaders.Add("Authorization", token);
-                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/guilds/{gid}/templates/{entry.code}");
-                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/guilds/{gid}/templates/{entry.code}");
-                        client.SendAsync(request2).Wait();
-                        Console.WriteLine("Deleted: " + entry["name"]);
-                        Thread.Sleep(WaitTimeShort);
-                    }
+                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/templates/{entry.code}", "DELETE", token);
+                    Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Thread.Sleep(WaitTimeShort);
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void DeleteStageInstances(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/channels", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/channels");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
+                    if (entry.type == "13")
                     {
-                        HttpClient client = new HttpClient();
-                        client.DefaultRequestHeaders.Add("Authorization", token);
-                        client.DefaultRequestHeaders.Add("X-Audit-Log-Reason", "Phoenix Nuker");
-                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/stage-instances/{entry.id}");
-                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/stage-instances/{entry.id}");
-                        client.SendAsync(request2).Wait();
+                        Request.Send($"https://discord.com/api/v{apiv}/stage-instances/{entry.id}", "DELETE", token);
+                        Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
                         Thread.Sleep(WaitTimeShort);
                     }
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void DeleteWebhooks(string token, ulong? gid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                using (HttpRequest req = new HttpRequest())
+                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/webhooks", token);
+                var array = JArray.Parse(request);
+                foreach (dynamic entry in array)
                 {
-                    req.AddHeader("Authorization", token);
-                    HttpResponse request = req.Get($"https://discord.com/api/v{apiv}/guilds/{gid}/webhooks");
-                    var array = JArray.Parse(request.ToString());
-                    req.Close();
-                    foreach (dynamic entry in array)
-                    {
-                        HttpClient client = new HttpClient();
-                        client.DefaultRequestHeaders.Add("Authorization", token);
-                        client.DefaultRequestHeaders.Add("X-Audit-Log-Reason", "Phoenix Nuker");
-                        client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/webhooks/{entry.id}");
-                        HttpRequestMessage request2 = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/webhooks/{entry.id}");
-                        client.SendAsync(request2).Wait();
-                        Console.WriteLine("Deleted: " + entry["name"]);
-                        Thread.Sleep(WaitTimeShort);
-                    }
+                    Request.Send($"https://discord.com/api/v{apiv}/webhooks/{entry.id}", "DELETE", token);
+                    Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Thread.Sleep(WaitTimeShort);
                 }
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void DeleteWebhook(string token, ulong? wid)
         {
+            Console.ReplaceAllColorsWithDefaults();
             try
             {
-                HttpClient client = new HttpClient();
-                client.DefaultRequestHeaders.Add("Authorization", token);
-                client.DefaultRequestHeaders.Add("X-Audit-Log-Reason", "Phoenix Nuker");
-                client.BaseAddress = new Uri($"https://discord.com/api/v{apiv}/webhooks/{wid}");
-                HttpRequestMessage request = new HttpRequestMessage(System.Net.Http.HttpMethod.Delete, $"https://discord.com/api/v{apiv}/webhooks/{wid}");
-                client.SendAsync(request).Wait();
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
+                Request.Send($"https://discord.com/api/v{apiv}/webhooks/{wid}", "DELETE", token);
             }
-            catch { }
+            catch { Console.WriteLine("Failed", Color.Red); }
+        }
+
+        public static void SendWebhookMessage(string token, ulong? wid, string wtoken, string message)
+        {
+            Console.ReplaceAllColorsWithDefaults();
+            try
+            {
+                Request.Send($"https://discord.com/api/v{apiv}/webhooks/{wid}/{wtoken}", "POST", token, $"{{\"content\":\"{message}\"}}");
+            }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
     }
 }
