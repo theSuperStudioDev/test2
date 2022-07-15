@@ -17,17 +17,17 @@ Discord nuker that can nuke/raid server or account with user token(s). Also has 
 
 <details>
 <summary>Preview</summary>
-<img src="https://i.imgur.com/EczAKH4.png" alt="png">
+<img src="https://i.imgur.com/Aq8sYuu.png" alt="png">
   
-<img src="https://i.imgur.com/sINHAyQ.png" alt="png">
+<img src="https://i.imgur.com/QOQIvmi.png" alt="png">
   
-<img src="https://i.imgur.com/XSVrQnm.png" alt="png">
+<img src="https://i.imgur.com/iCCXhiR.png" alt="png">
 
-<img src="https://i.imgur.com/kIM2Y28.png" alt="png">
+<img src="https://i.imgur.com/x0BMS0l.png" alt="png">
 
-<img src="https://i.imgur.com/Fsxf7rA.png" alt="png">
+<img src="https://i.imgur.com/EvQWRB3.png" alt="png">
 
-<img src="https://i.imgur.com/TzeDKhR.png" alt="png">
+<img src="https://i.imgur.com/LDAbjsV.png" alt="png">
 </details>
 
 <h1 allign="center">Features</h1>
