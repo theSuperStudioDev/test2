@@ -192,6 +192,7 @@ namespace nuker
                                 }
 
                                 SaveConfig(Token);
+                                token = Token;
                             }
                             catch (Exception ex)
                             {

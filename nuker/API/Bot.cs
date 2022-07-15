@@ -12,7 +12,6 @@ namespace nuker
         public static int WaitTimeShort = Config.WaitTimeShort;
         public static int WaitTimeLong = Config.WaitTimeLong;
 
-
         public static void BanAllMembers(string token, ulong? gid)
         {
             Console.ReplaceAllColorsWithDefaults();
