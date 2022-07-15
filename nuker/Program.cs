@@ -70,8 +70,7 @@ namespace nuker
 " + " > GitHub: github.com/extatent" + @"    ██║     ██║  ██║╚██████╔╝███████╗██║ ╚████║██║██╔╝ ██╗
 " + " > Discord: dsc.gg/extatent " + @"      ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
                                                       ";
-            Console.WriteWithGradient(phoenix, Color.OrangeRed, Color.Yellow, 16);
-            Console.WriteLine();
+            Console.WriteWithGradient(phoenix, Color.OrangeRed, Color.Yellow, 6);
             Console.WriteLine();
         }
         #endregion
@@ -119,8 +118,6 @@ namespace nuker
         #region Start
         static void Start()
         {
-            WriteLogo();
-            Console.ForegroundColor = Color.Yellow;
             string config = "config.json";
             if (!File.Exists(config))
             {
@@ -162,9 +159,9 @@ namespace nuker
                 ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
                 Table table = new Table(headers).AddRow("01", "Login With Config Token", "04", "Fetch User IDs").AddRow("02", "Login With DiscordApp Token", "05", "Delete Webhook").AddRow("03", "Multi Token Raider", "06", "Exit");
                 table.Config = TableConfiguration.Unicode();
-                Console.Write(table.ToString());
+                Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
                 Console.WriteLine();
-                Console.WriteLine();
+                Console.ForegroundColor = Color.Yellow;
                 Console.Write("Your choice: ");
                 int options = int.Parse(Console.ReadLine());
                 switch (options)
@@ -195,7 +192,6 @@ namespace nuker
                                 }
 
                                 SaveConfig(Token);
-                                token = Token;
                             }
                             catch (Exception ex)
                             {
@@ -293,7 +289,24 @@ namespace nuker
                 Start();
             }
 
-            WriteLogo();
+            try
+            {
+                Request.SendGet($"https://discord.com/api/v{nuker.Config.APIVersion}/users/@me", token);
+            }
+            catch
+            {
+                nuker.Config.IsBot = true;
+            }
+            if (User.GetUsername(token) == "N/A")
+            {
+                Console.Clear();
+                WriteLogo();
+                Console.WriteLine("Invalid authentication token.");
+                token = "";
+                Thread.Sleep(2000);
+                Login();
+            }
+
             Options();
         }
         #endregion
@@ -309,9 +322,9 @@ namespace nuker
                 ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
                 Table table = new Table(headers).AddRow("01", "Account Nuker", "04", "Webhook Spammer").AddRow("02", "Server Nuker", "05", "Login To Other Account").AddRow("03", "Report Bot", "06", "Exit");
                 table.Config = TableConfiguration.Unicode();
-                Console.Write(table.ToString());
+                Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
                 Console.WriteLine();
-                Console.WriteLine();
+                Console.ForegroundColor = Color.Yellow;
                 Console.Write("Your choice: ");
                 int option = Convert.ToInt32(Console.ReadLine());
                 switch (option)
@@ -381,9 +394,9 @@ namespace nuker
                             ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
                             Table table2 = new Table(headers2).AddRow("01", "Illegal Content").AddRow("02", "Harrassment").AddRow("03", "Spam or Phishing Links").AddRow("04", "Self harm").AddRow("05", "NSFW");
                             table2.Config = TableConfiguration.Unicode();
-                            Console.Write(table2.ToString());
+                            Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 7);
                             Console.WriteLine();
-                            Console.WriteLine();
+                            Console.ForegroundColor = Color.Yellow;
                             Console.Write("Your choice: ");
                             string reason = Console.ReadLine();
                             Console.Clear();
@@ -395,14 +408,9 @@ namespace nuker
                             int reports = 0;
                             for (int i = 0; i < count; i++)
                             {
-                                try
-                                {
-                                    Request.Send($"https://discord.com/api/v{nuker.Config.APIVersion}/report", "POST", token, $"{{\"channel_id\": \"{channelid}\", \"guild_id\": \"{guildid}\", \"message_id\": \"{messageid}\", \"reason\": {reason}}}");
-                                    reports++;
-                                    Console.WriteLine("Reports sent: " + reports);
-                                }
-                                catch (Exception ex)
-                                { Console.WriteLine(ex.Message); }
+                                Request.Send($"https://discord.com/api/v{nuker.Config.APIVersion}/report", "POST", token, $"{{\"channel_id\": \"{channelid}\", \"guild_id\": \"{guildid}\", \"message_id\": \"{messageid}\", \"reason\": {reason}}}");
+                                reports++;
+                                Console.WriteLine("Reports sent: " + reports);
                             }
                             Console.Title = $"Phoenix Nuker | {User.GetUsername(token)}";
                         }
@@ -525,9 +533,9 @@ namespace nuker
                 ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left),  };
                 Table table = new Table(headers).AddRow("01", "Join Guild/Group", "07", "Block User").AddRow("02", "Leave Guild", "08", "DM User").AddRow("03", "Add Friend", "09", "Leave Group").AddRow("04", "Spam", "10", "Trigger Typing").AddRow("05", "Add Reaction", "11", "Go Back").AddRow("06", "*soon*", "12", "Exit");
                 table.Config = TableConfiguration.Unicode();
-                Console.Write(table.ToString());
+                Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
                 Console.WriteLine();
-                Console.WriteLine();
+                Console.ForegroundColor = Color.Yellow;
                 Console.Write("Your choice: ");
                 int option = Convert.ToInt32(Console.ReadLine());
                 switch (option)
@@ -664,9 +672,9 @@ namespace nuker
                             ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
                             Table table2 = new Table(headers2).AddRow("01", "Heart", "06", "Billed Cap").AddRow("02", "White Check Mark", "07", "Negative Squared Cross Mark").AddRow("03", "Regional Indicator L", "08", "Neutral Face").AddRow("04", "Regional Indicator W", "09", "Nerd Face").AddRow("05", "Middle Finger", "10", "Joy");
                             table2.Config = TableConfiguration.Unicode();
-                            Console.Write(table2.ToString());
+                            Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 7);
                             Console.WriteLine();
-                            Console.WriteLine();
+                            Console.ForegroundColor = Color.Yellow;
                             Console.Write("Your choice: ");
                             string choice = Console.ReadLine();
                             Console.Clear();
@@ -871,9 +879,9 @@ namespace nuker
             ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
             Table table = new Table(headers).AddRow("01", "Edit Profile", "07", "Mass Create Guilds", "13", "Delete DMs").AddRow("02", "Leave/Delete Guilds", "08", "Seizure Mode", "14", "Go Back").AddRow("03", "Clear Relationships", "09", "Confuse Mode", "15", "Exit").AddRow("04", "Leave HypeSquad", "10", "Mass DM").AddRow("05", "Remove Connections", "11", "User Info").AddRow("06", "Deauthorize Apps", "12", "Block Relationships");
             table.Config = TableConfiguration.Unicode();
-            Console.Write(table.ToString());
+            Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
             Console.WriteLine();
-            Console.WriteLine();
+            Console.ForegroundColor = Color.Yellow;
             Console.Write("Your choice: ");
             int option = Convert.ToInt32(Console.ReadLine());
             switch(option)
@@ -890,9 +898,9 @@ namespace nuker
                     ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left)};
                     Table table2 = new Table(headers2).AddRow("00", "None").AddRow("01", "Bravery").AddRow("02", "Brilliance").AddRow("03", "Balance");
                     table2.Config = TableConfiguration.Unicode();
-                    Console.Write(table2.ToString());
+                    Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 7);
                     Console.WriteLine();
-                    Console.WriteLine();
+                    Console.ForegroundColor = Color.Yellow;
                     Console.Write("Your choice: ");
                     string hypesquad = Console.ReadLine();
                     Console.Clear();
@@ -1041,9 +1049,16 @@ namespace nuker
             ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
             Table table = new Table(headers).AddRow("01", "Delete All Roles", "09", "Remove Integrations", "17", "Mass Create Invites").AddRow("02", "Remove All Bans", "10", "Delete All Reactions", "18", "Delete Guild Scheduled Events").AddRow("03", "Delete All Channels", "11", "Server Info", "19", "Delete Guild Template").AddRow("04", "Delete All Emojis", "12", "Leave/Delete Server", "20", "Delete Stage Instances").AddRow("05", "Delete All Invites", "13", "Msg In Every Channel", "21", "Delete Webhooks").AddRow("06", "Mass Create Roles", "14", "Delete Stickers", "22", "Switch To Other Server").AddRow("07", "Mass Create Channels", "15", "Mass DM", "23", "Go Back").AddRow("08", "Prune Members", "16", "Delete Auto Moderation Rules", "24", "Exit");
             table.Config = TableConfiguration.Unicode();
-            Console.Write(table.ToString());
+            Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
+            if (nuker.Config.IsBot == true)
+            {
+                ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Additional Bot Options", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Additional Bot Options", Alignment.Left) };
+                Table table2 = new Table(headers2).AddRow("25", "Ban All Members", "27", "Change All Nicknames").AddRow("26", "Kick All Members");
+                table2.Config = TableConfiguration.Unicode();
+                Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 7);
+            }
             Console.WriteLine();
-            Console.WriteLine();
+            Console.ForegroundColor = Color.Yellow;
             Console.Write("Your choice: ");
             int option = Convert.ToInt32(Console.ReadLine());
             switch(option)
@@ -1208,9 +1223,9 @@ namespace nuker
                         ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
                         Table table2 = new Table(headers2).AddRow("01", "Spam").AddRow("02", "One Message");
                         table2.Config = TableConfiguration.Unicode();
-                        Console.Write(table2.ToString());
+                        Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
                         Console.WriteLine();
-                        Console.WriteLine();
+                        Console.ForegroundColor = Color.Yellow;
                         Console.Write("Your choice: ");
                         string choice = Console.ReadLine();
                         if (choice == "1")
@@ -1276,6 +1291,7 @@ namespace nuker
                         Console.WriteLine(ex.Message);
                         Thread.Sleep(2000);
                     }
+                    DoneMethod2();
                     break;
                 case 16:
                     Console.Clear();
@@ -1346,6 +1362,36 @@ namespace nuker
                     break;
                 case 24:
                     Environment.Exit(0);
+                    break;
+                case 25:
+                    Console.Clear();
+                    WriteLogo();
+                    Bot.BanAllMembers(token, guildid);
+                    DoneMethod2();
+                    break;
+                case 26:
+                    Console.Clear();
+                    WriteLogo();
+                    Bot.KickAllMembers(token, guildid);
+                    DoneMethod2();
+                    break;
+                case 27:
+                    try
+                    {
+                        Console.Clear();
+                        WriteLogo();
+                        Console.Write("Nickname: ");
+                        string nick = Console.ReadLine();
+                        Console.Clear();
+                        WriteLogo();
+                        Bot.ChangeAllNicknames(token, guildid, nick);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        Thread.Sleep(2000);
+                    }
+                    DoneMethod2();
                     break;
             }
         }

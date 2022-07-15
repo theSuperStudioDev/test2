@@ -9,7 +9,14 @@ namespace nuker
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
             ServicePointManager.DefaultConnectionLimit = 5000;
-            request.Headers.Add("Authorization", token);
+            if (Config.IsBot == true)
+            {
+                request.Headers.Add("Authorization", $"Bot {token}");
+            }
+            else
+            {
+                request.Headers.Add("Authorization", token);
+            }
             request.Method = method;
             if (!string.IsNullOrEmpty(json))
             {
@@ -31,7 +38,14 @@ namespace nuker
         {
             string text;
             var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Headers.Add("Authorization", token);
+            if (Config.IsBot == true)
+            {
+                request.Headers.Add("Authorization", $"Bot {token}");
+            }
+            else
+            {
+                request.Headers.Add("Authorization", token);
+            }
             request.Method = "GET";
             request.ContentLength = 0;
             var response = (HttpWebResponse)request.GetResponse();

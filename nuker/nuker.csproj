@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Bot.cs" />
     <Compile Include="API\Config.cs" />
     <Compile Include="API\Raid.cs" />
     <Compile Include="API\Request.cs" />
