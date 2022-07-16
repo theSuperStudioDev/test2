@@ -205,6 +205,15 @@ Deletes all webhooks in the server.
 
 #### Switch To Other Server
 Goes to "Enter Server ID" menu.
+
+#### Ban All Members
+Bans all members from the server. Only available for `bot` authentication token. Requires `server members intent` enabled in the developer portal.
+
+#### Kick All Members
+Kicks all members from the server. Only available for `bot` authentication token. Requires `server members intent` enabled in the developer portal.
+
+#### Rename All Members
+Changes nickname for all members in the server. Only available for `bot` authentication token. Requires `server members intent` enabled in the developer portal.
 </details>
 
 ## QnA
