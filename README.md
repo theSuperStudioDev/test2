@@ -34,7 +34,6 @@ Discord nuker that can nuke/raid server or account with user token(s). Also has 
 
 * ` Easy to use (read detailed features for more information)`
 * ` No installing anything (just an executable file)`
-* ` Updater (get reminded everytime a new update comes out)`
 * ` Always latest (updating the project everytime a new API function/version comes out)`
 * ` Report bot (mass report a message)`
 * ` Webhook spammer/deleter (spam/delete a webhook)`
@@ -50,65 +49,62 @@ Discord nuker that can nuke/raid server or account with user token(s). Also has 
 
 ### To find a specific feature, press CTRL+F and enter the feature name.
 
-#### Login With Config Token
+#### Login
 If you're using the program for the first time, it'll ask you to enter the Discord authentication token, after entering, the token will be saved in config.json file. Next time you open the the program and choose the option, it'll fetch the token from config.json to auto login.
 
-#### Login With DiscordApp Token
-If you're using the Discord App, it'll get your token and login.
-
 #### MultiToken Raider
-Before choosing the option, paste your authentication tokens in tokens.txt file. You'll be able to raid a server or user with many tokens.
+Lists all the available options for MultiToken raiding. Before choosing the option, paste your authentication tokens in tokens.txt file.
 
 #### Fetch User IDs
 It will create serverids.txt file, paste the server IDs here. Make sure you're in the same servers as the IDs is. It'll go through the servers and fetch random user IDs. They can be used to [mass dm](#mass-dm-server).
 
 #### Delete Webhook
-Deletes the Discord webhook you entered.
+Deletes the Discord webhook. Requires to enter the webhook URL.
 
 #### Account Nuker
-It lists all the available options for nuking an account.
+Lists all the available options for nuking an account.
 
 #### Server Nuker
-It lists all the available options for nuking a server. Requires to enter the server ID.
+Lists all the available options for nuking a server. Requires to enter the server ID.
 
 #### Report Bot
-Mass reports a message. Requires to enter the server ID, channel ID and message ID.
+Mass reports a message. Requires to enter the server ID, channel ID, message ID and count.
 
 #### Webhook Spammer
-Spams your message to the entered Discord webhook. Requires to enter the webhook, a message and the amount of messages.
+Spams your message to the entered Discord webhook. Requires to enter the webhook, message and amount of times.
 
 #### Login To Other Account
 Deletes config.json file and goes back to the login menu.
 
 #### Join Guild/Group
-Joins a entered invite link for a guild or group.
+Joins a guild or group. Requires to enter the guild or group invite link.
 
 #### Leave guild
-Leaves a guild with the entered server ID.
+Leaves a guild. Requires to enter the server ID.
 
 #### Add Friend
-Adds a friend with the entered user ID.
+Adds a friend. Requires to enter the user ID.
 
 #### Spam
-Spams a server with the entered server ID.
+Spams in a server. Requires to enter the channel ID, message and amount of times.
 
 #### Add Reaction
-Adds a reaction with the entered message ID.
+Adds a reaction. Requires to enter the channel ID and message.
 
 #### Block User
-Blocks a user with the entered user ID.
+Blocks a user. Requires to enter the user ID.
 
 #### DM User
-Direct messages a user with the entered user ID and message.
+Direct messages a user. Requires to enter the user ID and message.
 
 #### Leave Group
 Leaves a group with the entered group ID.
 
 #### Trigger Typing
-Shows a typing indicator in a channel with the entered channel ID.
+Shows a typing indicator in a channel. Requires to enter the channel ID.
 
 #### Edit Profile
-Edits a profile (HypeSquad badge, status, biography).
+Edits a profile (HypeSquad badge, status, biography). Requires to choose the badge, status and biography.
 
 #### Leave Delete/Guilds
 Leaves and/or deletes all guilds.
@@ -126,7 +122,7 @@ Removes all connections (Battle.net, Epic Games, Facebook, GitHub, Playstation N
 Deauthorizes all apps (authorized bots, apps, etc)
 
 #### Mass Create Guilds
-Mass creates guilds. Requires to enter the count of guilds to create.
+Mass creates guilds. Requires to enter the amount of guilds.
 
 #### Seizure Mode
 Switches through dark and light modes. Requires to enter the amount of times.
@@ -159,10 +155,10 @@ Deletes all emojis from the server.
 Deletes all invites from the server.
 
 #### Mass Create Roles
-Mass creates roles in the server. Requires to enter the amount of roles.
+Mass creates roles in the server. Requires to enter the name and amount of roles.
 
 #### Mass Create Channels
-Mass creates channels in the server. Requires to enter the amount of channels.
+Mass creates channels in the server. Requires to enter the name and amount of channels.
 
 #### Prune Members
 Prunes members in the server who haven't been active in 1 day.
@@ -183,7 +179,7 @@ Messages in every channel in the server. Requires to enter the message.
 Deletes all stickers in the server.
 
 #### Mass DM (Server)
-Goes through the user IDs you [fetched](#fetch-user-ids) and messages the users.
+Goes through the user IDs you [fetched](#fetch-user-ids) and messages the users. Requires to enter the message.
 
 #### Delete Auto Moderation Rules
 Deletes all auto moderation rules in the server.
