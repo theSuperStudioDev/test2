@@ -60,7 +60,7 @@ If you're using the Discord App, it'll get your token and login.
 Before choosing the option, paste your authentication tokens in tokens.txt file. You'll be able to raid a server or user with many tokens.
 
 #### Fetch User IDs
-It will create serverids.txt file, paste the server IDs here. Make sure you're in the same servers as the IDs is. It'll go through the servers and fetch random user IDs. They can be used to [mass dm](https://github.com/extatent/phoenix-nuker#mass-dm-server).
+It will create serverids.txt file, paste the server IDs here. Make sure you're in the same servers as the IDs is. It'll go through the servers and fetch random user IDs. They can be used to [mass dm](#mass-dm-server).
 
 #### Delete Webhook
 Deletes the Discord webhook you entered.
@@ -183,7 +183,7 @@ Messages in every channel in the server. Requires to enter the message.
 Deletes all stickers in the server.
 
 #### Mass DM (Server)
-Goes through the user IDs you [fetched](https://github.com/extatent/phoenix-nuker#fetch-user-ids) and messages the users.
+Goes through the user IDs you [fetched](#fetch-user-ids) and messages the users.
 
 #### Delete Auto Moderation Rules
 Deletes all auto moderation rules in the server.
