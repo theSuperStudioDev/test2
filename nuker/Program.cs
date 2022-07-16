@@ -1,19 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Threading;
 using Newtonsoft.Json;
 using System.Drawing;
 using Console = Colorful.Console;
 using System.Diagnostics;
 using System.Reflection;
-using Org.BouncyCastle.Crypto.Modes;
-using Org.BouncyCastle.Crypto.Parameters;
-using System.Linq;
-using System.Security.Cryptography;
-using Org.BouncyCastle.Crypto.Engines;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using BetterConsoleTables;
 
@@ -28,7 +20,6 @@ namespace nuker
     class Program
     {
         #region Configs
-        public static string version = "9";
         public static string token;
 
         class Config
@@ -62,7 +53,6 @@ namespace nuker
         {
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine();
             string phoenix = @"                                  ██████╗ ██╗  ██╗ ██████╗ ███████╗███╗   ██╗██╗██╗  ██╗
                                   ██╔══██╗██║  ██║██╔═══██╗██╔════╝████╗  ██║██║╚██╗██╔╝
                                   ██████╔╝███████║██║   ██║█████╗  ██╔██╗ ██║██║ ╚███╔╝ 
@@ -79,38 +69,44 @@ namespace nuker
         static void Main(string[] args)
         {
             Console.Title = "Phoenix Nuker";
-            CheckVersion();
             Start();
         }
         #endregion
 
-        #region Update
-        static void CheckVersion()
+        #region Done Method
+        public enum Method
         {
-            try
+            Account = 0,
+            Server = 1,
+            Options = 2,
+            Raider = 3
+        }
+
+        static void DoneMethod(Method option)
+        {
+            Console.ForegroundColor = Color.Yellow;
+            if (option == Method.Account)
             {
-                WebClient web = new WebClient();
-                if (!web.DownloadString("https://raw.githubusercontent.com/extatent/phoenix-nuker/main/version").Contains(version))
-                {
-                    int v2 = int.Parse(version) + 1;
-                    Console.Title = "Phoenix Nuker | New version is available";
-                    Console.Clear();
-                    WriteLogo();
-                    Console.WriteLine("New update is available: " + version + " > " + v2);
-                    Console.WriteLine();
-                    Console.WriteLine("Press any key to open Phoenix Nuker GitHub.");
-                    Console.ReadKey();
-                    Process.Start("https://github.com/extatent/phoenix-nuker/");
-                    Environment.Exit(0);
-                }
+                Console.WriteLine("Done");
+                Thread.Sleep(2000);
+                AccountNuker();
             }
-            catch
+            else if (option == Method.Server)
             {
-                Console.Clear();
-                WriteLogo();
-                Console.WriteLine("Please check your internet connection.");
-                Console.ReadKey();
-                Environment.Exit(0);
+                Console.WriteLine("Done");
+                Thread.Sleep(2000);
+                ServerNuker();
+            }
+            else if (option == Method.Options)
+            {
+                Thread.Sleep(3000);
+                Options();
+            }
+            else if (option == Method.Raider)
+            {
+                Console.WriteLine("Done");
+                Thread.Sleep(2000);
+                Raider();
             }
         }
         #endregion
@@ -118,31 +114,32 @@ namespace nuker
         #region Start
         static void Start()
         {
-            string config = "config.json";
-            if (!File.Exists(config))
+            try
             {
-                try
+                string config = "config.json";
+                if (!File.Exists(config))
                 {
                     File.Create(config).Dispose();
-                    File.WriteAllText(config, "{\"token\":\"\"}");
+                    File.WriteAllText(config, "{\"Token\":\"\"}");
                 }
-                catch
-                {
-                    Environment.Exit(0);
-                }
-            }
 
-            string tokens = "tokens.txt";
-            if (!File.Exists(tokens))
-            {
-                try
+                string tokens = "tokens.txt";
+                if (!File.Exists(tokens))
                 {
                     File.Create(tokens).Dispose();
                 }
-                catch
+
+                string serverids = "serverids.txt";
+                if (!File.Exists(serverids))
                 {
-                    Environment.Exit(0);
+                    File.Create(serverids).Dispose();
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + "\n\nPress any key to exit.");
+                Console.ReadKey();
+                Environment.Exit(0);
             }
 
             GetConfig();
@@ -157,7 +154,7 @@ namespace nuker
             {
                 WriteLogo();
                 ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                Table table = new Table(headers).AddRow("01", "Login With Config Token", "04", "Fetch User IDs").AddRow("02", "Login With DiscordApp Token", "05", "Delete Webhook").AddRow("03", "Multi Token Raider", "06", "Exit");
+                Table table = new Table(headers).AddRow("01", "Login", "04", "Delete Webhook").AddRow("02", "Multi Token Raider", "05", "Exit").AddRow("03", "Fetch User IDs");
                 table.Config = TableConfiguration.Unicode();
                 Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
                 Console.WriteLine();
@@ -175,50 +172,24 @@ namespace nuker
                     case 1:
                         if (string.IsNullOrEmpty(token))
                         {
-                            try
-                            {
-                                Console.Clear();
-                                WriteLogo();
-                                Console.Write("Token: ");
-                                string Token = Console.ReadLine();
+                            WriteLogo();
+                            Console.Write("Token: ");
+                            string Token = Console.ReadLine();
 
-                                if (Token.Contains("\""))
-                                {
-                                    Token = Token.Replace("\"", "");
-                                }
-                                if (Token.Contains("'"))
-                                {
-                                    Token = Token.Replace("'", "");
-                                }
-
-                                SaveConfig(Token);
-                                token = Token;
-                            }
-                            catch (Exception ex)
+                            if (Token.Contains("\""))
                             {
-                                Console.WriteLine(ex.Message);
-                                Thread.Sleep(2000);
-                                if (File.Exists("config.json"))
-                                {
-                                    File.Delete("config.json");
-                                }
-                                Start();
+                                Token = Token.Replace("\"", "");
                             }
+                            if (Token.Contains("'"))
+                            {
+                                Token = Token.Replace("'", "");
+                            }
+
+                            SaveConfig(Token);
+                            token = Token;
                         }
                         break;
                     case 2:
-                        try
-                        {
-                            token = GetToken();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(2000);
-                            Start();
-                        }
-                        break;
-                    case 3:
                         var list = File.ReadAllLines("tokens.txt");
                         int count = 0;
                         foreach (var token in list)
@@ -228,20 +199,15 @@ namespace nuker
                         }
                         if (count == 0)
                         {
-                            Console.Clear();
                             WriteLogo();
                             Console.WriteLine("Paste your tokens in tokens.txt file.");
-                            Thread.Sleep(2000);
+                            Thread.Sleep(3000);
                             Login();
                         }
                         Console.Title = "Phoenix Nuker | Total Accounts: " + count;
                         Raider();
                         break;
-                    case 4:
-                        if (!File.Exists("serverids.txt"))
-                        {
-                            File.Create("serverids.txt").Dispose();
-                        }
+                    case 3:
                         var ids = File.ReadAllLines("serverids.txt");
                         foreach (string id in ids)
                         {
@@ -249,62 +215,51 @@ namespace nuker
                         }
                         if (string.IsNullOrEmpty(File.ReadAllText("serverids.txt")))
                         {
-                            Console.Clear();
                             WriteLogo();
                             Console.WriteLine("Paste server IDs in serverids.txt file.");
-                            Thread.Sleep(2000);
+                            Thread.Sleep(3000);
                             Login();
                         }
+                        Login();
+                        break;
+                    case 4:
+                        WriteLogo();
+                        Console.Write("Webhook URL/ID: ");
+                        ulong? wid = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        Server.DeleteWebhook(token, wid);
+                        Console.WriteLine("Done");
+                        Thread.Sleep(2000);
                         Login();
                         break;
                     case 5:
-                        Console.Clear();
-                        WriteLogo();
-                        try
-                        {
-                            Console.Write("Webhook URL/ID: ");
-                            ulong wid = ulong.Parse(Console.ReadLine());
-                            Console.Clear();
-                            WriteLogo();
-                            Server.DeleteWebhook(token, wid);
-                            Console.WriteLine("Done");
-                            Thread.Sleep(2000);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(2000);
-                            Login();
-                        }
-                        Login();
-                        break;
-                    case 6:
                         Environment.Exit(0);
                         break;
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.Message);
-                Thread.Sleep(2000);
-                Start();
+                Console.WriteLine(e.Message);
+                Thread.Sleep(3000);
+                Login();
             }
 
             try
             {
-                Request.SendGet($"https://discord.com/api/v{nuker.Config.APIVersion}/users/@me", token);
+                Request.SendGet($"/users/@me", token);
             }
             catch
             {
                 nuker.Config.IsBot = true;
             }
+
             if (User.GetUsername(token) == "N/A")
             {
-                Console.Clear();
                 WriteLogo();
+                Console.ForegroundColor = Color.Yellow;
                 Console.WriteLine("Invalid authentication token.");
                 token = "";
-                Thread.Sleep(2000);
+                Thread.Sleep(3000);
                 Login();
             }
 
@@ -317,7 +272,6 @@ namespace nuker
         {
             try
             {
-                Console.Clear();
                 WriteLogo();
                 Console.Title = $"Phoenix Nuker | " + User.GetUsername(token);
                 ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
@@ -332,133 +286,85 @@ namespace nuker
                 {
                     default:
                         Console.WriteLine("Not a valid option.");
-                        DoneMethod4();
+                        DoneMethod(Method.Options);
                         break;
                     case 1:
-                        try
-                        {
-                            Console.Title = $"Phoenix Nuker | {User.GetUsername(token)}";
-                            Console.Clear();
-                            AccountNuker();
-                        }
-                        catch
-                        {
-                            DoneMethod4();
-                        }
+                        Console.Title = $"Phoenix Nuker | {User.GetUsername(token)}";
+                        AccountNuker();
                         break;
                     case 2:
-                        Console.Clear();
                         WriteLogo();
-                        try
-                        {
-                            if (string.IsNullOrEmpty(guildid.ToString()))
-                            {
-                                Console.Write("Guild ID: ");
-                                ulong GuildID = ulong.Parse(Console.ReadLine());
-                                guildid = GuildID;
-                            }
-                            if (Server.GetServerName(token, guildid) == "N/A")
-                            {
-                                Console.Clear();
-                                WriteLogo();
-                                Console.WriteLine("Invalid ID or you're not in the server.");
-                                guildid = ulong.Parse("");
-                                Thread.Sleep(2000);
-                                Options();
-                            }
-                            Console.Title = $"Phoenix Nuker | {User.GetUsername(token)} | {Server.GetServerName(token, guildid)}";
-                            Console.Clear();
-                            ServerNuker();
-                        }
-                        catch
-                        {
-                            DoneMethod4();
-                        }
-                        break;
-                    case 3:
-                        Console.Clear();
-                        WriteLogo();
-                        try
+                        if (string.IsNullOrEmpty(guildid.ToString()))
                         {
                             Console.Write("Guild ID: ");
-                            string guildid = Console.ReadLine();
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Channel ID: ");
-                            string channelid = Console.ReadLine();
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Message ID: ");
-                            string messageid = Console.ReadLine();
-                            Console.Clear();
-                            WriteLogo();
-                            ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                            Table table2 = new Table(headers2).AddRow("01", "Illegal Content").AddRow("02", "Harrassment").AddRow("03", "Spam or Phishing Links").AddRow("04", "Self harm").AddRow("05", "NSFW");
-                            table2.Config = TableConfiguration.Unicode();
-                            Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 7);
-                            Console.WriteLine();
-                            Console.ForegroundColor = Color.Yellow;
-                            Console.Write("Your choice: ");
-                            string reason = Console.ReadLine();
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Reports count: ");
-                            int count = int.Parse(Console.ReadLine());
-                            Console.Clear();
-                            WriteLogo();
-                            int reports = 0;
-                            for (int i = 0; i < count; i++)
-                            {
-                                Request.Send($"https://discord.com/api/v{nuker.Config.APIVersion}/report", "POST", token, $"{{\"channel_id\": \"{channelid}\", \"guild_id\": \"{guildid}\", \"message_id\": \"{messageid}\", \"reason\": {reason}}}");
-                                reports++;
-                                Console.WriteLine("Reports sent: " + reports);
-                            }
-                            Console.Title = $"Phoenix Nuker | {User.GetUsername(token)}";
+                            ulong? GuildID = ulong.Parse(Console.ReadLine());
+                            guildid = GuildID;
                         }
-                        catch
+                        if (Server.GetServerName(token, guildid) == "N/A")
                         {
-                            DoneMethod4();
+                            WriteLogo();
+                            Console.WriteLine("Invalid ID or you're not in the server.");
+                            guildid = ulong.Parse("");
+                            Thread.Sleep(3000);
+                            Options();
                         }
-                        DoneMethod3();
+                        Console.Title = $"Phoenix Nuker | {User.GetUsername(token)} | {Server.GetServerName(token, guildid)}";
+                        ServerNuker();
+                        break;
+                    case 3:
+                        WriteLogo();
+                        Console.Write("Guild ID: ");
+                        ulong? gid = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        Console.Write("Channel ID: ");
+                        ulong? channelid = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        Console.Write("Message ID: ");
+                        ulong? messageid = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+                        Table table2 = new Table(headers2).AddRow("01", "Illegal Content").AddRow("02", "Harrassment").AddRow("03", "Spam or Phishing Links").AddRow("04", "Self harm").AddRow("05", "NSFW");
+                        table2.Config = TableConfiguration.Unicode();
+                        Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 3);
+                        Console.WriteLine();
+                        Console.ForegroundColor = Color.Yellow;
+                        Console.Write("Your choice: ");
+                        string reason = Console.ReadLine();
+                        WriteLogo();
+                        Console.Write("Reports count: ");
+                        int count = int.Parse(Console.ReadLine());
+                        WriteLogo();
+                        int reports = 0;
+                        for (int i = 0; i < count; i++)
+                        {
+                            Request.Send($"/report", "POST", token, $"{{\"channel_id\": \"{channelid}\", \"guild_id\": \"{gid}\", \"message_id\": \"{messageid}\", \"reason\": {reason}}}");
+                            reports++;
+                            Console.WriteLine("Reports sent: " + reports);
+                        }
+                        DoneMethod(Method.Options);
                         break;
                     case 4:
-                        Console.Clear();
                         WriteLogo();
-                        try
+                        Console.Write("Webhook URL: ");
+                        string webhook = Console.ReadLine();
+                        WriteLogo();
+                        Console.Write("Message: ");
+                        string message = Console.ReadLine();
+                        WriteLogo();
+                        Console.Write("Count: ");
+                        int mcount = int.Parse(Console.ReadLine());
+                        WriteLogo();
+                        webhook = webhook.Replace("https://discord.com/api/webhooks/", "");
+                        ulong? wid = ulong.Parse(webhook.Split('/')[0]);
+                        string wtoken = webhook.Split('/')[1];
+                        int total = 0;
+                        for (int i = 0; i < mcount; i++)
                         {
-                            Console.Write("Webhook URL: ");
-                            string webhook = Console.ReadLine();
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Message: ");
-                            string message = Console.ReadLine();
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Count: ");
-                            string mcount = Console.ReadLine();
-                            Console.Clear();
-                            WriteLogo();
-                            webhook = webhook.Replace("https://discord.com/api/webhooks/", "");
-                            ulong? wid = ulong.Parse(webhook.Split('/')[0]);
-                            string wtoken = webhook.Split('/')[1];
-                            int total = 0;
-                            for (int i = 0; i < int.Parse(mcount); i++)
-                            {
-                                try
-                                {
-                                    total++;
-                                    Server.SendWebhookMessage(token, wid, wtoken, message);
-                                    Console.WriteLine("Messages sent: " + total);
-                                    Thread.Sleep(200);
-                                }
-                                catch { }
-                            }
+                            total++;
+                            Server.SendWebhookMessage(token, wid, wtoken, message);
+                            Console.WriteLine("Messages sent: " + total);
                         }
-                        catch
-                        {
-                            DoneMethod4();
-                        }
-                        DoneMethod3();
+                        DoneMethod(Method.Options);
                         break;
                     case 5:
                         if (File.Exists("config.json"))
@@ -473,53 +379,12 @@ namespace nuker
                         break;
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.Message);
-                Thread.Sleep(2000);
+                Console.WriteLine(e.Message);
+                Thread.Sleep(3000);
                 Options();
             }
-        }
-        #endregion
-
-        #region Done methods
-        static void DoneMethod()
-        {
-            Console.WriteLine("Done");
-            Thread.Sleep(2000);
-            Console.Clear();
-            AccountNuker();
-        }
-
-        static void DoneMethod2()
-        {
-            Console.WriteLine("Done");
-            Thread.Sleep(2000);
-            Console.Clear();
-            ServerNuker();
-        }
-
-        static void DoneMethod3()
-        {
-            Console.WriteLine("Done");
-            Thread.Sleep(2000);
-            Console.Clear();
-            Options();
-        }
-
-        static void DoneMethod4()
-        {
-            Thread.Sleep(2000);
-            Console.Clear();
-            Options();
-        }
-
-        static void DoneMethod5()
-        {
-            Console.WriteLine("Done");
-            Thread.Sleep(2000);
-            Console.Clear();
-            Raider();
         }
         #endregion
 
@@ -528,11 +393,9 @@ namespace nuker
         {
             try
             {
-                Console.Clear();
                 WriteLogo();
-                Console.ForegroundColor = Color.Yellow;
                 ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left),  };
-                Table table = new Table(headers).AddRow("01", "Join Guild/Group", "07", "Block User").AddRow("02", "Leave Guild", "08", "DM User").AddRow("03", "Add Friend", "09", "Leave Group").AddRow("04", "Spam", "10", "Trigger Typing").AddRow("05", "Add Reaction", "11", "Go Back").AddRow("06", "*soon*", "12", "Exit");
+                Table table = new Table(headers).AddRow("01", "Join Guild/Group", "07", "DM User").AddRow("02", "Leave Guild", "08", "Leave Group").AddRow("03", "Add Friend", "09", "Trigger Typing").AddRow("04", "Spam", "10", "Go Back").AddRow("05", "Add Reaction", "11", "Exit").AddRow("06", "Block User");
                 table.Config = TableConfiguration.Unicode();
                 Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
                 Console.WriteLine();
@@ -543,422 +406,299 @@ namespace nuker
                 {
                     default:
                         Console.WriteLine("Not a valid option.");
-                        Thread.Sleep(2000);
-                        Console.Clear();
+                        Thread.Sleep(3000);
                         Raider();
                         break;
                     case 1:
-                        try
+                        WriteLogo();
+                        Console.Write("Invite code: ");
+                        string code = Console.ReadLine();
+                        if (code.Contains("https://discord.gg/"))
                         {
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Invite code: ");
-                            string code = Console.ReadLine();
-                            if (code.Contains("https://discord.gg/"))
-                            {
-                                code = code.Replace("https://discord.gg/", "");
-                            }
-                            if (code.Contains("https://discord.com/invite/"))
-                            {
-                                code = code.Replace("https://discord.com/invite/", "");
-                            }
-                            Console.Clear();
-                            WriteLogo();
-                            foreach (var joinguild in clients)
-                            {
-                                Raid.JoinGuild(joinguild, code);
-                            }
-                            DoneMethod5();
+                            code = code.Replace("https://discord.gg/", "");
                         }
-                        catch (Exception ex)
+                        if (code.Contains("https://discord.com/invite/"))
                         {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(2000);
+                            code = code.Replace("https://discord.com/invite/", "");
                         }
-                        Raider();
+                        WriteLogo();
+                        foreach (var joinguild in clients)
+                        {
+                            Raid.JoinGuild(joinguild, code);
+                        }
+                        DoneMethod(Method.Raider);
                         break;
                     case 2:
-                        try
+                        WriteLogo();
+                        Console.Write("Guild ID: ");
+                        ulong? id = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        foreach (var token in clients)
                         {
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Guild ID: ");
-                            ulong id = ulong.Parse(Console.ReadLine());
-                            Console.Clear();
-                            WriteLogo();
-                            foreach (var token in clients)
-                            {
-                                Raid.LeaveGuild(token, id);
-                            }
-                            DoneMethod5();
+                            Raid.LeaveGuild(token, id);
                         }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(2000);
-                        }
-                        Raider();
+                        DoneMethod(Method.Raider);
                         break;
                     case 3:
-                        try
+                        WriteLogo();
+                        Console.Write("Full Username: ");
+                        string full = Console.ReadLine();
+                        string user = full.Split('#')[0];
+                        uint discriminator = uint.Parse(full.Split('#')[1]);
+                        WriteLogo();
+                        foreach (var token in clients)
                         {
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Username#TAG: ");
-                            string full = Console.ReadLine();
-                            string user = full.Split('#')[0];
-                            uint discriminator = uint.Parse(full.Split('#')[1]);
-                            Console.Clear();
-                            WriteLogo();
-                            foreach (var token in clients)
-                            {
-                                Raid.AddFriend(token, user, discriminator);
-                            }
-                            DoneMethod5();
+                            Raid.AddFriend(token, user, discriminator);
                         }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(2000);
-                        }
-                        Raider();
+                        DoneMethod(Method.Raider);
                         break;
                     case 4:
-                        try
+                        WriteLogo();
+                        Console.Write("Channel ID: ");
+                        ulong? cid = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        Console.Write("Message: ");
+                        string msg = Console.ReadLine();
+                        WriteLogo();
+                        Console.Write("Count: ");
+                        int count = int.Parse(Console.ReadLine());
+                        WriteLogo();
+                        for (int i = 0; i < count; i++)
                         {
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Channel ID: ");
-                            ulong cid = ulong.Parse(Console.ReadLine());
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Message: ");
-                            string msg = Console.ReadLine();
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Count: ");
-                            int count = int.Parse(Console.ReadLine());
-                            Console.Clear();
-                            WriteLogo();
-                            for (int i = 0; i < count; i++)
+                            foreach (var token in clients)
                             {
-                                foreach (var token in clients)
-                                {
-                                    Raid.SendMessage(token, cid, msg);
-                                    Thread.Sleep(200);
-                                }
+                                Raid.SendMessage(token, cid, msg);
                             }
-                            DoneMethod5();
                         }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(2000);
-                        }
-                        Raider();
+                        DoneMethod(Method.Raider);
                         break;
                     case 5:
-                        try
+                        WriteLogo();
+                        Console.Write("Channel ID: ");
+                        ulong? cid2 = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        Console.Write("Message ID: ");
+                        ulong? mid = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+                        Table table2 = new Table(headers2).AddRow("01", "Heart", "06", "Billed Cap").AddRow("02", "White Check Mark", "07", "Negative Squared Cross Mark").AddRow("03", "Regional Indicator L", "08", "Neutral Face").AddRow("04", "Regional Indicator W", "09", "Nerd Face").AddRow("05", "Middle Finger", "10", "Joy");
+                        table2.Config = TableConfiguration.Unicode();
+                        Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 7);
+                        Console.WriteLine();
+                        Console.ForegroundColor = Color.Yellow;
+                        Console.Write("Your choice: ");
+                        string choice = Console.ReadLine();
+                        WriteLogo();
+                        if (choice == "1")
                         {
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Channel ID: ");
-                            ulong cid2 = ulong.Parse(Console.ReadLine());
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Message ID: ");
-                            ulong mid = ulong.Parse(Console.ReadLine());
-                            Console.Clear();
-                            WriteLogo();
-                            ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                            Table table2 = new Table(headers2).AddRow("01", "Heart", "06", "Billed Cap").AddRow("02", "White Check Mark", "07", "Negative Squared Cross Mark").AddRow("03", "Regional Indicator L", "08", "Neutral Face").AddRow("04", "Regional Indicator W", "09", "Nerd Face").AddRow("05", "Middle Finger", "10", "Joy");
-                            table2.Config = TableConfiguration.Unicode();
-                            Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 7);
-                            Console.WriteLine();
-                            Console.ForegroundColor = Color.Yellow;
-                            Console.Write("Your choice: ");
-                            string choice = Console.ReadLine();
-                            Console.Clear();
-                            WriteLogo();
-                            if (choice == "1")
+                            foreach (var token in clients)
                             {
-                                foreach (var token in clients)
-                                {
-                                    Raid.AddReaction(token, cid2, mid, "❤️");
-                                }
+                                Raid.AddReaction(token, cid2, mid, "❤️");
                             }
-                            if (choice == "2")
-                            {
-                                foreach (var token in clients)
-                                {
-                                    Raid.AddReaction(token, cid2, mid, "✅");
-                                }
-                            }
-                            if (choice == "3")
-                            {
-                                foreach (var token in clients)
-                                {
-                                    Raid.AddReaction(token, cid2, mid, "🇱");
-                                }
-                            }
-                            if (choice == "4")
-                            {
-                                foreach (var token in clients)
-                                {
-                                    Raid.AddReaction(token, cid2, mid, "🇼");
-                                }
-                            }
-                            if (choice == "5")
-                            {
-                                foreach (var token in clients)
-                                {
-                                    Raid.AddReaction(token, cid2, mid, "🖕");
-                                }
-                            }
-                            if (choice == "6")
-                            {
-                                foreach (var token in clients)
-                                {
-                                    Raid.AddReaction(token, cid2, mid, "🧢");
-                                }
-                            }
-                            if (choice == "7")
-                            {
-                                foreach (var token in clients)
-                                {
-                                    Raid.AddReaction(token, cid2, mid, "❎");
-                                }
-                            }
-                            if (choice == "8")
-                            {
-                                foreach (var token in clients)
-                                {
-                                    Raid.AddReaction(token, cid2, mid, "😐");
-                                }
-                            }
-                            if (choice == "9")
-                            {
-                                foreach (var token in clients)
-                                {
-                                    Raid.AddReaction(token, cid2, mid, "🤓");
-                                }
-                            }
-                            if (choice == "10")
-                            {
-                                foreach (var token in clients)
-                                {
-                                    Raid.AddReaction(token, cid2, mid, "😂");
-                                }
-                            }
-                            DoneMethod5();
                         }
-                        catch (Exception ex)
+                        if (choice == "2")
                         {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(2000);
+                            foreach (var token in clients)
+                            {
+                                Raid.AddReaction(token, cid2, mid, "✅");
+                            }
                         }
-                        Raider();
+                        if (choice == "3")
+                        {
+                            foreach (var token in clients)
+                            {
+                                Raid.AddReaction(token, cid2, mid, "🇱");
+                            }
+                        }
+                        if (choice == "4")
+                        {
+                            foreach (var token in clients)
+                            {
+                                Raid.AddReaction(token, cid2, mid, "🇼");
+                            }
+                        }
+                        if (choice == "5")
+                        {
+                            foreach (var token in clients)
+                            {
+                                Raid.AddReaction(token, cid2, mid, "🖕");
+                            }
+                        }
+                        if (choice == "6")
+                        {
+                            foreach (var token in clients)
+                            {
+                                Raid.AddReaction(token, cid2, mid, "🧢");
+                            }
+                        }
+                        if (choice == "7")
+                        {
+                            foreach (var token in clients)
+                            {
+                                Raid.AddReaction(token, cid2, mid, "❎");
+                            }
+                        }
+                        if (choice == "8")
+                        {
+                            foreach (var token in clients)
+                            {
+                                Raid.AddReaction(token, cid2, mid, "😐");
+                            }
+                        }
+                        if (choice == "9")
+                        {
+                            foreach (var token in clients)
+                            {
+                                Raid.AddReaction(token, cid2, mid, "🤓");
+                            }
+                        }
+                        if (choice == "10")
+                        {
+                            foreach (var token in clients)
+                            {
+                                Raid.AddReaction(token, cid2, mid, "😂");
+                            }
+                        }
+                        DoneMethod(Method.Raider);
                         break;
                     case 6:
-                        Raider();
+                        WriteLogo();
+                        Console.Write("User ID: ");
+                        ulong? uid2 = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        foreach (var token in clients)
+                        {
+                            Raid.BlockUser(token, uid2);
+                        }
+                        DoneMethod(Method.Raider);
                         break;
                     case 7:
-                        try
+                        WriteLogo();
+                        Console.Write("User ID: ");
+                        ulong? uid = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        Console.Write("Message: ");
+                        string msg2 = Console.ReadLine();
+                        WriteLogo();
+                        foreach (var token in clients)
                         {
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("User ID: ");
-                            ulong uid2 = ulong.Parse(Console.ReadLine());
-                            Console.Clear();
-                            WriteLogo();
-                            foreach (var token in clients)
-                            {
-                                Raid.BlockUser(token, uid2);
-                            }
-                            DoneMethod5();
+                            Raid.DMUser(token, uid, msg2);
                         }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(2000);
-                        }
-                        Raider();
+                        DoneMethod(Method.Raider);
                         break;
                     case 8:
-                        try
+                        WriteLogo();
+                        Console.Write("Group ID: ");
+                        ulong? gid = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        foreach (var token in clients)
                         {
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("User ID: ");
-                            ulong uid = ulong.Parse(Console.ReadLine());
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Message: ");
-                            string msg = Console.ReadLine();
-                            Console.Clear();
-                            WriteLogo();
-                            foreach (var token in clients)
-                            {
-
-                            }
-                            DoneMethod5();
+                            Raid.LeaveGroup(token, gid);
                         }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(2000);
-                        }
-                        Raider();
+                        DoneMethod(Method.Raider);
                         break;
                     case 9:
-                        try
+                        WriteLogo();
+                        Console.Write("Channel ID: ");
+                        ulong? cid4 = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        foreach (var token in clients)
                         {
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Group ID: ");
-                            ulong gid = ulong.Parse(Console.ReadLine());
-                            Console.Clear();
-                            WriteLogo();
-                            foreach (var token in clients)
-                            {
-                                Raid.LeaveGroup(token, gid);
-                            }
-                            DoneMethod5();
+                            Raid.TriggerTyping(token, cid4);
                         }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(2000);
-                        }
-                        Raider();
+                        DoneMethod(Method.Raider);
                         break;
                     case 10:
-                        try
-                        {
-                            Console.Clear();
-                            WriteLogo();
-                            Console.Write("Channel ID: ");
-                            ulong cid = ulong.Parse(Console.ReadLine());
-                            Console.Clear();
-                            WriteLogo();
-                            foreach (var token in clients)
-                            {
-                                Raid.TriggerTyping(token, cid);
-                            }
-                            DoneMethod5();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Thread.Sleep(2000);
-                        }
-                        Raider();
-                        break;
-                    case 11:
                         Console.Title = "Phoenix Nuker";
                         Start();
                         break;
-                    case 12:
+                    case 11:
                         Environment.Exit(0);
                         break;
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.Message);
-                Thread.Sleep(2000);
+                Console.WriteLine(e.Message);
+                Thread.Sleep(3000);
                 Raider();
             }
         }
         #endregion
 
-        #region Account nuker
+        #region Account Nuker
         static void AccountNuker()
         {
-            WriteLogo();
-            Console.ForegroundColor = Color.Yellow;
-            ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-            Table table = new Table(headers).AddRow("01", "Edit Profile", "07", "Mass Create Guilds", "13", "Delete DMs").AddRow("02", "Leave/Delete Guilds", "08", "Seizure Mode", "14", "Go Back").AddRow("03", "Clear Relationships", "09", "Confuse Mode", "15", "Exit").AddRow("04", "Leave HypeSquad", "10", "Mass DM").AddRow("05", "Remove Connections", "11", "User Info").AddRow("06", "Deauthorize Apps", "12", "Block Relationships");
-            table.Config = TableConfiguration.Unicode();
-            Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
-            Console.WriteLine();
-            Console.ForegroundColor = Color.Yellow;
-            Console.Write("Your choice: ");
-            int option = Convert.ToInt32(Console.ReadLine());
-            switch(option)
+            try
             {
-                default:
-                    Console.WriteLine("Not a valid option.");
-                    Thread.Sleep(2000);
-                    Console.Clear();
-                    AccountNuker();
-                    break;
-                case 1:
-                    Console.Clear();
-                    WriteLogo();
-                    ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left)};
-                    Table table2 = new Table(headers2).AddRow("00", "None").AddRow("01", "Bravery").AddRow("02", "Brilliance").AddRow("03", "Balance");
-                    table2.Config = TableConfiguration.Unicode();
-                    Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 7);
-                    Console.WriteLine();
-                    Console.ForegroundColor = Color.Yellow;
-                    Console.Write("Your choice: ");
-                    string hypesquad = Console.ReadLine();
-                    Console.Clear();
-                    WriteLogo();
-                    Console.Write("Biography: ");
-                    string bio = Console.ReadLine();
-                    Console.Clear();
-                    WriteLogo();
-                    Console.Write("Custom Status: ");
-                    string status = Console.ReadLine();
-                    Console.Clear();
-                    WriteLogo();
-                    User.EditProfile(token, hypesquad, bio, status);
-                    DoneMethod();
-                    break;
-                case 2:
-                    Console.Clear();
-                    WriteLogo();
-                    User.LeaveDeleteGuilds(token);
-                    DoneMethod();
-                    break;
-                case 3:
-                    Console.Clear();
-                    WriteLogo();
-                    User.ClearRelationships(token);
-                    DoneMethod();
-                    break;
-                case 4:
-                    Console.Clear();
-                    WriteLogo();
-                    User.LeaveHypeSquad(token);
-                    DoneMethod();
-                    break;
-                case 5:
-                    Console.Clear();
-                    WriteLogo();
-                    User.RemoveConnections(token);
-                    DoneMethod();
-                    break;
-                case 6:
-                    Console.Clear();
-                    WriteLogo();
-                    User.DeauthorizeApps(token);
-                    DoneMethod();
-                    break;
-                case 7:
-                    try
-                    {
-                        Console.Clear();
+                WriteLogo();
+                ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+                Table table = new Table(headers).AddRow("01", "Edit Profile", "07", "Mass Create Guilds", "13", "Delete DMs").AddRow("02", "Leave/Delete Guilds", "08", "Seizure Mode", "14", "Go Back").AddRow("03", "Clear Relationships", "09", "Confuse Mode", "15", "Exit").AddRow("04", "Leave HypeSquad", "10", "Mass DM").AddRow("05", "Remove Connections", "11", "User Info").AddRow("06", "Deauthorize Apps", "12", "Block Relationships");
+                table.Config = TableConfiguration.Unicode();
+                Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
+                Console.WriteLine();
+                Console.ForegroundColor = Color.Yellow;
+                Console.Write("Your choice: ");
+                int option = Convert.ToInt32(Console.ReadLine());
+                switch (option)
+                {
+                    default:
+                        Console.WriteLine("Not a valid option.");
+                        Thread.Sleep(3000);
+                        AccountNuker();
+                        break;
+                    case 1:
+                        WriteLogo();
+                        ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+                        Table table2 = new Table(headers2).AddRow("00", "None").AddRow("01", "Bravery").AddRow("02", "Brilliance").AddRow("03", "Balance");
+                        table2.Config = TableConfiguration.Unicode();
+                        Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 7);
+                        Console.WriteLine();
+                        Console.ForegroundColor = Color.Yellow;
+                        Console.Write("Your choice: ");
+                        string hypesquad = Console.ReadLine();
+                        WriteLogo();
+                        Console.Write("Biography: ");
+                        string bio = Console.ReadLine();
+                        WriteLogo();
+                        Console.Write("Custom Status: ");
+                        string status = Console.ReadLine();
+                        WriteLogo();
+                        User.EditProfile(token, hypesquad, bio, status);
+                        DoneMethod(Method.Account);
+                        break;
+                    case 2:
+                        WriteLogo();
+                        User.LeaveDeleteGuilds(token);
+                        DoneMethod(Method.Account);
+                        break;
+                    case 3:
+                        WriteLogo();
+                        User.ClearRelationships(token);
+                        DoneMethod(Method.Account);
+                        break;
+                    case 4:
+                        WriteLogo();
+                        User.LeaveHypeSquad(token);
+                        DoneMethod(Method.Account);
+                        break;
+                    case 5:
+                        WriteLogo();
+                        User.RemoveConnections(token);
+                        DoneMethod(Method.Account);
+                        break;
+                    case 6:
+                        WriteLogo();
+                        User.DeauthorizeApps(token);
+                        DoneMethod(Method.Account);
+                        break;
+                    case 7:
                         WriteLogo();
                         Console.Write("Guild name: ");
                         string name = Console.ReadLine();
-                        Console.Clear();
                         WriteLogo();
                         Console.Write("Count (max 100): ");
                         int count = int.Parse(Console.ReadLine());
-                        Console.Clear();
                         WriteLogo();
                         int numb = 0;
                         for (int i = 0; i < count; i++)
@@ -966,78 +706,66 @@ namespace nuker
                             numb++;
                             User.CreateGuild(token, name);
                             Console.WriteLine($"Created: {numb}");
-                            Thread.Sleep(200);
                         }
-
-                    }
-                    catch
-                    { }
-                    DoneMethod();
-                    break;
-                case 8:
-                    try
-                    {
-                        Console.Clear();
+                        DoneMethod(Method.Account);
+                        break;
+                    case 8:
                         WriteLogo();
                         Console.Write("Count: ");
-                        int count = int.Parse(Console.ReadLine());
-                        Console.Clear();
+                        int count2 = int.Parse(Console.ReadLine());
                         WriteLogo();
-                        int numb = 0;
-                        for (int i = 0; i < count; i++)
+                        int numb2 = 0;
+                        for (int i = 0; i < count2; i++)
                         {
-                            numb++;
+                            numb2++;
                             User.ChangeTheme(token, "light");
                             User.ChangeTheme(token, "dark");
-                            Console.WriteLine($"Changed: {numb}");
-                            Thread.Sleep(200);
+                            Console.WriteLine($"Changed: {numb2}");
                         }
-                    }
-                    catch { }
-                    DoneMethod();
-                    break;
-                case 9:
-                    Console.Clear();
-                    WriteLogo();
-                    User.ConfuseMode(token);
-                    DoneMethod();
-                    break;
-                case 10:
-                    Console.Clear();
-                    WriteLogo();
-                    Console.Write("Message: ");
-                    string message = Console.ReadLine();
-                    Console.Clear();
-                    WriteLogo();
-                    User.MassDM(token, message);
-                    DoneMethod();
-                    break;
-                case 11:
-                    Console.Clear();
-                    WriteLogo();
-                    User.UserInformation(token);
-                    AccountNuker();
-                    break;
-                case 12:
-                    Console.Clear();
-                    WriteLogo();
-                    User.BlockRelationships(token);
-                    DoneMethod();
-                    break;
-                case 13:
-                    Console.Clear();
-                    WriteLogo();
-                    User.DeleteDMs(token);
-                    DoneMethod();
-                    break;
-                case 14:
-                    Console.Clear();
-                    WriteLogo();
-                    Options();
-                    break;
-                case 15:
-                    Environment.Exit(0);
-                    break;
+                        DoneMethod(Method.Account);
+                        break;
+                    case 9:
+                        WriteLogo();
+                        User.ConfuseMode(token);
+                        DoneMethod(Method.Account);
+                        break;
+                    case 10:
+                        WriteLogo();
+                        Console.Write("Message: ");
+                        string message = Console.ReadLine();
+                        WriteLogo();
+                        User.MassDM(token, message);
+                        DoneMethod(Method.Account);
+                        break;
+                    case 11:
+                        WriteLogo();
+                        User.UserInformation(token);
+                        AccountNuker();
+                        break;
+                    case 12:
+                        WriteLogo();
+                        User.BlockRelationships(token);
+                        DoneMethod(Method.Account);
+                        break;
+                    case 13:
+                        WriteLogo();
+                        User.DeleteDMs(token);
+                        DoneMethod(Method.Account);
+                        break;
+                    case 14:
+                        WriteLogo();
+                        Options();
+                        break;
+                    case 15:
+                        Environment.Exit(0);
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Thread.Sleep(3000);
+                AccountNuker();
             }
         }
         #endregion
@@ -1045,181 +773,125 @@ namespace nuker
         #region Server Nuker
         static void ServerNuker()
         {
-            WriteLogo();
-            Console.ForegroundColor = Color.Yellow;
-            ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-            Table table = new Table(headers).AddRow("01", "Delete All Roles", "09", "Remove Integrations", "17", "Mass Create Invites").AddRow("02", "Remove All Bans", "10", "Delete All Reactions", "18", "Delete Guild Scheduled Events").AddRow("03", "Delete All Channels", "11", "Server Info", "19", "Delete Guild Template").AddRow("04", "Delete All Emojis", "12", "Leave/Delete Server", "20", "Delete Stage Instances").AddRow("05", "Delete All Invites", "13", "Msg In Every Channel", "21", "Delete Webhooks").AddRow("06", "Mass Create Roles", "14", "Delete Stickers", "22", "Switch To Other Server").AddRow("07", "Mass Create Channels", "15", "Mass DM", "23", "Go Back").AddRow("08", "Prune Members", "16", "Delete Auto Moderation Rules", "24", "Exit");
-            table.Config = TableConfiguration.Unicode();
-            Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
-            if (nuker.Config.IsBot == true)
+            try
             {
-                ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Additional Bot Options", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Additional Bot Options", Alignment.Left) };
-                Table table2 = new Table(headers2).AddRow("25", "Ban All Members", "27", "Change All Nicknames").AddRow("26", "Kick All Members");
-                table2.Config = TableConfiguration.Unicode();
-                Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 7);
-            }
-            Console.WriteLine();
-            Console.ForegroundColor = Color.Yellow;
-            Console.Write("Your choice: ");
-            int option = Convert.ToInt32(Console.ReadLine());
-            switch(option)
-            {
-                default:
-                    Console.WriteLine("Not a valid option.");
-                    Thread.Sleep(2000);
-                    Console.Clear();
-                    ServerNuker();
-                    break;
-                case 1:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.DeleteRoles(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 2:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.RemoveBans(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 3:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.DeleteChannels(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 4:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.DeleteEmojis(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 5:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.DeleteInvites(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 6:
-                    try
-                    {
-                        Console.Clear();
+                WriteLogo();
+                ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+                Table table = new Table(headers).AddRow("01", "Delete All Roles", "09", "Remove Integrations", "17", "Mass Create Invites").AddRow("02", "Remove All Bans", "10", "Delete All Reactions", "18", "Delete Guild Scheduled Events").AddRow("03", "Delete All Channels", "11", "Server Info", "19", "Delete Guild Template").AddRow("04", "Delete All Emojis", "12", "Leave/Delete Server", "20", "Delete Stage Instances").AddRow("05", "Delete All Invites", "13", "Msg In Every Channel", "21", "Delete Webhooks").AddRow("06", "Mass Create Roles", "14", "Delete Stickers", "22", "Switch To Other Server").AddRow("07", "Mass Create Channels", "15", "Mass DM", "23", "Go Back").AddRow("08", "Prune Members", "16", "Delete Auto Moderation Rules", "24", "Exit");
+                table.Config = TableConfiguration.Unicode();
+                Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
+                if (nuker.Config.IsBot == true)
+                {
+                    ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Additional Bot Options", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Additional Bot Options", Alignment.Left) };
+                    Table table2 = new Table(headers2).AddRow("25", "Ban All Members", "27", "Change All Nicknames").AddRow("26", "Kick All Members");
+                    table2.Config = TableConfiguration.Unicode();
+                    Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 7);
+                }
+                Console.WriteLine();
+                Console.ForegroundColor = Color.Yellow;
+                Console.Write("Your choice: ");
+                int option = Convert.ToInt32(Console.ReadLine());
+                switch (option)
+                {
+                    default:
+                        Console.WriteLine("Not a valid option.");
+                        Thread.Sleep(3000);
+                        ServerNuker();
+                        break;
+                    case 1:
+                        WriteLogo();
+                        Server.DeleteRoles(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 2:
+                        WriteLogo();
+                        Server.RemoveBans(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 3:
+                        WriteLogo();
+                        Server.DeleteChannels(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 4:
+                        WriteLogo();
+                        Server.DeleteEmojis(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 5:
+                        WriteLogo();
+                        Server.DeleteInvites(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 6:
                         WriteLogo();
                         Console.Write("Role name: ");
                         string name = Console.ReadLine();
-                        Console.Clear();
                         WriteLogo();
                         Console.Write("Count (max 250): ");
                         int count = int.Parse(Console.ReadLine());
-                        Console.Clear();
                         WriteLogo();
                         int numb = 0;
                         for (int i = 0; i < count; i++)
                         {
-                            try
-                            {
-                                numb++;
-                                Server.CreateRole(token, guildid, name);
-                                Console.WriteLine("Created: " + numb);
-                            }
-                            catch { }
+                            numb++;
+                            Server.CreateRole(token, guildid, name);
+                            Console.WriteLine("Created: " + numb);
                         }
-                    }
-                    catch
-                    { }
-                    DoneMethod2();
-                    break;
-                case 7:
-                    try
-                    {
-                        Console.Clear();
+                        DoneMethod(Method.Server);
+                        break;
+                    case 7:
                         WriteLogo();
                         Console.Write("Channel name: ");
-                        string name = Console.ReadLine();
-                        Console.Clear();
+                        string name2 = Console.ReadLine();
                         WriteLogo();
                         Console.Write("Count (max 500): ");
-                        int count = int.Parse(Console.ReadLine());
-                        Console.Clear();
+                        int count2 = int.Parse(Console.ReadLine());
                         WriteLogo();
-                        int numb = 0;
-                        for (int i = 0; i < count; i++)
+                        int numb2 = 0;
+                        for (int i = 0; i < count2; i++)
                         {
-                            try
-                            {
-                                numb++;
-                                Server.CreateChannel(token, guildid, name);
-                                Console.WriteLine("Created: " + numb);
-                            }
-                            catch { }
+                            numb2++;
+                            Server.CreateChannel(token, guildid, name2);
+                            Console.WriteLine("Created: " + numb2);
                         }
-                    }
-                    catch
-                    { }
-                    DoneMethod2();
-                    break;
-                case 8:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.PruneMembers(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 9:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.RemoveIntegrations(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 10:
-                    try
-                    {
-                        Console.Clear();
+                        DoneMethod(Method.Server);
+                        break;
+                    case 8:
+                        WriteLogo();
+                        Server.PruneMembers(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 9:
+                        WriteLogo();
+                        Server.RemoveIntegrations(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 10:
                         WriteLogo();
                         Console.Write("Channel ID: ");
                         ulong? cid = ulong.Parse(Console.ReadLine());
-                        Console.Clear();
                         WriteLogo();
                         Console.Write("Message ID: ");
                         ulong? mid = ulong.Parse(Console.ReadLine());
-                        Console.Clear();
                         WriteLogo();
                         Server.DeleteAllReactions(token, cid, mid);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        Thread.Sleep(2000);
-                    }
-                    DoneMethod2();
-                    break;
-                case 11:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.ServerInformation(token, guildid);
-                    ServerNuker();
-                    break;
-                case 12:
-                    try
-                    {
-                        Console.Clear();
+                        DoneMethod(Method.Server);
+                        break;
+                    case 11:
+                        WriteLogo();
+                        Server.ServerInformation(token, guildid);
+                        ServerNuker();
+                        break;
+                    case 12:
                         WriteLogo();
                         Console.Write("Your server (Y/N): ");
                         string owner = Console.ReadLine().ToLower();
-                        Console.Clear();
                         WriteLogo();
                         Server.LeaveDeleteGuild(token, guildid, owner);
-                        DoneMethod2();
-                    }
-                    catch 
-                    {
-                        Console.WriteLine("Wrong response");
-                        Thread.Sleep(2000);
-                    }
-                    break;
-                case 13:
-                    try
-                    {
-                        Console.Clear();
+                        DoneMethod(Method.Server);
+                        break;
+                    case 13:
                         WriteLogo();
                         ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
                         Table table2 = new Table(headers2).AddRow("01", "Spam").AddRow("02", "One Message");
@@ -1231,211 +903,123 @@ namespace nuker
                         string choice = Console.ReadLine();
                         if (choice == "1")
                         {
-                            Console.Clear();
                             WriteLogo();
                             Console.Write("Message: ");
                             string msg = Console.ReadLine();
-                            Console.Clear();
                             WriteLogo();
                             Console.Write("Messages count: ");
-                            string count = Console.ReadLine();
-                            Console.Clear();
+                            int count3 = int.Parse(Console.ReadLine());
                             WriteLogo();
-                            int total = 0;
-                            for (int i = 0; i < int.Parse(count); i++)
+                            for (int i = 0; i < count3; i++)
                             {
-                                try
-                                {
-                                    total++;
-                                    Server.MsgInEveryChannel(token, guildid, msg);
-                                }
-                                catch { }
+                                Server.MsgInEveryChannel(token, guildid, msg);
                             }
                         }
                         else
                         {
-                            Console.Clear();
                             WriteLogo();
                             Console.Write("Message: ");
                             string msg = Console.ReadLine();
-                            Console.Clear();
                             WriteLogo();
                             Server.MsgInEveryChannel(token, guildid, msg);
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        Thread.Sleep(2000);
-                    }
-                    DoneMethod2();
-                    break;
-                case 14:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.DeleteStickers(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 15:
-                    try
-                    {
-                        Console.Clear();
+                        DoneMethod(Method.Server);
+                        break;
+                    case 14:
+                        WriteLogo();
+                        Server.DeleteStickers(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 15:
                         WriteLogo();
                         Console.Write("Message: ");
                         string msgs = Console.ReadLine();
-                        Console.Clear();
                         WriteLogo();
                         Server.ServerDM(token, msgs);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        Thread.Sleep(2000);
-                    }
-                    DoneMethod2();
-                    break;
-                case 16:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.DeleteAutoModerationRules(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 17:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.CreateInvite(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 18:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.DeleteGuildScheduledEvents(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 19:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.DeleteGuildTemplate(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 20:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.DeleteStageInstances(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 21:
-                    Console.Clear();
-                    WriteLogo();
-                    Server.DeleteWebhooks(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 22:
-                    Console.Clear();
-                    WriteLogo();
-                    try
-                    {
-                        Console.Write("Guild ID: ");
-                        ulong GuildID = ulong.Parse(Console.ReadLine());
-                        guildid = GuildID;
+                        DoneMethod(Method.Server);
+                        break;
+                    case 16:
+                        WriteLogo();
+                        Server.DeleteAutoModerationRules(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 17:
+                        WriteLogo();
+                        Server.CreateInvite(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 18:
+                        WriteLogo();
+                        Server.DeleteGuildScheduledEvents(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 19:
+                        WriteLogo();
+                        Server.DeleteGuildTemplate(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 20:
+                        WriteLogo();
+                        Server.DeleteStageInstances(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 21:
+                        WriteLogo();
+                        Server.DeleteWebhooks(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 22:
+                        WriteLogo();
+                        if (string.IsNullOrEmpty(guildid.ToString()))
+                        {
+                            Console.Write("Guild ID: ");
+                            ulong? GuildID = ulong.Parse(Console.ReadLine());
+                            guildid = GuildID;
+                        }
                         if (Server.GetServerName(token, guildid) == "N/A")
                         {
-                            Console.Clear();
                             WriteLogo();
                             Console.WriteLine("Invalid ID or you're not in the server.");
                             guildid = ulong.Parse("");
-                            Thread.Sleep(2000);
+                            Thread.Sleep(3000);
                             Options();
                         }
                         Console.Title = $"Phoenix Nuker | {User.GetUsername(token)} | {Server.GetServerName(token, guildid)}";
-                        Console.Clear();
                         ServerNuker();
-                    }
-                    catch
-                    {
-                        DoneMethod4();
-                    }
-                    break;
-                case 23:
-                    Console.Clear();
-                    WriteLogo();
-                    Options();
-                    break;
-                case 24:
-                    Environment.Exit(0);
-                    break;
-                case 25:
-                    Console.Clear();
-                    WriteLogo();
-                    Bot.BanAllMembers(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 26:
-                    Console.Clear();
-                    WriteLogo();
-                    Bot.KickAllMembers(token, guildid);
-                    DoneMethod2();
-                    break;
-                case 27:
-                    try
-                    {
-                        Console.Clear();
+                        break;
+                    case 23:
+                        WriteLogo();
+                        Options();
+                        break;
+                    case 24:
+                        Environment.Exit(0);
+                        break;
+                    case 25:
+                        WriteLogo();
+                        Bot.BanAllMembers(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 26:
+                        WriteLogo();
+                        Bot.KickAllMembers(token, guildid);
+                        DoneMethod(Method.Server);
+                        break;
+                    case 27:
                         WriteLogo();
                         Console.Write("Nickname: ");
                         string nick = Console.ReadLine();
-                        Console.Clear();
                         WriteLogo();
                         Bot.ChangeAllNicknames(token, guildid, nick);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        Thread.Sleep(2000);
-                    }
-                    DoneMethod2();
-                    break;
-            }
-        }
-        #endregion
-
-        #region Get Token
-        static string GetToken()
-        {
-            string token = "";
-
-            Regex EncryptedRegex = new Regex("(dQw4w9WgXcQ:)([^.*\\['(.*)'\\].*$][^\"]*)", RegexOptions.Compiled);
-
-            string[] dbfiles = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\discord\Local Storage\leveldb\", "*.ldb", SearchOption.AllDirectories);
-            foreach (string file in dbfiles)
-            {
-                FileInfo info = new FileInfo(file);
-                string contents = File.ReadAllText(info.FullName);
-
-                Match match = EncryptedRegex.Match(contents);
-                if (match.Success)
-                {
-                    token = DecryptToken(Convert.FromBase64String(match.Value.Split(new[] { "dQw4w9WgXcQ:" }, StringSplitOptions.None)[1]));
+                        DoneMethod(Method.Server);
+                        break;
                 }
             }
-
-            return token;
-        }
-
-        static byte[] DecryptKey(string path)
-        {
-            dynamic DeserializedFile = JsonConvert.DeserializeObject(File.ReadAllText(path));
-            return ProtectedData.Unprotect(Convert.FromBase64String((string)DeserializedFile.os_crypt.encrypted_key).Skip(5).ToArray(), null, DataProtectionScope.CurrentUser);
-        }
-
-        static string DecryptToken(byte[] buffer)
-        {
-            byte[] EncryptedData = buffer.Skip(15).ToArray();
-            AeadParameters Params = new AeadParameters(new KeyParameter(DecryptKey(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\discord\Local State")), 128, buffer.Skip(3).Take(12).ToArray(), null);
-            GcmBlockCipher BlockCipher = new GcmBlockCipher(new AesEngine());
-            BlockCipher.Init(false, Params);
-            byte[] DecryptedBytes = new byte[BlockCipher.GetOutputSize(EncryptedData.Length)];
-            BlockCipher.DoFinal(DecryptedBytes, BlockCipher.ProcessBytes(EncryptedData, 0, EncryptedData.Length, DecryptedBytes, 0));
-            return Encoding.UTF8.GetString(DecryptedBytes).TrimEnd("\r\n\0".ToCharArray());
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Thread.Sleep(3000);
+                ServerNuker();
+            }
         }
         #endregion
     }

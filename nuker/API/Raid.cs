@@ -1,20 +1,17 @@
-﻿using System.Drawing;
+﻿using Newtonsoft.Json.Linq;
+using System.Drawing;
 using Console = Colorful.Console;
 
 namespace nuker
 {
     public class Raid
     {
-        public static string apiv = Config.APIVersion;
-        public static int WaitTimeShort = Config.WaitTimeShort;
-        public static int WaitTimeLong = Config.WaitTimeLong;
-
         public static void JoinGuild(string token, string code)
         {
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"https://discord.com/api/v{apiv}/invites/{code}", "POST", token);
+                Request.Send($"/invites/{code}", "POST", token);
                 Console.WriteLine("Succeed: " + token, Color.Lime);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
@@ -25,7 +22,7 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"https://discord.com/api/v{apiv}/users/@me/guilds/{id}", "DELETE", token);
+                Request.Send($"/users/@me/guilds/{id}", "DELETE", token);
                 Console.WriteLine("Succeed: " + token, Color.Lime);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
@@ -36,7 +33,7 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"https://discord.com/api/v{apiv}/users/@me/relationships", "POST", token, $"{{\"username\":\"{username}\",\"discriminator\":{discriminator}}}");
+                Request.Send($"/users/@me/relationships", "POST", token, $"{{\"username\":\"{username}\",\"discriminator\":{discriminator}}}");
                 Console.WriteLine("Succeed: " + token, Color.Lime);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
@@ -47,7 +44,7 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"https://discord.com/api/v{apiv}/channels/{cid}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
+                Request.Send($"/channels/{cid}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
                 Console.WriteLine("Succeed: " + token, Color.Lime);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
@@ -58,7 +55,7 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"https://discord.com/api/v{apiv}/channels/{cid}/messages/{mid}/reactions/{emoji}/@me", "PUT", token);
+                Request.Send($"/channels/{cid}/messages/{mid}/reactions/{emoji}/@me", "PUT", token);
                 Console.WriteLine("Succeed: " + token, Color.Lime);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
@@ -69,7 +66,7 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"https://discord.com/api/v{apiv}/users/@me/relationships/{uid}", "PUT", token, $"{{\"type\":\"2\"}}");
+                Request.Send($"/users/@me/relationships/{uid}", "PUT", token, $"{{\"type\":\"2\"}}");
                 Console.WriteLine("Succeed: " + token, Color.Lime);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
@@ -80,7 +77,21 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"https://discord.com/api/v{apiv}/channels/{gid}", "DELETE", token);
+                Request.Send($"/channels/{gid}", "DELETE", token);
+                Console.WriteLine("Succeed: " + token, Color.Lime);
+            }
+            catch { Console.WriteLine("Failed: " + token, Color.Red); }
+        }
+
+        public static void DMUser(string token, ulong? uid, string message)
+        {
+            Console.ReplaceAllColorsWithDefaults();
+            try
+            {
+                var request = Request.SendGet($"/users/@me/channels", token, "POST", $"{{\"recipient_id\":\"{uid}\"}}");
+                var array = JObject.Parse(request);
+                dynamic entry = array;
+                Request.Send($"/channels/{entry.id}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
                 Console.WriteLine("Succeed: " + token, Color.Lime);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
@@ -91,7 +102,7 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"https://discord.com/api/v{apiv}/channels/{cid}/typing", "POST", token);
+                Request.Send($"/channels/{cid}/typing", "POST", token);
                 Console.WriteLine("Succeed: " + token, Color.Lime);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }

