@@ -219,11 +219,7 @@ A: User Settings > Advanced > Enable Developer Mode. After that, right click on 
 
 Q: How to get my Discord token?
 
-A: There is two options:
-
-- Use the "Login With DiscordApp Token" option in the Phoenix Nuker.
-
-- Go to Discord in your browser, login, press CTRL+SHIFT+J and paste this code:
+A: Go to Discord in your browser, login, press CTRL+SHIFT+J and paste this code:
 ```javascript
 (webpackChunkdiscord_app.push([[''],{},e=>{m=[];for(let c in e.c)m.push(e.c[c])}]),m).find(m=>m?.exports?.default?.getToken!==void 0).exports.default.getToken()
 ```
