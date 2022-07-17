@@ -17,17 +17,15 @@ Discord nuker that can nuke/raid server or account with user token(s). Also has 
 
 <details>
 <summary>Preview</summary>
-<img src="https://i.imgur.com/Aq8sYuu.png" alt="png">
+<img src="https://i.imgur.com/01DrPLV.png" alt="png">
   
-<img src="https://i.imgur.com/QOQIvmi.png" alt="png">
+<img src="https://i.imgur.com/AfyhyEn.png" alt="png">
   
-<img src="https://i.imgur.com/iCCXhiR.png" alt="png">
+<img src="https://i.imgur.com/zIibTos.png" alt="png">
 
-<img src="https://i.imgur.com/x0BMS0l.png" alt="png">
+<img src="https://i.imgur.com/x2THCs2.png" alt="png">
 
-<img src="https://i.imgur.com/EvQWRB3.png" alt="png">
-
-<img src="https://i.imgur.com/LDAbjsV.png" alt="png">
+<img src="https://i.imgur.com/qycQ9P1.png" alt="png">
 </details>
 
 <h1 allign="center">Features</h1>
@@ -39,7 +37,6 @@ Discord nuker that can nuke/raid server or account with user token(s). Also has 
 * ` Webhook spammer/deleter (spam/delete a webhook)`
 * ` Fully destroy an account or server`
 * ` MultiToken support (raid a server or user with many tokens)`
-* ` Scrape random users and mass dm`
 * ` Supports bot and user authentication tokens`
 * ` Fast user support (GitHub/Discord)`
 * ` Unique features`
@@ -54,9 +51,6 @@ If you're using the program for the first time, it'll ask you to enter the Disco
 
 #### MultiToken Raider
 Lists all the available options for MultiToken raiding. Before choosing the option, paste your authentication tokens in tokens.txt file.
-
-#### Fetch User IDs
-It will create serverids.txt file, paste the server IDs here. Make sure you're in the same servers as the IDs is. It'll go through the servers and fetch random user IDs. They can be used to [mass dm](#mass-dm-server).
 
 #### Delete Webhook
 Deletes the Discord webhook. Requires to enter the webhook URL.
@@ -130,8 +124,8 @@ Switches through dark and light modes. Requires to enter the amount of times.
 #### Confuse Mode
 Changes the language to chinese, theme to light, turns developer mode off, enables compact mode, turns off explicit content filter.
 
-#### Mass DM (Account)
-Mass direct messages all friends.
+#### Mass DM
+Direct messages all friends.
 
 #### User Info
 Fetches user info from the account (email, phone number, avatar, billing, subscription information, etc).
@@ -178,8 +172,8 @@ Messages in every channel in the server. Requires to enter the message.
 #### Delete Stickers
 Deletes all stickers in the server.
 
-#### Mass DM (Server)
-Goes through the user IDs you [fetched](#fetch-user-ids) and messages the users. Requires to enter the message.
+#### Grant Everyone Admin
+Gives `Administrator` permission to `@everyone` role.
 
 #### Delete Auto Moderation Rules
 Deletes all auto moderation rules in the server.
