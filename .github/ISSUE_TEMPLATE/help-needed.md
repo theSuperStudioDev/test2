@@ -1,7 +1,7 @@
 ---
 name: Help needed
 about: In case you're having an issue, we will try to help you
-title: "[help wanted]"
+title: ''
 labels: help wanted
 assignees: extatent
 
