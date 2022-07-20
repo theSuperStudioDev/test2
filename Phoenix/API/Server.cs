@@ -332,6 +332,7 @@ namespace Phoenix
                 {
                     Request.Send($"/guilds/{gid}/auto-moderation/rules/" + entry["id"], "DELETE", token);
                     Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Sleep(Wait.Short);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -347,6 +348,7 @@ namespace Phoenix
                 foreach (dynamic entry in array)
                 {
                     Request.Send($"/channels/{entry.id}/invites", "POST", token, $"{{\"max_age\": 0}}");
+                    Sleep(Wait.Short);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -363,6 +365,7 @@ namespace Phoenix
                 {
                     Request.Send($"/guilds/{gid}/scheduled-events/{entry.id}", "DELETE", token);
                     Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Sleep(Wait.Short);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -379,6 +382,7 @@ namespace Phoenix
                 {
                     Request.Send($"/guilds/{gid}/templates/{entry.code}", "DELETE", token);
                     Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Sleep(Wait.Short);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -397,6 +401,7 @@ namespace Phoenix
                     {
                         Request.Send($"/stage-instances/{entry.id}", "DELETE", token);
                         Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                        Sleep(Wait.Short);
                     }
                 }
             }
@@ -414,6 +419,7 @@ namespace Phoenix
                 {
                     Request.Send($"/webhooks/{entry.id}", "DELETE", token);
                     Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Sleep(Wait.Short);
                 }
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -435,6 +441,7 @@ namespace Phoenix
             try
             {
                 Request.Send($"/webhooks/{wid}/{wtoken}", "POST", token, $"{{\"content\":\"{message}\"}}");
+                Sleep(Wait.Short);
             }
             catch { Console.WriteLine("Failed", Color.Red); }
         }
@@ -453,6 +460,16 @@ namespace Phoenix
                         Request.Send($"/guilds/{gid}/roles/{entry.id}", "PATCH", token, $"{{\"permissions\":\"6546771529\"}}");
                     }
                 }
+            }
+            catch { Console.WriteLine("Failed", Color.Red); }
+        }
+
+        public static void ReportMessage(string token, ulong? gid, ulong? cid, ulong? mid, int reason)
+        {
+            Console.ReplaceAllColorsWithDefaults();
+            try
+            {
+                Request.Send("/report", "POST", token, $"{{\"channel_id\": \"{cid}\", \"guild_id\": \"{gid}\", \"message_id\": \"{mid}\", \"reason\": {reason}}}");
             }
             catch { Console.WriteLine("Failed", Color.Red); }
         }

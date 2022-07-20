@@ -244,7 +244,7 @@ namespace Phoenix
                 WriteLogo();
                 Console.Title = $"Phoenix Nuker | " + User.GetUsername(token);
                 ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                Table table = new Table(headers).AddRow("01", "Account Nuker", "05", "Delete Webhook").AddRow("02", "Server Nuker", "06", "Login To Other Account").AddRow("03", "Report Bot", "07", "Exit").AddRow("04", "Webhook Spammer");
+                Table table = new Table(headers).AddRow("01", "Account Nuker", "05", "Report Bot").AddRow("02", "Server Nuker", "06", "Login To Other Account").AddRow("03", "Webhook Spammer", "07", "Go Back").AddRow("04", "Delete Webhook", "08", "Exit");
                 table.Config = TableConfiguration.Unicode();
                 Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
                 Console.WriteLine();
@@ -282,38 +282,6 @@ namespace Phoenix
                         break;
                     case 3:
                         WriteLogo();
-                        Console.Write("Guild ID: ");
-                        ulong? gid = ulong.Parse(Console.ReadLine());
-                        WriteLogo();
-                        Console.Write("Channel ID: ");
-                        ulong? channelid = ulong.Parse(Console.ReadLine());
-                        WriteLogo();
-                        Console.Write("Message ID: ");
-                        ulong? messageid = ulong.Parse(Console.ReadLine());
-                        WriteLogo();
-                        ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                        Table table2 = new Table(headers2).AddRow("01", "Illegal Content").AddRow("02", "Harrassment").AddRow("03", "Spam or Phishing Links").AddRow("04", "Self harm").AddRow("05", "NSFW");
-                        table2.Config = TableConfiguration.Unicode();
-                        Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 3);
-                        Console.WriteLine();
-                        Console.ForegroundColor = Color.Yellow;
-                        Console.Write("Your choice: ");
-                        string reason = Console.ReadLine();
-                        WriteLogo();
-                        Console.Write("Reports count: ");
-                        int count = int.Parse(Console.ReadLine());
-                        WriteLogo();
-                        int reports = 0;
-                        for (int i = 0; i < count; i++)
-                        {
-                            Request.Send($"/report", "POST", token, $"{{\"channel_id\": \"{channelid}\", \"guild_id\": \"{gid}\", \"message_id\": \"{messageid}\", \"reason\": {reason}}}");
-                            reports++;
-                            Console.WriteLine("Reports sent: " + reports);
-                        }
-                        DoneMethod(Method.Options);
-                        break;
-                    case 4:
-                        WriteLogo();
                         Console.Write("Webhook URL: ");
                         string webhook = Console.ReadLine();
                         WriteLogo();
@@ -335,13 +303,45 @@ namespace Phoenix
                         }
                         DoneMethod(Method.Options);
                         break;
-                    case 5:
+                    case 4:
                         WriteLogo();
                         Console.Write("Webhook URL/ID: ");
                         ulong? wid2 = ulong.Parse(Console.ReadLine());
                         WriteLogo();
                         Server.DeleteWebhook(token, wid2);
                         Console.WriteLine("Done");
+                        DoneMethod(Method.Options);
+                        break;
+                    case 5:
+                        WriteLogo();
+                        Console.Write("Guild ID: ");
+                        ulong? gid = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        Console.Write("Channel ID: ");
+                        ulong? cid = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        Console.Write("Message ID: ");
+                        ulong? mid = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+                        Table table2 = new Table(headers2).AddRow("01", "Illegal Content").AddRow("02", "Harrassment").AddRow("03", "Spam or Phishing Links").AddRow("04", "Self harm").AddRow("05", "NSFW");
+                        table2.Config = TableConfiguration.Unicode();
+                        Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 3);
+                        Console.WriteLine();
+                        Console.ForegroundColor = Color.Yellow;
+                        Console.Write("Your choice: ");
+                        int reason = int.Parse(Console.ReadLine());
+                        WriteLogo();
+                        Console.Write("Reports count: ");
+                        int count = int.Parse(Console.ReadLine());
+                        WriteLogo();
+                        int reports = 0;
+                        for (int i = 0; i < count; i++)
+                        {
+                            Server.ReportMessage(token, gid, cid, mid, reason);
+                            reports++;
+                            Console.WriteLine("Reports sent: " + reports);
+                        }
                         DoneMethod(Method.Options);
                         break;
                     case 6:
@@ -353,6 +353,10 @@ namespace Phoenix
                         Environment.Exit(0);
                         break;
                     case 7:
+                        Console.Title = "Phoenix Nuker";
+                        Login();
+                        break;
+                    case 8:
                         Environment.Exit(0);
                         break;
                 }
@@ -373,8 +377,7 @@ namespace Phoenix
             {
                 WriteLogo();
                 ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                //Table table = new Table(headers).AddRow("01", "Join Guild/Group", "07", "DM User").AddRow("02", "Leave Guild", "08", "Leave Group").AddRow("03", "Add Friend", "09", "Trigger Typing").AddRow("04", "Spam", "10", "Go Back").AddRow("05", "Add Reaction", "11", "Exit").AddRow("06", "Block User");
-                Table table = new Table(headers).AddRow("01", "Join Guild/Group", "04", "Spam", "07", "DM User", "10", "Go Back").AddRow("02", "Leave Guild", "05", "Add Reaction", "08", "Leave Group", "11", "Exit").AddRow("03", "Add Friend", "06", "Block User", "09", "Trigger Typing");
+                Table table = new Table(headers).AddRow("01", "Join Guild/Group", "04", "Spam", "07", "DM User", "10", "Report Message").AddRow("02", "Leave Guild", "05", "Add Reaction", "08", "Leave Group", "11", "Go Back").AddRow("03", "Add Friend", "06", "Block User", "09", "Trigger Typing", "12", "Exit");
                 table.Config = TableConfiguration.Unicode();
                 Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
                 Console.WriteLine();
@@ -588,10 +591,36 @@ namespace Phoenix
                         DoneMethod(Method.Raider);
                         break;
                     case 10:
+                        WriteLogo();
+                        Console.Write("Guild ID: ");
+                        ulong? gid2 = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        Console.Write("Channel ID: ");
+                        ulong? cid3 = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        Console.Write("Message ID: ");
+                        ulong? mid2 = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        ColumnHeader[] headers3 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
+                        Table table3 = new Table(headers3).AddRow("01", "Illegal Content").AddRow("02", "Harrassment").AddRow("03", "Spam or Phishing Links").AddRow("04", "Self harm").AddRow("05", "NSFW");
+                        table3.Config = TableConfiguration.Unicode();
+                        Console.WriteWithGradient(table3.ToString(), Color.OrangeRed, Color.Yellow, 3);
+                        Console.WriteLine();
+                        Console.ForegroundColor = Color.Yellow;
+                        Console.Write("Your choice: ");
+                        int reason = int.Parse(Console.ReadLine());
+                        WriteLogo();
+                        foreach (var token in clients)
+                        {
+                            Raid.ReportMessage(token, gid2, cid3, mid2, reason);
+                        }
+                        DoneMethod(Method.Raider);
+                        break;
+                    case 11:
                         Console.Title = "Phoenix Nuker";
                         Start();
                         break;
-                    case 11:
+                    case 12:
                         Environment.Exit(0);
                         break;
                 }

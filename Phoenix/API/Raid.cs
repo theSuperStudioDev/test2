@@ -33,7 +33,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"/users/@me/relationships", "POST", token, $"{{\"username\":\"{username}\",\"discriminator\":{discriminator}}}");
+                Request.Send("/users/@me/relationships", "POST", token, $"{{\"username\":\"{username}\",\"discriminator\":{discriminator}}}");
                 Console.WriteLine("Succeed: " + token, Color.Lime);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
@@ -88,7 +88,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/users/@me/channels", token, "POST", $"{{\"recipient_id\":\"{uid}\"}}");
+                var request = Request.SendGet("/users/@me/channels", token, "POST", $"{{\"recipient_id\":\"{uid}\"}}");
                 var array = JObject.Parse(request);
                 dynamic entry = array;
                 Request.Send($"/channels/{entry.id}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
@@ -103,6 +103,17 @@ namespace Phoenix
             try
             {
                 Request.Send($"/channels/{cid}/typing", "POST", token);
+                Console.WriteLine("Succeed: " + token, Color.Lime);
+            }
+            catch { Console.WriteLine("Failed: " + token, Color.Red); }
+        }
+
+        public static void ReportMessage(string token, ulong? gid, ulong? cid, ulong? mid, int reason)
+        {
+            Console.ReplaceAllColorsWithDefaults();
+            try
+            {
+                Request.Send("/report", "POST", token, $"{{\"channel_id\": \"{cid}\", \"guild_id\": \"{gid}\", \"message_id\": \"{mid}\", \"reason\": {reason}}}");
                 Console.WriteLine("Succeed: " + token, Color.Lime);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }

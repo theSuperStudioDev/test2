@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using Console = Colorful.Console;
 using System.Drawing;
+using static Phoenix.Config;
 
 namespace Phoenix
 {
@@ -24,6 +25,7 @@ namespace Phoenix
                     bans++;
                     Request.Send($"/guilds/{gid}/bans/" + entry.user["id"], "PUT", token);
                     Console.WriteLine("Banned: " + entry.user["username"] + "#" + entry.user["discriminator"], Color.Lime);
+                    Sleep(Wait.Short);
                 }
             }
             catch { Console.WriteLine("Failed. Make sure you've enabled server members intent.", Color.Red); }
@@ -46,6 +48,7 @@ namespace Phoenix
                     kicks++;
                     Request.Send($"/guilds/{gid}/members/" + entry.user["id"], "DELETE", token);
                     Console.WriteLine("Kicked: " + entry.user["username"] + "#" + entry.user["discriminator"], Color.Lime);
+                    Sleep(Wait.Short);
                 }
             }
             catch { Console.WriteLine("Failed. Make sure you've enabled server members intent.", Color.Red); }
@@ -68,6 +71,7 @@ namespace Phoenix
                     changes++;
                     Request.Send($"/guilds/{gid}/members/" + entry.user["id"], "PATCH", token, $"{{\"nick\":\"{nick}\"}}");
                     Console.WriteLine("Renamed: " + entry.user["username"] + "#" + entry.user["discriminator"], Color.Lime);
+                    Sleep(Wait.Short);
                 }
             }
             catch { Console.WriteLine("Failed. Make sure you've enabled server members intent.", Color.Red); }

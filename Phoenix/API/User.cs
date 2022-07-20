@@ -12,7 +12,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/users/@me/channels", token);
+                var request = Request.SendGet("/users/@me/channels", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -29,7 +29,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/users/@me/channels", token);
+                var request = Request.SendGet("/users/@me/channels", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -46,7 +46,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/users/@me/relationships", token);
+                var request = Request.SendGet("/users/@me/relationships", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -63,7 +63,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/users/@me", token);
+                var request = Request.SendGet("/users/@me", token);
                 var id = JObject.Parse(request)["id"].ToString();
                 var getbadges = JObject.Parse(request)["flags"].ToString();
                 string badges = "";
@@ -123,7 +123,7 @@ namespace Phoenix
                 {
                     avatar = $"https://cdn.discordapp.com/avatars/{id}/{avatarid}.webp";
                 }
-                var request2 = Request.SendGet($"/users/@me/settings", token);
+                var request2 = Request.SendGet("/users/@me/settings", token);
                 var theme = JObject.Parse(request2)["theme"];
                 var devmode = JObject.Parse(request2)["developer_mode"];
                 var status = JObject.Parse(request2)["status"];
@@ -133,7 +133,7 @@ namespace Phoenix
                 Console.WriteLine($"ID: {id}\nEmail: {email}\nPhone Number: {phone}\nBiography: {bio}\nLocale: {locale}\nNSFW Allowed: {nsfw}\n2FA Enabled: {mfa}\nBadges: {badges}\nTheme: {theme}\nDeveloper Mode: {devmode}\nStatus: {status}\nAvatar: {avatar}");
                 Console.WriteLine("\nBilling Information:\n");
 
-                var request3 = Request.SendGet($"/users/@me/billing/payment-sources", token);
+                var request3 = Request.SendGet("/users/@me/billing/payment-sources", token);
                 var array = JArray.Parse(request3);
                 foreach (dynamic entry in array)
                 {
@@ -183,7 +183,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"/users/@me/settings", "PATCH", token, $"{{\"locale\": \"zh-CN\",\"theme\": \"light\", \"developer_mode\": \"false\", \"message_display_compact\": \"true\", \"explicit_content_filter\": \"0\"}}");
+                Request.Send("/users/@me/settings", "PATCH", token, $"{{\"locale\": \"zh-CN\",\"theme\": \"light\", \"developer_mode\": \"false\", \"message_display_compact\": \"true\", \"explicit_content_filter\": \"0\"}}");
                 Sleep(Wait.Short);
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -194,7 +194,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"/users/@me/settings", "PATCH", token, $"{{\"theme\": \"{theme}\"}}");
+                Request.Send("/users/@me/settings", "PATCH", token, $"{{\"theme\": \"{theme}\"}}");
                 Sleep(Wait.Short);
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -205,7 +205,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"/guilds", "POST", token, $"{{\"name\": \"{name}\"}}");
+                Request.Send("/guilds", "POST", token, $"{{\"name\": \"{name}\"}}");
                 Sleep(Wait.Short);
             }
             catch { Console.WriteLine("Failed", Color.Red); }
@@ -216,7 +216,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/users/@me/connections", token);
+                var request = Request.SendGet("/users/@me/connections", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -233,7 +233,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/oauth2/tokens", token);
+                var request = Request.SendGet("/oauth2/tokens", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -250,7 +250,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"/hypesquad/online", "DELETE", token);
+                Request.Send("/hypesquad/online", "DELETE", token);
             }
             catch { Console.WriteLine("Failed", Color.Red); }
         }
@@ -260,7 +260,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/users/@me/relationships", token);
+                var request = Request.SendGet("/users/@me/relationships", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -277,7 +277,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/users/@me/guilds", token);
+                var request = Request.SendGet("/users/@me/guilds", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -303,32 +303,32 @@ namespace Phoenix
             {
                 if (hypesquad == "0")
                 {
-                    Request.Send($"/hypesquad/online", "DELETE", token);
+                    Request.Send("/hypesquad/online", "DELETE", token);
                     Sleep(Wait.Short);
                 }
                 else if (hypesquad == "1")
                 {
-                    Request.Send($"/hypesquad/online", "POST", token, $"{{\"house_id\": 1}}");
+                    Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 1}}");
                     Sleep(Wait.Short);
                 }
                 else if (hypesquad == "2")
                 {
-                    Request.Send($"/hypesquad/online", "POST", token, $"{{\"house_id\": 2}}");
+                    Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 2}}");
                     Sleep(Wait.Short);
                 }
                 else if (hypesquad == "3")
                 {
-                    Request.Send($"/hypesquad/online", "POST", token, $"{{\"house_id\": 3}}");
+                    Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 3}}");
                     Sleep(Wait.Short);
                 }
                 if (!string.IsNullOrEmpty(bio))
                 {
-                    Request.Send($"/users/@me", "PATCH", token, $"{{\"bio\": \"{bio}\"}}");
+                    Request.Send("/users/@me", "PATCH", token, $"{{\"bio\": \"{bio}\"}}");
                     Sleep(Wait.Short);
                 }
                 if (!string.IsNullOrEmpty(status))
                 {
-                    Request.Send($"/users/@me/settings", "PATCH", token, $"{{\"custom_status\": {{\"text\": \"{status}\"}}}}");
+                    Request.Send("/users/@me/settings", "PATCH", token, $"{{\"custom_status\": {{\"text\": \"{status}\"}}}}");
                     Sleep(Wait.Short);
                 }
             }
@@ -340,7 +340,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                string request = Request.SendGet($"/users/@me", token);
+                string request = Request.SendGet("/users/@me", token);
                 var username = JObject.Parse(request)["username"];
                 var discriminator = JObject.Parse(request)["discriminator"];
                 return $"{username}#{discriminator}";
