@@ -97,6 +97,9 @@ Leaves a group with the entered group ID.
 #### Trigger Typing
 Shows a typing indicator in a channel. Requires to enter the channel ID.
 
+#### Report Message
+Reports a message. Requires to enter the guild ID, channel ID and message ID.
+
 #### Edit Profile
 Edits a profile (HypeSquad badge, status, biography). Requires to choose the badge, status and biography.
 
