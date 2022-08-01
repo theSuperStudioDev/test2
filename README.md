@@ -1,19 +1,16 @@
-# Phoenix Nuker
-Discord nuker that can nuke/raid server or account with user token(s). Also has mass report bot, webhook spammer, deleter and many more.
+<h1 align="left">Phoenix Nuker</h1>
 
-<p align="center">
-<img src="https://img.shields.io/github/languages/top/extatent/phoenix-nuker?style=flat-square" </a>
-<img src="https://img.shields.io/github/last-commit/extatent/phoenix-nuker?style=flat-square" </a>
-<img src="https://img.shields.io/github/license/extatent/phoenix-nuker?style=flat-square" </a>
-<img src="https://img.shields.io/github/downloads/extatent/phoenix-nuker/total?label=Downloads&style=flat-square" </a>
-<img src="https://img.shields.io/github/stars/extatent/phoenix-nuker?label=Stars&style=flat-square" </a>
-<img src="https://img.shields.io/github/forks/extatent/phoenix-nuker?label=Forks&style=flat-square" </a>
+[![Download](https://img.shields.io/badge/Download-Now-Green?style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/releases/download/Release/Debug.zip)
+[![Downloads](https://img.shields.io/github/downloads/extatent/phoenix-nuker/total?label=Downloads&style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/releases/tag/Release)
+[![Stars](https://img.shields.io/github/stars/extatent/Phoenix-Nuker?label=Stars&style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/stargazers)
+[![Forks](https://img.shields.io/github/forks/extatent/Phoenix-Nuker?label=Forks&style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/network/members)
+[![License](https://img.shields.io/github/license/extatent/Phoenix-Nuker?style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/blob/main/LICENSE)
 
 ---
 
-**NOTE:** ⭐ If you like the project, feel free to star it ⭐
+> ⭐ If you like the project, feel free to star it ⭐
   
-### If you caught any issues, please report it in [issues](https://github.com/extatent/phoenix-nuker/issues) or in our [Discord server](https://dsc.gg/extatent)
+> If you caught any issues, please report it in [issues](https://github.com/extatent/Phoenix-Nuker/issues) or in our [Discord server](https://dsc.gg/extatent)
 
 <details>
 <summary>Preview</summary>
@@ -28,7 +25,9 @@ Discord nuker that can nuke/raid server or account with user token(s). Also has 
 <img src="https://i.imgur.com/qycQ9P1.png" alt="png">
 </details>
 
-<h1 allign="center">Features</h1>
+---
+
+### Features
 
 * ` Easy to use (read detailed features for more information)`
 * ` No installing anything (just an executable file)`
@@ -40,6 +39,7 @@ Discord nuker that can nuke/raid server or account with user token(s). Also has 
 * ` Supports bot and user authentication tokens`
 * ` Fast user support (GitHub/Discord)`
 * ` Unique features`
+* ` And more`
 
 <details>
 <summary>Features detailed</summary>
@@ -209,37 +209,15 @@ Kicks all members from the server. Only available for `bot` authentication token
 Changes nickname for all members in the server. Only available for `bot` authentication token. Requires `server members intent` enabled in the developer portal.
 </details>
 
-## QnA
-Q: How to get Guild/User ID?
-  
-A: User Settings > Advanced > Enable Developer Mode. After that, right click on a guild/user > Copy ID
+---
 
-Q: How to get my Discord token?
+## Frequently Asked Questions
 
-A: Go to Discord in your browser, login, press CTRL+SHIFT+J and paste this code:
+**1) How to get Guild/User ID?**
+> *User Settings > Advanced > Enable Developer Mode. After that, right click on a guild/user > Copy ID*
+
+**2) How to get my Discord token?**
+> *Go to Discord in your browser, login, press CTRL+SHIFT+J and paste:*
 ```javascript
 (webpackChunkdiscord_app.push([[''],{},e=>{m=[];for(let c in e.c)m.push(e.c[c])}]),m).find(m=>m?.exports?.default?.getToken!==void 0).exports.default.getToken()
 ```
-  
-## Installation 
-
-#### Compiled version
-> Go to [Releases](https://github.com/extatent/phoenix-nuker/releases/tag/Release) and download the Debug.zip file.
-  
-> Extract the Debug folder and open the Phoenix Nuker.exe file.
-
-#### Source Code
->Click the green "Code" button. 
-  
->Click "Download ZIP".
-  
->Extract the ZIP.
-
->Open the nuker.sln, in Visual Studio click Build>Build Solution
-  
->Go to bin>debug folder and open the Phoenix Nuker.exe file.
-
->NOTE: Make sure you have [Visual Studio 2019 or Visual Studio 2022](https://visualstudio.microsoft.com/downloads/) and [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework) installed.
-
----
-### phoenix-nuker is licensed under the GNU General Public License v3.0. See the [LICENSE](https://github.com/extatent/phoenix-nuker/blob/main/LICENSE) file for details.
