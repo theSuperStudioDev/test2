@@ -1,6 +1,6 @@
 <h1 align="left">Phoenix Nuker</h1>
 
-[![Download](https://img.shields.io/badge/Download-Now-Green?style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/releases/download/Release/Debug.zip)
+[![Download](https://img.shields.io/badge/Download-Now-Green?style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/releases/download/Release/Phoenix.zip)
 [![Downloads](https://img.shields.io/github/downloads/extatent/phoenix-nuker/total?label=Downloads&style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/releases/tag/Release)
 [![Stars](https://img.shields.io/github/stars/extatent/Phoenix-Nuker?label=Stars&style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/stargazers)
 [![Forks](https://img.shields.io/github/forks/extatent/Phoenix-Nuker?label=Forks&style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/network/members)
