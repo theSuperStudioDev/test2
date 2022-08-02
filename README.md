@@ -1,4 +1,4 @@
-<h1 align="left">Phoenix Nuker</h1>
+# Phoenix Nuker
 
 [![Download](https://img.shields.io/badge/Download-Now-Green?style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/releases/download/Release/Phoenix.zip)
 [![Downloads](https://img.shields.io/github/downloads/extatent/phoenix-nuker/total?label=Downloads&style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/releases/tag/Release)
@@ -8,7 +8,7 @@
 
 ---
 
-> ⭐ If you like the project, feel free to star it ⭐
+> If you like the project, consider dropping a star ⭐
   
 > If you caught any issues, please report it in [issues](https://github.com/extatent/Phoenix-Nuker/issues) or in our [Discord server](https://dsc.gg/extatent)
 
@@ -32,14 +32,15 @@
 * ` Easy to use`
 * ` Run without installing any addons like python`
 * ` Supports Windows, Linux and macOS`
+* ` User Security (0% chance of getting ban or rate limit)`
+* ` Feature-Rich (50+ different features for server/account nuking)`
+* ` No repeatable token or server ID entering`
 * ` Always latest (updating the project everytime a new API function/version comes out)`
 * ` Report bot (mass report a message)`
 * ` Webhook spammer/deleter (spam/delete a webhook)`
 * ` Fully destroy an account or server`
 * ` MultiToken support (raid a server or user with many tokens)`
 * ` Supports bot and user authentication tokens`
-* ` Fast user support (GitHub/Discord)`
-* ` Unique features`
 * ` And more`
 
 ---
