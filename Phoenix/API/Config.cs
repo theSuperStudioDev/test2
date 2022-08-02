@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace Phoenix
+﻿namespace Phoenix
 {
     public class Config
     {

@@ -1,13 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Drawing;
 using Console = Colorful.Console;
 using System.Diagnostics;
 using System.Reflection;
-using System.Collections.Generic;
-using BetterConsoleTables;
 
 /* 
        │ Author       : extatent
@@ -133,11 +128,14 @@ namespace Phoenix
             try
             {
                 WriteLogo();
-                ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                Table table = new Table(headers).AddRow("01", "Login").AddRow("02", "Multi Token Raider").AddRow("03", "Exit");
-                table.Config = TableConfiguration.Unicode();
-                Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
-                Console.WriteLine();
+                string options2 = @"╔════════════════════════╗
+║ [01] Login             ║
+║ [02] MultiToken Raider ║
+║ [03] Exit              ║
+╚════════════════════════╝
+
+";
+                Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 7);
                 Console.ForegroundColor = Color.Yellow;
                 Console.Write("Your choice: ");
                 int options = int.Parse(Console.ReadLine());
@@ -227,11 +225,16 @@ namespace Phoenix
             {
                 WriteLogo();
                 Console.Title = $"Phoenix Nuker | " + User.GetUsername(token);
-                ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                Table table = new Table(headers).AddRow("01", "Account Nuker", "05", "Report Bot").AddRow("02", "Server Nuker", "06", "Login To Other Account").AddRow("03", "Webhook Spammer", "07", "Go Back").AddRow("04", "Delete Webhook", "08", "Exit");
-                table.Config = TableConfiguration.Unicode();
-                Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
-                Console.WriteLine();
+
+                string options = @"╔══════════════════════════════════════════════════╗
+║ [01] Account Nuker   [05] Report Bot             ║
+║ [02] Server Nuker    [06] Login To Other Account ║
+║ [03] Webhook Spammer [07] Go Back                ║
+║ [04] Delete Webhook  [08] Exit                   ║
+╚══════════════════════════════════════════════════╝
+
+";
+                Console.WriteWithGradient(options, Color.OrangeRed, Color.Yellow, 7);
                 Console.ForegroundColor = Color.Yellow;
                 Console.Write("Your choice: ");
                 int option = Convert.ToInt32(Console.ReadLine());
@@ -307,11 +310,16 @@ namespace Phoenix
                         Console.Write("Message ID: ");
                         ulong? mid = ulong.Parse(Console.ReadLine());
                         WriteLogo();
-                        ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                        Table table2 = new Table(headers2).AddRow("01", "Illegal Content").AddRow("02", "Harrassment").AddRow("03", "Spam or Phishing Links").AddRow("04", "Self harm").AddRow("05", "NSFW");
-                        table2.Config = TableConfiguration.Unicode();
-                        Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 3);
-                        Console.WriteLine();
+                        string options2 = @"╔═════════════════════════════╗
+║ [01] Illegal Content        ║
+║ [02] Harrassment            ║
+║ [03] Spam Or Phishing Links ║
+║ [04] Self Harm              ║
+║ [05] NSFW                   ║
+╚═════════════════════════════╝
+
+";
+                        Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 3);
                         Console.ForegroundColor = Color.Yellow;
                         Console.Write("Your choice: ");
                         int reason = int.Parse(Console.ReadLine());
@@ -358,11 +366,15 @@ namespace Phoenix
             try
             {
                 WriteLogo();
-                ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                Table table = new Table(headers).AddRow("01", "Join Guild/Group", "04", "Spam", "07", "DM User", "10", "Report Message").AddRow("02", "Leave Guild", "05", "Add Reaction", "08", "Leave Group", "11", "Go Back").AddRow("03", "Add Friend", "06", "Block User", "09", "Trigger Typing", "12", "Exit");
-                table.Config = TableConfiguration.Unicode();
-                Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
-                Console.WriteLine();
+                string options = @"╔═════════════════════════════════════════════════════════════╗
+║ [01] Join Guild/Group [05] Add Reaction [09] Trigger Typing ║
+║ [02] Leave Guild      [06] Block User   [10] Report Message ║
+║ [03] Add Friend       [07] DM User      [11] Go Back        ║
+║ [04] Spam             [08] Leave Group  [12] Exit           ║
+╚═════════════════════════════════════════════════════════════╝
+
+";
+                Console.WriteWithGradient(options, Color.OrangeRed, Color.Yellow, 7);
                 Console.ForegroundColor = Color.Yellow;
                 Console.Write("Your choice: ");
                 int option = Convert.ToInt32(Console.ReadLine());
@@ -432,11 +444,16 @@ namespace Phoenix
                         Console.Write("Message ID: ");
                         ulong? mid = ulong.Parse(Console.ReadLine());
                         WriteLogo();
-                        ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                        Table table2 = new Table(headers2).AddRow("01", "Heart", "06", "Billed Cap").AddRow("02", "White Check Mark", "07", "Negative Squared Cross Mark").AddRow("03", "Regional Indicator L", "08", "Neutral Face").AddRow("04", "Regional Indicator W", "09", "Nerd Face").AddRow("05", "Middle Finger", "10", "Joy");
-                        table2.Config = TableConfiguration.Unicode();
-                        Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 7);
-                        Console.WriteLine();
+                        string options2 = @"╔════════════════════════════════════════════════════════════╗
+║ [01] Heart                [06] Billed Cap                  ║
+║ [02] White Check Mark     [07] Negative Squared Cross Mark ║
+║ [03] Regional Indicator L [08] Neutral Face                ║
+║ [04] Regional Indicator W [09] Nerd Face                   ║
+║ [05] Middle Finger        [10] Joy                         ║
+╚════════════════════════════════════════════════════════════╝
+
+";
+                        Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 7);
                         Console.ForegroundColor = Color.Yellow;
                         Console.Write("Your choice: ");
                         string choice = Console.ReadLine();
@@ -543,11 +560,16 @@ namespace Phoenix
                         Console.Write("Message ID: ");
                         ulong? mid2 = ulong.Parse(Console.ReadLine());
                         WriteLogo();
-                        ColumnHeader[] headers3 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                        Table table3 = new Table(headers3).AddRow("01", "Illegal Content").AddRow("02", "Harrassment").AddRow("03", "Spam or Phishing Links").AddRow("04", "Self harm").AddRow("05", "NSFW");
-                        table3.Config = TableConfiguration.Unicode();
-                        Console.WriteWithGradient(table3.ToString(), Color.OrangeRed, Color.Yellow, 3);
-                        Console.WriteLine();
+                        string options3 = @"╔═════════════════════════════╗
+║ [01] Illegal Content        ║
+║ [02] Harrassment            ║
+║ [03] Spam Or Phishing Links ║
+║ [04] Self Harm              ║
+║ [05] NSFW                   ║
+╚═════════════════════════════╝
+
+";
+                        Console.WriteWithGradient(options3, Color.OrangeRed, Color.Yellow, 3);
                         Console.ForegroundColor = Color.Yellow;
                         Console.Write("Your choice: ");
                         int reason = int.Parse(Console.ReadLine());
@@ -580,11 +602,17 @@ namespace Phoenix
             try
             {
                 WriteLogo();
-                ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                Table table = new Table(headers).AddRow("01", "Edit Profile", "07", "Mass Create Guilds", "13", "Delete DMs").AddRow("02", "Leave/Delete Guilds", "08", "Seizure Mode", "14", "Go Back").AddRow("03", "Clear Relationships", "09", "Confuse Mode", "15", "Exit").AddRow("04", "Leave HypeSquad", "10", "Mass DM").AddRow("05", "Remove Connections", "11", "User Info").AddRow("06", "Deauthorize Apps", "12", "Block Relationships");
-                table.Config = TableConfiguration.Unicode();
-                Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
-                Console.WriteLine();
+                string options2 = @"╔═══════════════════════════════════════════════════════════════════╗
+║ [01] Edit Profile        [07] Mass Create Guilds  [13] Delete DMs ║
+║ [02] Leave/Delete Guilds [08] Seizure Mode        [14] Go Back    ║
+║ [03] Clear Relationships [09] Confuse Mode        [15] Exit       ║
+║ [04] Leave HypeSquad     [10] Mass DM                             ║
+║ [05] Remove Connections  [11] User Info                           ║
+║ [06] Deauthorize Apps    [12] Block Relationships                 ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+";
+                Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 7);
                 Console.ForegroundColor = Color.Yellow;
                 Console.Write("Your choice: ");
                 int option = Convert.ToInt32(Console.ReadLine());
@@ -597,11 +625,15 @@ namespace Phoenix
                         break;
                     case 1:
                         WriteLogo();
-                        ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                        Table table2 = new Table(headers2).AddRow("00", "None").AddRow("01", "Bravery").AddRow("02", "Brilliance").AddRow("03", "Balance");
-                        table2.Config = TableConfiguration.Unicode();
-                        Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 7);
-                        Console.WriteLine();
+                        string options3 = @"╔═════════════════╗
+║ [00] None       ║
+║ [01] Bravery    ║
+║ [02] Brilliance ║
+║ [03] Balance    ║
+╚═════════════════╝
+
+";
+                        Console.WriteWithGradient(options3, Color.OrangeRed, Color.Yellow, 7);
                         Console.ForegroundColor = Color.Yellow;
                         Console.Write("Your choice: ");
                         string hypesquad = Console.ReadLine();
@@ -724,18 +756,36 @@ namespace Phoenix
             try
             {
                 WriteLogo();
-                ColumnHeader[] headers = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                Table table = new Table(headers).AddRow("01", "Delete Roles", "09", "Remove Integrations", "17", "Mass Create Invites").AddRow("02", "Remove All Bans", "10", "Remove All Reactions", "18", "Delete Guild Scheduled Events").AddRow("03", "Delete All Channels", "11", "Server Info", "19", "Delete Guild Template").AddRow("04", "Delete All Emojis", "12", "Leave/Delete Server", "20", "Delete Stage Instances").AddRow("05", "Delete All Invites", "13", "Msg In Every Channel", "21", "Delete Webhooks").AddRow("06", "Mass Create Roles", "14", "Delete Stickers", "22", "Switch To Other Server").AddRow("07", "Mass Create Channels", "15", "Grant Everyone Admin", "23", "Go Back").AddRow("08", "Prune Members", "16", "Delete Auto Moderation Rules", "24", "Exit");
-                table.Config = TableConfiguration.Unicode();
-                Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
+                string options = @"
+╔══════════════════════════════════════════════════════════════════════════════════════════════╗
+║[01] Delete Roles         [09] Remove Integrations          [17] Mass Create Invites          ║
+║[02] Remove All Bans      [10] Remove All Reactions         [18] Delete Guild Scheduled Events║
+║[03] Delete All Channels  [11] Server Info                  [19] Delete Guild Template        ║
+║[04] Delete All Emojis    [12] Leave/Delete Server          [20] Delete Stage Instances       ║
+║[05] Delete All Invites   [13] Msg In Every Channel         [21] Delete Webhooks              ║
+║[06] Mass Create Roles    [14] Delete Stickers              [22] Switch To Other Server       ║
+║[07] Mass Create Channels [15] Grant Everyone Admin         [23] Go Back                      ║
+║[08] Prune Members        [16] Delete Auto Moderation Rules [24] Exit                         ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════╝
+
+
+";
+                Console.WriteWithGradient(options, Color.OrangeRed, Color.Yellow, 7);
+
                 if (Config.IsBot == true)
                 {
-                    ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Additional Bot Options", Alignment.Left), new ColumnHeader("##", Alignment.Left), new ColumnHeader("Additional Bot Options", Alignment.Left) };
-                    Table table2 = new Table(headers2).AddRow("25", "Ban All Members", "27", "Rename Everyone").AddRow("26", "Kick All Members");
-                    table2.Config = TableConfiguration.Unicode();
-                    Console.WriteWithGradient(table2.ToString(), Color.OrangeRed, Color.Yellow, 7);
+                    string options2 = @"
+╔═════════════════════╗
+║[25] Ban All Members ║
+║[26] Kick All Members║
+║[27] Rename Everyone ║
+╚═════════════════════╝
+
+
+";
+                    Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 7);
                 }
-                Console.WriteLine();
+
                 Console.ForegroundColor = Color.Yellow;
                 Console.Write("Your choice: ");
                 int option = Convert.ToInt32(Console.ReadLine());
@@ -838,11 +888,13 @@ namespace Phoenix
                         break;
                     case 13:
                         WriteLogo();
-                        ColumnHeader[] headers2 = new[] { new ColumnHeader("##", Alignment.Left), new ColumnHeader("Choice", Alignment.Left) };
-                        Table table2 = new Table(headers2).AddRow("01", "Spam").AddRow("02", "One Message");
-                        table2.Config = TableConfiguration.Unicode();
-                        Console.WriteWithGradient(table.ToString(), Color.OrangeRed, Color.Yellow, 7);
-                        Console.WriteLine();
+                        string options3 = @"╔══════════════════╗
+║ [01] Spam        ║
+║ [02] One Message ║
+╚══════════════════╝
+
+";
+                        Console.WriteWithGradient(options3, Color.OrangeRed, Color.Yellow, 7);
                         Console.ForegroundColor = Color.Yellow;
                         Console.Write("Your choice: ");
                         string choice = Console.ReadLine();
