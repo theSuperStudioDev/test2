@@ -756,8 +756,7 @@ namespace Phoenix
             try
             {
                 WriteLogo();
-                string options = @"
-╔══════════════════════════════════════════════════════════════════════════════════════════════╗
+                string options = @"╔══════════════════════════════════════════════════════════════════════════════════════════════╗
 ║[01] Delete Roles         [09] Remove Integrations          [17] Mass Create Invites          ║
 ║[02] Remove All Bans      [10] Remove All Reactions         [18] Delete Guild Scheduled Events║
 ║[03] Delete All Channels  [11] Server Info                  [19] Delete Guild Template        ║
@@ -768,19 +767,16 @@ namespace Phoenix
 ║[08] Prune Members        [16] Delete Auto Moderation Rules [24] Exit                         ║
 ╚══════════════════════════════════════════════════════════════════════════════════════════════╝
 
-
 ";
                 Console.WriteWithGradient(options, Color.OrangeRed, Color.Yellow, 7);
 
                 if (Config.IsBot == true)
                 {
-                    string options2 = @"
-╔═════════════════════╗
+                    string options2 = @"╔═════════════════════╗
 ║[25] Ban All Members ║
 ║[26] Kick All Members║
 ║[27] Rename Everyone ║
 ╚═════════════════════╝
-
 
 ";
                     Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 7);
