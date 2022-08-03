@@ -23,7 +23,7 @@
 	
   <ItemGroup>
     <PackageReference Include="Colorful.Console" Version="1.2.15" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Selenium.WebDriver" Version="4.3.0" />
   </ItemGroup>
 
 </Project>

