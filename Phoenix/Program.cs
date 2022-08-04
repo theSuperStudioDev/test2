@@ -57,6 +57,7 @@ namespace Phoenix
         {
             Console.Title = "Phoenix Nuker";
             Start();
+            Console.Read();
         }
         #endregion
 
@@ -676,6 +677,7 @@ namespace Phoenix
                                 Console.WriteLine(token, Color.Lime);
                                 File.AppendAllText("WorkingTokens.txt", token + Environment.NewLine);
                             } catch { Console.WriteLine(token, Color.Red); }
+                            Thread.Sleep(200);
                         }
                         Console.ForegroundColor = Color.Yellow;
                         Console.WriteLine("Working tokens were saved to WorkingTokens.txt");

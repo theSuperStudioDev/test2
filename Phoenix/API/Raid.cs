@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Drawing;
 using Console = Colorful.Console;
+using static Phoenix.Config;
 
 namespace Phoenix
 {
@@ -13,6 +14,7 @@ namespace Phoenix
             {
                 Request.Send($"/invites/{code}", "POST", token);
                 Console.WriteLine("Succeed: " + token, Color.Lime);
+                Sleep(Wait.Short);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
         }
@@ -24,6 +26,7 @@ namespace Phoenix
             {
                 Request.Send($"/users/@me/guilds/{id}", "DELETE", token);
                 Console.WriteLine("Succeed: " + token, Color.Lime);
+                Sleep(Wait.Short);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
         }
@@ -35,6 +38,7 @@ namespace Phoenix
             {
                 Request.Send("/users/@me/relationships", "POST", token, $"{{\"username\":\"{username}\",\"discriminator\":{discriminator}}}");
                 Console.WriteLine("Succeed: " + token, Color.Lime);
+                Sleep(Wait.Short);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
         }
@@ -46,6 +50,7 @@ namespace Phoenix
             {
                 Request.Send($"/channels/{cid}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
                 Console.WriteLine("Succeed: " + token, Color.Lime);
+                Sleep(Wait.Short);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
         }
@@ -57,6 +62,7 @@ namespace Phoenix
             {
                 Request.Send($"/channels/{cid}/messages/{mid}/reactions/{emoji}/@me", "PUT", token);
                 Console.WriteLine("Succeed: " + token, Color.Lime);
+                Sleep(Wait.Short);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
         }
@@ -68,6 +74,7 @@ namespace Phoenix
             {
                 Request.Send($"/users/@me/relationships/{uid}", "PUT", token, $"{{\"type\":\"2\"}}");
                 Console.WriteLine("Succeed: " + token, Color.Lime);
+                Sleep(Wait.Short);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
         }
@@ -79,6 +86,7 @@ namespace Phoenix
             {
                 Request.Send($"/channels/{gid}", "DELETE", token);
                 Console.WriteLine("Succeed: " + token, Color.Lime);
+                Sleep(Wait.Short);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
         }
@@ -93,6 +101,7 @@ namespace Phoenix
                 dynamic entry = array;
                 Request.Send($"/channels/{entry.id}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
                 Console.WriteLine("Succeed: " + token, Color.Lime);
+                Sleep(Wait.Short);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
         }
@@ -104,6 +113,7 @@ namespace Phoenix
             {
                 Request.Send($"/channels/{cid}/typing", "POST", token);
                 Console.WriteLine("Succeed: " + token, Color.Lime);
+                Sleep(Wait.Short);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
         }
@@ -115,6 +125,7 @@ namespace Phoenix
             {
                 Request.Send("/report", "POST", token, $"{{\"channel_id\": \"{cid}\", \"guild_id\": \"{gid}\", \"message_id\": \"{mid}\", \"reason\": {reason}}}");
                 Console.WriteLine("Succeed: " + token, Color.Lime);
+                Sleep(Wait.Short);
             }
             catch { Console.WriteLine("Failed: " + token, Color.Red); }
         }
