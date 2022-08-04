@@ -14,15 +14,15 @@
 
 <details>
 <summary>Preview</summary>
-<img src="https://i.imgur.com/01DrPLV.png" alt="png">
+<img src="https://i.imgur.com/ErtvoWa.png" alt="png">
   
-<img src="https://i.imgur.com/AfyhyEn.png" alt="png">
+<img src="https://i.imgur.com/9R8VGMF.png" alt="png">
   
-<img src="https://i.imgur.com/zIibTos.png" alt="png">
+<img src="https://i.imgur.com/AwLIpFZ.png" alt="png">
 
-<img src="https://i.imgur.com/x2THCs2.png" alt="png">
+<img src="https://i.imgur.com/CMdrjbL.png" alt="png">
 
-<img src="https://i.imgur.com/qycQ9P1.png" alt="png">
+<img src="https://i.imgur.com/XY6FvCm.png" alt="png">
 </details>
 
 ---
@@ -58,15 +58,27 @@
 
 **3) The program automatically closes after opening.**
 > *You must install .NET Runtime:*
-* **Windows**
+<details>
+<summary>Windows</summary>
+
 * [Download x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.7-windows-x64-installer)
 * [Download x86](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.7-windows-x86-installer)
 * [Download Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.7-windows-arm64-installer)
-* **macOS**
+
+</details>
+<details>
+<summary>macOS</summary>
+
 * [Download x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.7-macos-x64-installer)
 * [Download Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.7-macos-arm64-installer)
-* **Linux**
+
+</details>
+<details>
+<summary>Linux</summary>
+
 * [Install .NET on Linux](https://docs.microsoft.com/dotnet/core/install/linux?WT.mc_id=dotnet-35129-website)
+
+</details>
 
 **4) How do I know if my PC is x64, x86 or Arm64?**
 > *Open the Settings app. Navigate to System > About. On the right, check out the System type value. It shows either a x86-based processor (32-bit), x64-based processor (64-bit), or ARM-based processor depending on the hardware you have.*
