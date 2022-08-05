@@ -81,4 +81,21 @@
 </details>
 
 **4) How do I know if my PC is x64, x86 or Arm64?**
+<details>
+<summary>Windows</summary>
+
 > *Open the Settings app. Navigate to System > About. On the right, check out the System type value. It shows either a x86-based processor (32-bit), x64-based processor (64-bit), or ARM-based processor depending on the hardware you have.*
+
+</details>
+<details>
+<summary>macOS</summary>
+
+> *Open the Apple System Profiler application. Select the Hardware section from the sidebar. Under the Hardware section, you should see a Processor Type entry. If this entry says “x86_64,” then your Mac is running on an x64-based processor. If the entry says “ARM,” then your Mac is running on an ARM-based processor.*
+
+</details>
+<details>
+<summary>Linux</summary>
+
+> *In the “System Settings” window, double-click the “Details” icon in the “System” section. In the “Details” window, on “Overview” tab, look for the “OS type” entry. You'll see either “64-bit” or “32-bit” listed.*
+
+</details>
