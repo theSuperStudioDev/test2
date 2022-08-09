@@ -30,16 +30,16 @@
 ### Features
 
 * ` Easy to use`
-* ` Run without installing any addons like python`
+* ` Runs without installing any addons like Python`
 * ` Supports Windows, Linux and macOS`
 * ` User Security (0% chance of getting ban or rate limit)`
-* ` Feature-Rich (50+ different features for server/account nuking)`
+* ` Feature-Rich (50+ different features)`
 * ` No repeatable token or server ID entering`
-* ` Always latest (updating the project everytime a new API function/version comes out)`
+* ` Always Latest (updating the project everytime a new API function/version comes out)`
 * ` Report bot (mass report a message)`
 * ` Webhook spammer/deleter (spam/delete a webhook)`
 * ` Fully destroy an account or server`
-* ` MultiToken support (raid a server or user with many tokens)`
+* ` MultiToken Support (raid a server or user with many tokens)`
 * ` Supports bot and user authentication tokens`
 * ` And more`
 
@@ -77,25 +77,5 @@
 <summary>Linux</summary>
 
 * [Install .NET on Linux](https://docs.microsoft.com/dotnet/core/install/linux?WT.mc_id=dotnet-35129-website)
-
-</details>
-
-**4) How do I know if my PC is x64, x86 or Arm64?**
-<details>
-<summary>Windows</summary>
-
-> *Open the Settings app. Navigate to System > About. On the right, check out the System type value. It shows either a x86-based processor (32-bit), x64-based processor (64-bit), or ARM-based processor depending on the hardware you have.*
-
-</details>
-<details>
-<summary>macOS</summary>
-
-> *Open the Apple System Profiler application. Select the Hardware section from the sidebar. Under the Hardware section, you should see a Processor Type entry. If this entry says “x86_64,” then your Mac is running on an x64-based processor. If the entry says “ARM,” then your Mac is running on an ARM-based processor.*
-
-</details>
-<details>
-<summary>Linux</summary>
-
-> *In the “System Settings” window, double-click the “Details” icon in the “System” section. In the “Details” window, on “Overview” tab, look for the “OS type” entry. You'll see either “64-bit” or “32-bit” listed.*
 
 </details>
