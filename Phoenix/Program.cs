@@ -201,10 +201,7 @@ namespace Phoenix
             {
                 Request.SendGet($"/users/@me", token);
             }
-            catch
-            {
-                Config.IsBot = true;
-            }
+            catch { Config.IsBot = true; }
 
             if (User.GetUsername(token) == "N/A")
             {
@@ -227,10 +224,9 @@ namespace Phoenix
             try
             {
                 WriteLogo();
-                Console.Title = $"Phoenix Nuker | " + User.GetUsername(token);
+                Console.Title = $"Phoenix Nuker | {User.GetUsername(token)}";
 
-                string options = @"
-╔═════════════════════════════════════════════════╗
+                string options = @"╔═════════════════════════════════════════════════╗
 ║ [01] Account Nuker   [06] Login To Account      ║
 ║ [02] Server Nuker    [07] Export Data           ║
 ║ [03] Webhook Spammer [08] Enter Another Account ║
@@ -343,7 +339,7 @@ namespace Phoenix
                         break;
                     case 6:
                         WriteLogo();
-                        SeleniumLogin(token);
+                        SeleniumLogin();
                         DoneMethod(Method.Options);
                         break;
                     case 7:
@@ -398,7 +394,7 @@ namespace Phoenix
         #endregion
 
         #region Selenium Login
-        static void SeleniumLogin(string? token)
+        static void SeleniumLogin()
         {
             try
             {

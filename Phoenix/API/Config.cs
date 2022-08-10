@@ -15,7 +15,7 @@
         {
             if (option == Wait.Short)
             {
-                Thread.Sleep(200);
+                Thread.Sleep(1000);
             }
             else if (option == Wait.Long)
             {

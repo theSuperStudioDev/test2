@@ -19,9 +19,7 @@ namespace Phoenix
                 request.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
             else
-            {
                 request.Content = null;
-            }
             var response = client.GetAsync($"https://discord.com/api/v{Config.APIVersion}{endpoint}").GetAwaiter().GetResult();
             response.EnsureSuccessStatusCode();
             client.Send(request);
@@ -41,9 +39,7 @@ namespace Phoenix
                 request.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
             else
-            {
                 request.Content = null;
-            }
             var response = client.GetAsync($"https://discord.com/api/v{Config.APIVersion}{endpoint}").GetAwaiter().GetResult();
             response.EnsureSuccessStatusCode();
             return new StreamReader(client.Send(request).Content.ReadAsStream()).ReadToEnd();

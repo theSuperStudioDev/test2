@@ -333,6 +333,13 @@ namespace Phoenix
             {
                 var request = Request.SendGet("/users/@me", token);
                 var id = JObject.Parse(request)["id"];
+                Console.ForegroundColor = Color.Yellow;
+                if (File.Exists($"{id}.txt"))
+                {
+                    Console.WriteLine("\nThis account is already exported.");
+                    Sleep(Wait.Long);
+                    return;
+                }
                 var id2 = (id == null || string.IsNullOrEmpty(id.ToString())) ? "" : id.ToString();
                 var getbadges = JObject.Parse(request)["flags"];
                 var getbadges2 = (getbadges == null || string.IsNullOrEmpty(getbadges.ToString())) ? "" : getbadges.ToString();
@@ -375,15 +382,6 @@ namespace Phoenix
                 var theme = JObject.Parse(request2)["theme"];
                 var devmode = JObject.Parse(request2)["developer_mode"];
                 var status = JObject.Parse(request2)["status"];
-
-                Console.ForegroundColor = Color.Yellow;
-
-                if (File.Exists($"{id}.txt"))
-                {
-                    Console.WriteLine("\nThis account is already exported.");
-                    Sleep(Wait.Long);
-                    return;
-                }
 
                 File.AppendAllText($"{id}.txt", $"User Information:\nUser ID: {id}\nEmail: {email}\nPhone Number: {phone}\nBiography: {bio}\nLocale: {locale}\nNSFW Allowed: {nsfw}\n2FA Enabled: {mfa}\nBadges: {badges}\nTheme: {theme}\nDeveloper Mode: {devmode}\nStatus: {status}\nAvatar: {avatar}");
 

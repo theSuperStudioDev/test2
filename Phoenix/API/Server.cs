@@ -482,10 +482,18 @@ namespace Phoenix
         public static void ExportServer(string? token, ulong? gid)
         {
             Console.ReplaceAllColorsWithDefaults();
+
             try
             {
                 var request = Request.SendGet($"/guilds/{gid}", token);
                 var id = JObject.Parse(request)["id"];
+                Console.ForegroundColor = Color.Yellow;
+                if (File.Exists($"{id}.txt"))
+                {
+                    Console.WriteLine("\nThis server is already exported.");
+                    Sleep(Wait.Long);
+                    return;
+                }
                 var ownerid = JObject.Parse(request)["owner_id"];
                 var region = JObject.Parse(request)["region"];
                 var vanityurl = JObject.Parse(request)["vanity_url_code"];
@@ -495,43 +503,25 @@ namespace Phoenix
                 var bannerid2 = (bannerid == null || string.IsNullOrEmpty(bannerid.ToString())) ? "" : bannerid.ToString();
                 string icon;
                 if (string.IsNullOrEmpty(iconid2))
-                {
                     icon = "N/A";
-                }
                 else
-                {
                     icon = $"https://cdn.discordapp.com/icons/{id}/{iconid}.webp";
-                }
                 string banner;
                 if (string.IsNullOrEmpty(bannerid2))
-                {
                     banner = "N/A";
-                }
                 else
-                {
                     banner = $"https://cdn.discordapp.com/banners/{id}/{bannerid}.webp?size=240";
-                }
                 dynamic? verificationlevel = JObject.Parse(request)["verification_level"];
                 if (verificationlevel == "0")
-                {
                     verificationlevel = "None";
-                }
                 else if (verificationlevel == "1")
-                {
                     verificationlevel = "Low";
-                }
                 else if (verificationlevel == "2")
-                {
                     verificationlevel = "Medium";
-                }
                 else if (verificationlevel == "3")
-                {
                     verificationlevel = "High";
-                }
                 else if (verificationlevel == "4")
-                {
                     verificationlevel = "Highest";
-                }
                 var preferredlocale = JObject.Parse(request)["preferred_locale"];
                 var nsfw = JObject.Parse(request)["nsfw"];
                 var roles = Request.SendGet($"/guilds/{gid}/roles", token);
@@ -575,15 +565,6 @@ namespace Phoenix
                 foreach (dynamic entry in array6)
                 {
                     invitescount++;
-                }
-
-                Console.ForegroundColor = Color.Yellow;
-
-                if (File.Exists($"{id}.txt"))
-                {
-                    Console.WriteLine("\nThis server is already exported.");
-                    Sleep(Wait.Long);
-                    return;
                 }
 
                 File.AppendAllText($"{id}.txt", $"Server Information:\nServer ID: {id}\nOwner ID: {ownerid}\nRegion: {region}\nRoles Count: {rolescount}\nChannels Count: {channelscount}\nEmojis Count: {emojiscount}\nStickers Count: {stickerscount}\nBans Count: {banscount}\nInvites Count: {invitescount}\nVerification Level: {verificationlevel}\nPreferred Locale: {preferredlocale}\nNSFW: {nsfw}\nVanity Code: {vanityurl}\nServer Icon: {icon}\nBanner: {banner}");
