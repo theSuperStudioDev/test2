@@ -38,6 +38,7 @@
 * ` Always Latest (updating the project everytime a new API function/version comes out)`
 * ` Report bot (mass report a message)`
 * ` Webhook spammer/deleter (spam/delete a webhook)`
+* ` Export account/server (saves data to a text file)`
 * ` Fully destroy an account or server`
 * ` MultiToken Support (raid a server or user with many tokens)`
 * ` Supports bot and user authentication tokens`
