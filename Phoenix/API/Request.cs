@@ -5,14 +5,16 @@ namespace Phoenix
 {
     public class Request
     {
-        public static void Send(string endpoint, string method, string? auth, string? json = null)
+        public static void Send(string endpoint, string method, string? auth, string? json = null, bool XAuditLogReason = false)
         {
             HttpClient client = new();
             if (Config.IsBot == true)
                 client.DefaultRequestHeaders.Add("Authorization", $"Bot {auth}");
             else
                 client.DefaultRequestHeaders.Add("Authorization", auth);
-            HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(method), $"https://discord.com/api/v{Config.APIVersion}{endpoint}");
+            if (XAuditLogReason == true)
+                client.DefaultRequestHeaders.Add("X-Audit-Log-Reason", "Phoenix Nuker");
+            HttpRequestMessage request = new(new HttpMethod(method), $"https://discord.com/api/v{Config.APIVersion}{endpoint}");
             if (json != null)
             {
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -32,7 +34,7 @@ namespace Phoenix
                 client.DefaultRequestHeaders.Add("Authorization", $"Bot {auth}");
             else
                 client.DefaultRequestHeaders.Add("Authorization", auth);
-            HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(method), $"https://discord.com/api/v{Config.APIVersion}{endpoint}");
+            HttpRequestMessage request = new(new HttpMethod(method), $"https://discord.com/api/v{Config.APIVersion}{endpoint}");
             if (json != null)
             {
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

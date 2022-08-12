@@ -7,20 +7,15 @@
 
         public enum Wait
         {
-            Short = 0,
-            Long = 1
+            Short = 0, Long = 1
         }
 
         public static void Sleep(Wait option)
         {
             if (option == Wait.Short)
-            {
                 Thread.Sleep(200);
-            }
             else if (option == Wait.Long)
-            {
                 Thread.Sleep(2000);
-            }
         }
     }
 }

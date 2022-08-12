@@ -72,7 +72,7 @@ namespace Phoenix
                 if (getbadges2 == "1")
                     badges += "Discord Employee, ";
                 if (getbadges2 == "2")
-                    badges += "Partnered Server Owner, ";
+                    badges += "Partnered Guild Owner, ";
                 if (getbadges2 == "4")
                     badges += "HypeSquad Events Member, ";
                 if (getbadges2 == "8")
@@ -347,7 +347,7 @@ namespace Phoenix
                 if (getbadges2 == "1")
                     badges += "Discord Employee, ";
                 if (getbadges2 == "2")
-                    badges += "Partnered Server Owner, ";
+                    badges += "Partnered Guild Owner, ";
                 if (getbadges2 == "4")
                     badges += "HypeSquad Events Member, ";
                 if (getbadges2 == "8")
