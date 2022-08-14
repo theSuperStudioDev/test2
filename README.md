@@ -30,7 +30,6 @@
 ### Features
 
 * ` Easy to use`
-* ` Runs without installing any addons like Python`
 * ` Supports Windows, Linux and macOS`
 * ` User Security (0% chance of getting ban or rate limit)`
 * ` Feature-Rich (50+ different features)`
@@ -57,7 +56,7 @@
 (webpackChunkdiscord_app.push([[''],{},e=>{m=[];for(let c in e.c)m.push(e.c[c])}]),m).find(m=>m?.exports?.default?.getToken!==void 0).exports.default.getToken()
 ```
 
-**3) The program automatically closes after opening.**
+**3) Why the program automatically closes after opening?**
 > *You must install .NET Runtime:*
 <details>
 <summary>Windows</summary>
@@ -81,7 +80,7 @@
 
 </details>
 
-**4) The compiled file appears as a malware.**
+**4) Why the compiled file appears as a malware?**
 > *The online scan engines and antivirus programs mistakenly may flag the file as being infected.*
 
 **5) How to compile the project?**
