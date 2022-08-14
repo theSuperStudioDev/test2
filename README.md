@@ -80,3 +80,9 @@
 * [Install .NET on Linux](https://docs.microsoft.com/dotnet/core/install/linux?WT.mc_id=dotnet-35129-website)
 
 </details>
+
+**4) The compiled file appears as a malware.**
+> *The online scan engines and antivirus programs mistakenly may flag the file as being infected.*
+
+**5) How to compile the project?**
+> *Install [Visual Studio 2022](https://visualstudio.microsoft.com/) and [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0). After that, open the Solution file (.sln) or C# Project file (.csproj). On the menu bar, choose Build > Build Solution. The files will appear in ..\bin\Debug\net6.0 folder.*
