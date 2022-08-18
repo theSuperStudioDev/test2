@@ -14,7 +14,7 @@
 
 > Read the [FAQ](#frequently-asked-questions) before creating a new ticket/issue.
 
-> Tickets like **"how to use"**, **"I need help"**, **"not working"**, **"help me to raid/nuke"** will be deleted. Provide specific information.
+> Tickets like **"how to use"**, **"I need help"**, **"not working"**, **"help me to raid/nuke"** will be ignored and deleted. Provide specific information.
 
 > Become a contributor by forking the project and opening a new pull request or [suggest new features](https://dsc.gg/extatent).
 
