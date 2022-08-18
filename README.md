@@ -10,7 +10,7 @@
 
 > If you like the project, consider dropping a star ⭐
   
-> If you caught any issues, please report it in [issues](https://github.com/extatent/Phoenix-Nuker/issues) or in our [Discord server](https://dsc.gg/extatent)
+> If you caught any issues, please report it in [issues](https://github.com/extatent/Phoenix-Nuker/issues) or in our [Discord server](https://dsc.gg/extatent) (Specify **"Phoenix Nuker"** in the ticket)
 
 > Read the [FAQ](#frequently-asked-questions) before creating a new ticket/issue.
 
