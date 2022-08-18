@@ -12,6 +12,10 @@
   
 > If you caught any issues, please report it in [issues](https://github.com/extatent/Phoenix-Nuker/issues) or in our [Discord server](https://dsc.gg/extatent)
 
+> Read the [FAQ](#frequently-asked-questions) before creating a new ticket/issue.
+
+> Tickets like **"how to use"**, **"I need help"**, **"not working"**, **"help me to raid/nuke"** will be deleted. Provide specific information.
+
 <details>
 <summary>Preview</summary>
 <img src="https://i.imgur.com/ErtvoWa.png" alt="png">
