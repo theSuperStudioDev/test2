@@ -16,6 +16,8 @@
 
 > Tickets like **"how to use"**, **"I need help"**, **"not working"**, **"help me to raid/nuke"** will be deleted. Provide specific information.
 
+> Become a contributor by forking the project and opening a new pull request or [suggest new features](https://dsc.gg/extatent).
+
 <details>
 <summary>Preview</summary>
 <img src="https://i.imgur.com/ErtvoWa.png" alt="png">
@@ -85,4 +87,4 @@
 </details>
 
 **4) How to compile the project?**
-> *Install [Visual Studio 2022](https://visualstudio.microsoft.com/) and [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0). After that, open the Solution file (.sln) or C# Project file (.csproj). On the menu bar, choose Build > Build Solution. The files will appear in ..\bin\Debug\net6.0 folder.*
+> *Install [Visual Studio 2022](https://visualstudio.microsoft.com/) and [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0). After that, open the Solution file (.sln) or C# Project file (.csproj). On the menu bar, choose Build > Build Solution (CTRL+SHIFT+B). The files will appear in ..\bin\Debug\net6.0 folder.*
