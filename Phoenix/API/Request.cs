@@ -8,6 +8,7 @@ namespace Phoenix
         public static void Send(string endpoint, string method, string? auth, string? json = null, bool XAuditLogReason = false)
         {
             HttpClient client = new();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36");
             if (Config.IsBot == true)
                 client.DefaultRequestHeaders.Add("Authorization", $"Bot {auth}");
             else
@@ -30,6 +31,7 @@ namespace Phoenix
         public static string SendGet(string endpoint, string? auth, string method = "GET", string? json = null)
         {
             HttpClient client = new();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36");
             if (Config.IsBot == true)
                 client.DefaultRequestHeaders.Add("Authorization", $"Bot {auth}");
             else

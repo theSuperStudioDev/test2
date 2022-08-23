@@ -5,6 +5,9 @@ using System.Diagnostics;
 using System.Reflection;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
+using WebDriverManager;
+using WebDriverManager.DriverConfigs.Impl;
+using WebDriverManager.Helpers;
 
 /* 
        │ Author       : extatent
@@ -30,8 +33,7 @@ namespace Phoenix
 
         static void SaveConfig(string token)
         {
-            string json = JsonConvert.SerializeObject(new { token });
-            File.WriteAllText("config.json", json);
+            File.WriteAllText("config.json", JsonConvert.SerializeObject(new { token }));
         }
         #endregion
 
@@ -196,7 +198,7 @@ namespace Phoenix
 
             try
             {
-                Request.SendGet($"/users/@me", token);
+                Request.SendGet("/users/@me", token);
             }
             catch { Config.IsBot = true; }
 
@@ -399,14 +401,7 @@ namespace Phoenix
         {
             try
             {
-                if (!File.Exists("chromedriver.exe"))
-                {
-                    Console.ForegroundColor = Color.Yellow;
-                    Console.WriteLine("Chromedriver is missing.\nChromedriver must be in the same folder as Phoenix.\nChromedriver must match your Chrome version.\nPress any key to download.");
-                    Console.ReadKey();
-                    Process.Start(new ProcessStartInfo("http://chromedriver.storage.googleapis.com/index.html") { UseShellExecute = true });
-                    Options();
-                }
+                new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
 
                 Console.WriteLine("Please wait");
 
@@ -481,8 +476,8 @@ namespace Phoenix
                         if (code.Contains("https://discord.com/invite/"))
                             code = code.Replace("https://discord.com/invite/", "");
                         WriteLogo();
-                        foreach (var joinguild in tokenlist)
-                            Raid.JoinGuild(joinguild, code);
+                        foreach (var token in tokenlist)
+                            Raid.JoinGuild(token, code);
                         DoneMethod(Method.Raider);
                         break;
                     case 2:
