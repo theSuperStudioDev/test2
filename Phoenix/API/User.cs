@@ -240,8 +240,6 @@ namespace Phoenix
             {
                 var request = Request.SendGet("/users/@me/relationships", token);
                 var array = JArray.Parse(request);
-                Console.WriteLine(array);
-                Console.Read();
                 foreach (dynamic entry in array)
                 {
                     Request.Send($"/users/@me/relationships/{entry.id}", "DELETE", token);
@@ -249,7 +247,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch (Exception e) { Console.WriteLine("Failed " + e.Message, Color.Red); }
+            catch { Console.WriteLine("Failed", Color.Red); }
         }
 
         public static void LeaveDeleteGuilds(string? token)
