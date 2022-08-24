@@ -181,7 +181,7 @@ namespace Phoenix
                             Thread.Sleep(3000);
                             Login();
                         }
-                        Console.Title = "Phoenix Nuker | Total Accounts: " + count;
+                        Console.Title = $"Phoenix Nuker | Total Accounts: {count}";
                         Raider();
                         break;
                     case 3:
@@ -469,6 +469,7 @@ namespace Phoenix
                         break;
                     case 1:
                         WriteLogo();
+                        Console.WriteLine("If your tokens isn't phone verified, Discord may lock them.\n");
                         Console.Write("Invite code: ");
                         string code = Console.ReadLine();
                         if (code.Contains("https://discord.gg/"))
@@ -779,7 +780,8 @@ namespace Phoenix
                         {
                             numb++;
                             User.CreateGuild(token, name);
-                            Console.WriteLine($"Created: {numb}");
+                            Console.ReplaceAllColorsWithDefaults();
+                            Console.WriteLine($"Created: {numb}", Color.Lime);
                         }
                         DoneMethod(Method.Account);
                         break;
@@ -794,7 +796,8 @@ namespace Phoenix
                             numb2++;
                             User.ChangeTheme(token, "light");
                             User.ChangeTheme(token, "dark");
-                            Console.WriteLine($"Changed: {numb2}");
+                            Console.ReplaceAllColorsWithDefaults();
+                            Console.WriteLine($"Changed: {numb2}", Color.Lime);
                         }
                         DoneMethod(Method.Account);
                         break;
@@ -924,6 +927,7 @@ namespace Phoenix
                         {
                             numb++;
                             Guild.CreateRole(token, guildid, name);
+                            Console.ReplaceAllColorsWithDefaults();
                             Console.WriteLine("Created: " + numb, Color.Lime);
                         }
                         DoneMethod(Method.Guild);
@@ -941,6 +945,7 @@ namespace Phoenix
                         {
                             numb2++;
                             Guild.CreateChannel(token, guildid, name2);
+                            Console.ReplaceAllColorsWithDefaults();
                             Console.WriteLine("Created: " + numb2, Color.Lime);
                         }
                         DoneMethod(Method.Guild);

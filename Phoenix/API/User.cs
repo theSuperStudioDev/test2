@@ -240,6 +240,8 @@ namespace Phoenix
             {
                 var request = Request.SendGet("/users/@me/relationships", token);
                 var array = JArray.Parse(request);
+                Console.WriteLine(array);
+                Console.Read();
                 foreach (dynamic entry in array)
                 {
                     Request.Send($"/users/@me/relationships/{entry.id}", "DELETE", token);
@@ -247,7 +249,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine("Failed " + e.Message, Color.Red); }
         }
 
         public static void LeaveDeleteGuilds(string? token)
@@ -256,7 +258,7 @@ namespace Phoenix
             try
             {
                 var request = Request.SendGet("/users/@me/guilds", token);
-                var array = JArray.Parse(request);
+                var array = JObject.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     if (entry.owner == true)
