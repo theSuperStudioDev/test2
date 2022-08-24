@@ -42,6 +42,7 @@ namespace Phoenix
                 request.Content = null;
             var response = client.GetAsync($"https://discord.com/api/v{Config.APIVersion}{endpoint}").GetAwaiter().GetResult();
             response.EnsureSuccessStatusCode();
+            Thread.Sleep(1000);
             return new StreamReader(client.Send(request).Content.ReadAsStream()).ReadToEnd();
         }
     }

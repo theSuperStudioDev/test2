@@ -256,7 +256,7 @@ namespace Phoenix
             try
             {
                 var request = Request.SendGet("/users/@me/guilds", token);
-                var array = JObject.Parse(request);
+                var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     if (entry.owner == true)
