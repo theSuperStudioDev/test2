@@ -67,16 +67,16 @@
 <details>
 <summary>Windows</summary>
 
-* [Download x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.7-windows-x64-installer)
-* [Download x86](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.7-windows-x86-installer)
-* [Download Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.7-windows-arm64-installer)
+* [Download x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.8-windows-x64-installer)
+* [Download x86](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.8-windows-x86-installer)
+* [Download Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.8-windows-arm64-installer)
 
 </details>
 <details>
 <summary>macOS</summary>
 
-* [Download x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.7-macos-x64-installer)
-* [Download Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.7-macos-arm64-installer)
+* [Download x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.8-macos-x64-installer)
+* [Download Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.8-macos-arm64-installer)
 
 </details>
 <details>
