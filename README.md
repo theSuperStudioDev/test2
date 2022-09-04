@@ -14,7 +14,7 @@
 
 > Read the [FAQ](#frequently-asked-questions) before creating a new ticket/issue.
 
-> Tickets like **"how to use"**, **"I need help"**, **"not working"**, **"help me to raid/nuke"** will be ignored and deleted. Provide specific information.
+> Tickets like **"how to use"**, **"I need help"**, **"not working"**, **"help me to raid/nuke"** and common knowledge questions will be ignored and deleted. Provide specific information.
 
 > Become a contributor by forking the project and opening a new pull request or [suggest new features](https://dsc.gg/extatent).
 
@@ -35,19 +35,18 @@
 
 ### Features
 
-* ` Easy to use`
+* ` Easy To Use`
 * ` Supports Windows, Linux and macOS`
 * ` User Security (0% chance of getting ban or rate limit)`
 * ` Feature-Rich (50+ different features)`
 * ` No repeatable token or server ID entering`
 * ` Always Latest (updating the project everytime a new API function/version comes out)`
-* ` Report bot (mass report a message)`
-* ` Webhook spammer/deleter (spam/delete a webhook)`
-* ` Export account/server (saves data to a text file)`
+* ` Report Bot (mass report a message)`
+* ` Webhook Spammer/Deleter (spam/delete a webhook)`
 * ` Fully destroy an account or server`
-* ` MultiToken Support (raid a server or user with many tokens)`
+* ` Multi Token Support (raid a server or user with many tokens)`
 * ` Supports bot and user authentication tokens`
-* ` And more`
+* ` And More`
 
 ---
 
@@ -85,6 +84,3 @@
 * [Install .NET on Linux](https://docs.microsoft.com/dotnet/core/install/linux?WT.mc_id=dotnet-35129-website)
 
 </details>
-
-**4) How to compile the project?**
-> *Install [Visual Studio 2022](https://visualstudio.microsoft.com/) and [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0). After that, open the Solution file (.sln) or C# Project file (.csproj). On the menu bar, choose Build > Build Solution (CTRL+SHIFT+B). The files will appear in ..\bin\Debug\net6.0 folder.*
