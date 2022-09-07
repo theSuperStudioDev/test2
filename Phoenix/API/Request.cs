@@ -28,10 +28,9 @@ namespace Phoenix
         public static string SendGet(string endpoint, string? auth, string method = "GET", string? json = null)
         {
             HttpClient client = new();
-            if (Config.IsBot == true)
-                client.DefaultRequestHeaders.Add("Authorization", $"Bot {auth}");
-            else
-                client.DefaultRequestHeaders.Add("Authorization", auth);
+            string token = Config.IsBot ? $"Bot {auth}" : auth;
+            client.DefaultRequestHeaders.Add("Authorization", token);
+
             HttpRequestMessage request = new(new HttpMethod(method), $"https://discord.com/api/v{Config.APIVersion}{endpoint}");
             if (json != null)
             {

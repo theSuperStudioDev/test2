@@ -69,26 +69,39 @@ namespace Phoenix
                 var getbadges = JObject.Parse(request)["flags"];
                 var getbadges2 = (getbadges == null || string.IsNullOrEmpty(getbadges.ToString())) ? "" : getbadges.ToString();
                 string badges = "";
-                if (getbadges2 == "1")
-                    badges += "Discord Employee, ";
-                if (getbadges2 == "2")
-                    badges += "Partnered Guild Owner, ";
-                if (getbadges2 == "4")
-                    badges += "HypeSquad Events Member, ";
-                if (getbadges2 == "8")
-                    badges += "Bug Hunter Level 1, ";
-                if (getbadges2 == "64")
-                    badges += "House Bravery Member, ";
-                if (getbadges2 == "128")
-                    badges += "House Brilliance Member, ";
-                if (getbadges2 == "256")
-                    badges += "House Balance Member, ";
-                if (getbadges2 == "512")
-                    badges += "Early Nitro Supporter, ";
-                if (getbadges2 == "16384")
-                    badges += "Bug Hunter Level 2, ";
-                if (getbadges2 == "131072")
-                    badges += "Early Verified Bot Developer, ";
+                switch(getbadges2)
+                {
+                    case "1":
+                        badges += "Discord Employee, ";
+                        break;
+                    case "2":
+                        badges += "Partnered Guild Owner, ";
+                        break;
+                    case "4":
+                        badges += "HypeSquad Events Member, ";
+                        break;
+                    case "8":
+                        badges += "Bug Hunter Level 1, ";
+                        break;
+                    case "64":
+                        badges += "House Bravery Member, ";
+                        break;
+                    case "128":
+                        badges += "House Brilliance Member, ";
+                        break;
+                    case "256":
+                        badges += "House Balance Member, ";
+                        break;
+                    case "512":
+                        badges += "Early Nitro Supporter, ";
+                        break;
+                    case "16384":
+                        badges += "Bug Hunter Level 2, ";
+                        break;
+                    case "131072":
+                        badges += "Early Verified Bot Developer, ";
+                        break;
+                }
                 badges = badges.TrimEnd(' ', ',');
                 var email = JObject.Parse(request)["email"];
                 var phone = JObject.Parse(request)["phone"];
@@ -279,25 +292,24 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                if (hypesquad == "0")
+                switch(hypesquad)
                 {
-                    Request.Send("/hypesquad/online", "DELETE", token);
-                    Sleep(Wait.Short);
-                }
-                else if (hypesquad == "1")
-                {
-                    Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 1}}");
-                    Sleep(Wait.Short);
-                }
-                else if (hypesquad == "2")
-                {
-                    Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 2}}");
-                    Sleep(Wait.Short);
-                }
-                else if (hypesquad == "3")
-                {
-                    Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 3}}");
-                    Sleep(Wait.Short);
+                    case "0":
+                        Request.Send("/hypesquad/online", "DELETE", token);
+                        Sleep(Wait.Short);
+                        break;
+                    case "1":
+                        Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 1}}");
+                        Sleep(Wait.Short);
+                        break;
+                    case "2":
+                        Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 2}}");
+                        Sleep(Wait.Short);
+                        break;
+                    case "3":
+                        Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 3}}");
+                        Sleep(Wait.Short);
+                        break;
                 }
                 if (!string.IsNullOrEmpty(bio))
                 {
@@ -344,26 +356,39 @@ namespace Phoenix
                 var getbadges = JObject.Parse(request)["flags"];
                 var getbadges2 = (getbadges == null || string.IsNullOrEmpty(getbadges.ToString())) ? "" : getbadges.ToString();
                 string badges = "";
-                if (getbadges2 == "1")
-                    badges += "Discord Employee, ";
-                if (getbadges2 == "2")
-                    badges += "Partnered Guild Owner, ";
-                if (getbadges2 == "4")
-                    badges += "HypeSquad Events Member, ";
-                if (getbadges2 == "8")
-                    badges += "Bug Hunter Level 1, ";
-                if (getbadges2 == "64")
-                    badges += "House Bravery Member, ";
-                if (getbadges2 == "128")
-                    badges += "House Brilliance Member, ";
-                if (getbadges2 == "256")
-                    badges += "House Balance Member, ";
-                if (getbadges2 == "512")
-                    badges += "Early Nitro Supporter, ";
-                if (getbadges2 == "16384")
-                    badges += "Bug Hunter Level 2, ";
-                if (getbadges2 == "131072")
-                    badges += "Early Verified Bot Developer, ";
+                switch (getbadges2)
+                {
+                    case "1":
+                        badges += "Discord Employee, ";
+                        break;
+                    case "2":
+                        badges += "Partnered Guild Owner, ";
+                        break;
+                    case "4":
+                        badges += "HypeSquad Events Member, ";
+                        break;
+                    case "8":
+                        badges += "Bug Hunter Level 1, ";
+                        break;
+                    case "64":
+                        badges += "House Bravery Member, ";
+                        break;
+                    case "128":
+                        badges += "House Brilliance Member, ";
+                        break;
+                    case "256":
+                        badges += "House Balance Member, ";
+                        break;
+                    case "512":
+                        badges += "Early Nitro Supporter, ";
+                        break;
+                    case "16384":
+                        badges += "Bug Hunter Level 2, ";
+                        break;
+                    case "131072":
+                        badges += "Early Verified Bot Developer, ";
+                        break;
+                }
                 badges = badges.TrimEnd(' ', ',');
                 var email = JObject.Parse(request)["email"];
                 var phone = JObject.Parse(request)["phone"];
