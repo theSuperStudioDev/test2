@@ -72,28 +72,27 @@ namespace Phoenix
         static void DoneMethod(Method option)
         {
             Console.ForegroundColor = Color.Yellow;
-            if (option == Method.Account)
+            switch(option)
             {
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                AccountNuker();
-            }
-            else if (option == Method.Guild)
-            {
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                GuildNuker();
-            }
-            else if (option == Method.Options)
-            {
-                Thread.Sleep(3000);
-                Options();
-            }
-            else if (option == Method.Raider)
-            {
-                Console.WriteLine("Done");
-                Thread.Sleep(2000);
-                Raider();
+                case Method.Account:
+                    Console.WriteLine("Done");
+                    Thread.Sleep(2000);
+                    AccountNuker();
+                    break;
+                case Method.Guild:
+                    Console.WriteLine("Done");
+                    Thread.Sleep(2000);
+                    GuildNuker();
+                    break;
+                case Method.Options:
+                    Thread.Sleep(3000);
+                    Options();
+                    break;
+                case Method.Raider:
+                    Console.WriteLine("Done");
+                    Thread.Sleep(2000);
+                    Raider();
+                    break;
             }
         }
         #endregion
@@ -411,18 +410,10 @@ namespace Phoenix
                 service.HideCommandPromptWindow = true;
 
                 ChromeOptions options = new ChromeOptions();
-                options.AddArgument("--disable-logging");
-                options.AddArguments("--mute-audio");
-                options.AddArguments("--disable-extensions");
-                options.AddArguments("--disable-notifications");
-                options.AddArguments("--disable-application-cache");
-                options.AddArguments("--no-sandbox");
-                options.AddArgument("--disable-crash-reporter");
-                options.AddArguments("--disable-dev-shm-usage");
-                options.AddArguments("--disable-gpu");
-                options.AddArgument("--ignore-certificate-errors");
-                options.AddArguments("--disable-infobars");
-                options.AddArgument("--silent");
+                options.AddArguments(new string[] {
+                    "--disable-logging", "--mute-audio", "--disable-extensions", "--disable-notifications", "--disable-application-cache",
+                    "--no-sandbox", "--disable-crash-reporter", "--disable-dev-shm-usage", "--disable-gpu", "--ignore-certificate-errors",
+                    "--disable-infobars", "--silent" });
 
                 IWebDriver driver = new ChromeDriver(service, options)
                 {
@@ -536,55 +527,29 @@ namespace Phoenix
 ╚══╩══════════════════════╩══╩═════════════════════════════╝
 
 ";
+                        Dictionary<int, string> emojiDict = new Dictionary<int, string>()
+                        {
+                            {1, "❤️"},
+                            {2, "✅"},
+                            {3, "🇱"},
+                            {4, "🇼"},
+                            {5, "🖕"},
+                            {6, "🧢"},
+                            {7, "❎"},
+                            {8, "😐"},
+                            {9, "🤓"},
+                            {10, "😂"}
+                        };
                         Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 7);
                         Console.ForegroundColor = Color.Yellow;
                         Console.Write("Your choice: ");
                         int choice = int.Parse(Console.ReadLine());
-                        switch (choice)
+                        foreach (var token in tokenlist)
                         {
-                            default:
+                            if (emojiDict.ContainsKey(choice))
+                                Raid.AddReaction(token, cid2, mid, emojiDict[choice]);
+                            else
                                 Raider();
-                                break;
-                            case 1:
-                                foreach (var token in tokenlist)
-                                    Raid.AddReaction(token, cid2, mid, "❤️");
-                                break;
-                            case 2:
-                                foreach (var token in tokenlist)
-                                    Raid.AddReaction(token, cid2, mid, "✅");
-                                break;
-                            case 3:
-                                foreach (var token in tokenlist)
-                                    Raid.AddReaction(token, cid2, mid, "🇱");
-                                break;
-                            case 4:
-                                foreach (var token in tokenlist)
-                                    Raid.AddReaction(token, cid2, mid, "🇼");
-                                break;
-                            case 5:
-                                foreach (var token in tokenlist)
-                                    Raid.AddReaction(token, cid2, mid, "🖕");
-                                break;
-                            case 6:
-                                foreach (var token in tokenlist)
-                                    Raid.AddReaction(token, cid2, mid, "🧢");
-                                break;
-                            case 7:
-                                foreach (var token in tokenlist)
-                                    Raid.AddReaction(token, cid2, mid, "❎");
-                                break;
-                            case 8:
-                                foreach (var token in tokenlist)
-                                    Raid.AddReaction(token, cid2, mid, "😐");
-                                break;
-                            case 9:
-                                foreach (var token in tokenlist)
-                                    Raid.AddReaction(token, cid2, mid, "🤓");
-                                break;
-                            case 10:
-                                foreach (var token in tokenlist)
-                                    Raid.AddReaction(token, cid2, mid, "😂");
-                                break;
                         }
                         DoneMethod(Method.Raider);
                         break;

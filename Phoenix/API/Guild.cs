@@ -68,16 +68,24 @@ namespace Phoenix
                 else
                     banner = $"https://cdn.discordapp.com/banners/{id}/{bannerid}.webp?size=240";
                 dynamic? verificationlevel = JObject.Parse(request)["verification_level"];
-                if (verificationlevel == "0")
-                    verificationlevel = "None";
-                else if (verificationlevel == "1")
-                    verificationlevel = "Low";
-                else if (verificationlevel == "2")
-                    verificationlevel = "Medium";
-                else if (verificationlevel == "3")
-                    verificationlevel = "High";
-                else if (verificationlevel == "4")
-                    verificationlevel = "Highest";
+                switch(verificationlevel)
+                {
+                    case "0":
+                        verificationlevel = "None";
+                        break;
+                    case "1":
+                        verificationlevel = "Low";
+                        break;
+                    case "2":
+                        verificationlevel = "Medium";
+                        break;
+                    case "3":
+                        verificationlevel = "High";
+                        break;
+                    case "4":
+                        verificationlevel = "Highest";
+                        break;
+                }
                 var preferredlocale = JObject.Parse(request)["preferred_locale"];
                 var nsfw = JObject.Parse(request)["nsfw"];
                 var roles = Request.SendGet($"/guilds/{gid}/roles", token);
@@ -480,16 +488,24 @@ namespace Phoenix
                 else
                     banner = $"https://cdn.discordapp.com/banners/{id}/{bannerid}.webp?size=240";
                 dynamic? verificationlevel = JObject.Parse(request)["verification_level"];
-                if (verificationlevel == "0")
-                    verificationlevel = "None";
-                else if (verificationlevel == "1")
-                    verificationlevel = "Low";
-                else if (verificationlevel == "2")
-                    verificationlevel = "Medium";
-                else if (verificationlevel == "3")
-                    verificationlevel = "High";
-                else if (verificationlevel == "4")
-                    verificationlevel = "Highest";
+                switch (verificationlevel)
+                {
+                    case "0":
+                        verificationlevel = "None";
+                        break;
+                    case "1":
+                        verificationlevel = "Low";
+                        break;
+                    case "2":
+                        verificationlevel = "Medium";
+                        break;
+                    case "3":
+                        verificationlevel = "High";
+                        break;
+                    case "4":
+                        verificationlevel = "Highest";
+                        break;
+                }
                 var preferredlocale = JObject.Parse(request)["preferred_locale"];
                 var nsfw = JObject.Parse(request)["nsfw"];
                 var roles = Request.SendGet($"/guilds/{gid}/roles", token);

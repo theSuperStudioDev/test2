@@ -12,10 +12,15 @@
 
         public static void Sleep(Wait option)
         {
-            if (option == Wait.Short)
-                Thread.Sleep(200);
-            else if (option == Wait.Long)
-                Thread.Sleep(2000);
+            switch(option)
+            {
+                case Wait.Short:
+                    Thread.Sleep(200);
+                    break;
+                case Wait.Long:
+                    Thread.Sleep(2000);
+                    break;
+            }
         }
     }
 }
