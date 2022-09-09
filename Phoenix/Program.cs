@@ -20,7 +20,7 @@ namespace Phoenix
     class Program
     {
         #region Configuration
-        static string? token;
+        static string? token; 
         static readonly List<string> tokenlist = new();
         static ulong? guildid;
 
@@ -129,11 +129,11 @@ namespace Phoenix
             try
             {
                 WriteLogo();
-                string options2 = @"╔══╦═══════════════════╗
-║01║ Login             ║
-║02║ MultiToken Raider ║
-║03║ Exit              ║
-╚══╩═══════════════════╝
+                string options2 = @"╔══╦════════════════════╗
+║01║ Login              ║
+║02║ Multi Token Raider ║
+║03║ Exit               ║
+╚══╩════════════════════╝
 
 ";
                 Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 7);
@@ -200,7 +200,7 @@ namespace Phoenix
                 Request.SendGet("/users/@me", token);
             }
             catch { Config.IsBot = true; }
-
+            Thread.Sleep(1000);
             if (User.GetUsername(token) == "N/A")
             {
                 WriteLogo();
@@ -223,14 +223,13 @@ namespace Phoenix
             {
                 WriteLogo();
                 Console.Title = $"Phoenix Nuker | {User.GetUsername(token)}";
-
-                string options = @"╔══╦═════════════════╦══╦═══════════════════════╗
-║01║ Account Nuker   ║06║ Login To Account      ║
-║02║ Guild Nuker     ║07║ Export Data           ║
-║03║ Webhook Spammer ║08║ Enter Another Account ║
-║04║ Delete Webhook  ║09║ Go Back               ║
-║05║ Report Bot      ║10║ Exit                  ║
-╚══╩═════════════════╩══╩═══════════════════════╝
+                string options = @"╔══╦═════════════════╦══╦═════════════════════╗
+║01║ Account Nuker   ║06║ Login To Account    ║
+║02║ Guild Nuker     ║07║ Enter Another Token ║
+║03║ Webhook Spammer ║08║ Go Back             ║
+║04║ Delete Webhook  ║09║ Exit                ║
+║05║ Report Bot      ║10║                     ║
+╚══╩═════════════════╩══╩═════════════════════╝
 
 ";
                 Console.WriteWithGradient(options, Color.OrangeRed, Color.Yellow, 7);
@@ -341,47 +340,16 @@ namespace Phoenix
                         DoneMethod(Method.Options);
                         break;
                     case 7:
-                        WriteLogo();
-                        string options3 = @"╔══╦════════════════╗
-║01║ Export Account ║
-║02║ Export Guild   ║
-╚══╩════════════════╝
-
-";
-                        Console.WriteWithGradient(options3, Color.OrangeRed, Color.Yellow, 3);
-                        Console.ForegroundColor = Color.Yellow;
-                        Console.Write("Your choice: ");
-                        int choice = int.Parse(Console.ReadLine());
-                        switch (choice)
-                        {
-                            default:
-                                Options();
-                                break;
-                            case 1:
-                                WriteLogo();
-                                User.ExportAccount(token);
-                                break;
-                            case 2:
-                                WriteLogo();
-                                Console.Write("Guild ID: ");
-                                ulong? gid2 = ulong.Parse(Console.ReadLine());
-                                WriteLogo();
-                                Guild.ExportGuild(token, gid2);
-                                break;
-                        }
-                        DoneMethod(Method.Options);
-                        break;
-                    case 8:
                         if (File.Exists("config.json"))
                             File.Delete("config.json");
                         Process.Start(Assembly.GetExecutingAssembly().Location);
                         Environment.Exit(0);
                         break;
-                    case 9:
+                    case 8:
                         Console.Title = "Phoenix Nuker";
                         Login();
                         break;
-                    case 10:
+                    case 9:
                         Environment.Exit(0);
                         break;
                 }
@@ -518,16 +486,16 @@ namespace Phoenix
                         Console.Write("Message ID: ");
                         ulong? mid = ulong.Parse(Console.ReadLine());
                         WriteLogo();
-                        string options2 = @"╔══╦══════════════════════╦══╦═════════════════════════════╗
-║01║ Heart                ║06║ Billed Cap                  ║
-║02║ White Check Mark     ║07║ Negative Squared Cross Mark ║
-║03║ Regional Indicator L ║08║ Neutral Face                ║
-║04║ Regional Indicator W ║09║ Nerd Face                   ║
-║05║ Middle Finger        ║10║ Joy                         ║
-╚══╩══════════════════════╩══╩═════════════════════════════╝
+                        string options2 = @"╔══╦══════════════════════╦══╦═════════════════════════════╦══╦════════════╗
+║01║ Heart                ║06║ Billed Cap                  ║11║ Skull      ║
+║02║ White Check Mark     ║07║ Negative Squared Cross Mark ║12║ Clown      ║
+║03║ Regional Indicator L ║08║ Neutral Face                ║13║ No Mouth   ║
+║04║ Regional Indicator W ║09║ Nerd Face                   ║14║ Sob        ║
+║05║ Middle Finger        ║10║ Joy                         ║15║ Eggplant   ║
+╚══╩══════════════════════╩══╩═════════════════════════════╩══╩════════════╝
 
 ";
-                        Dictionary<int, string> emojiDict = new Dictionary<int, string>()
+                        Dictionary<int, string> emojis = new()
                         {
                             {1, "❤️"},
                             {2, "✅"},
@@ -538,18 +506,21 @@ namespace Phoenix
                             {7, "❎"},
                             {8, "😐"},
                             {9, "🤓"},
-                            {10, "😂"}
+                            {10, "😂"},
+                            {11, "💀"},
+                            {12, "🤡"},
+                            {13, "😶"},
+                            {14, "😭"},
+                            {15, "🍆"}
                         };
                         Console.WriteWithGradient(options2, Color.OrangeRed, Color.Yellow, 7);
                         Console.ForegroundColor = Color.Yellow;
                         Console.Write("Your choice: ");
                         int choice = int.Parse(Console.ReadLine());
-                        foreach (var token in tokenlist)
+                        if (emojis.ContainsKey(choice))
                         {
-                            if (emojiDict.ContainsKey(choice))
-                                Raid.AddReaction(token, cid2, mid, emojiDict[choice]);
-                            else
-                                Raider();
+                            foreach (var token in tokenlist)
+                                Raid.AddReaction(token, cid2, mid, emojis[choice]);
                         }
                         DoneMethod(Method.Raider);
                         break;
