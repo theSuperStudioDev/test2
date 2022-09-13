@@ -10,13 +10,9 @@
 
 > If you like the project, consider dropping a star ⭐
   
-> If you caught any issues, please report it in [issues](https://github.com/extatent/Phoenix-Nuker/issues) or in our [Discord server](https://dsc.gg/extatent) (Specify **"Phoenix Nuker"** in the ticket)
+> If you caught any issues, please report it in [issues](https://github.com/extatent/Phoenix-Nuker/issues).
 
-> Read the [FAQ](#frequently-asked-questions) before creating a new ticket/issue.
-
-> Tickets like **"how to use"**, **"I need help"**, **"not working"**, **"help me to raid/nuke"** and common knowledge questions will be ignored and deleted. Provide specific information.
-
-> Become a contributor by forking the project and opening a new pull request or [suggest new features](https://dsc.gg/extatent).
+> Read the [FAQ](#frequently-asked-questions) before creating a new issue.
 
 <details>
 <summary>Preview</summary>
