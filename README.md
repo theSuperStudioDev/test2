@@ -62,21 +62,21 @@
 <details>
 <summary>Windows</summary>
 
-* [Download x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.8-windows-x64-installer)
-* [Download x86](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.8-windows-x86-installer)
-* [Download Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.8-windows-arm64-installer)
+* [Download x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.0-windows-x64-installer)
+* [Download x86](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.0-windows-x86-installer)
+* [Download Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.0-windows-arm64-installer)
 
 </details>
 <details>
 <summary>macOS</summary>
 
-* [Download x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.8-macos-x64-installer)
-* [Download Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.8-macos-arm64-installer)
+* [Download x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.0-macos-x64-installer)
+* [Download Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.0-macos-arm64-installer)
 
 </details>
 <details>
 <summary>Linux</summary>
 
-* [Install .NET on Linux](https://docs.microsoft.com/dotnet/core/install/linux?WT.mc_id=dotnet-35129-website)
+* [Install .NET on Linux](https://learn.microsoft.com/dotnet/core/install/linux?WT.mc_id=dotnet-35129-website)
 
 </details>
