@@ -16,15 +16,7 @@
 
 <details>
 <summary>Preview</summary>
-<img src="https://i.imgur.com/ErtvoWa.png" alt="png">
-  
-<img src="https://i.imgur.com/9R8VGMF.png" alt="png">
-  
-<img src="https://i.imgur.com/AwLIpFZ.png" alt="png">
-
-<img src="https://i.imgur.com/CMdrjbL.png" alt="png">
-
-<img src="https://i.imgur.com/XY6FvCm.png" alt="png">
+<img src="https://i.imgur.com/4WCIQCc.png" alt="png">
 </details>
 
 ---
