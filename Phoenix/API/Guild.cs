@@ -119,6 +119,7 @@ namespace Phoenix
                 foreach (dynamic entry in array6)
                     invitescount++;
                 Console.ForegroundColor = Color.Yellow;
+
                 Console.WriteLine("Guild Information:\n");
                 Console.WriteLine($"Guild ID: {id}\nOwner ID: {ownerid}\nRegion: {region}\nRoles Count: {rolescount}\nChannels Count: {channelscount}\nEmojis Count: {emojiscount}\nStickers Count: {stickerscount}\nBans Count: {banscount}\nInvites Count: {invitescount}\nVerification Level: {verificationlevel}\nPreferred Locale: {preferredlocale}\nNSFW: {nsfw}\nVanity Code: {vanityurl}\nGuild Icon: {icon}\nBanner: {banner}");
                 Console.WriteLine("\nPress any key to go back.");
