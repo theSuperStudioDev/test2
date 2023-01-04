@@ -26,7 +26,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed. Make sure you've enabled guild members intent.", Color.Red); }
+            catch { Console.WriteLine("Failed. Make sure it's a bot token and you've enabled guild members intent in the developer portal.", Color.Red); }
         }
 
         public static void KickAllMembers(string? token, ulong? gid)
@@ -47,7 +47,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed. Make sure you've enabled guild members intent.", Color.Red); }
+            catch { Console.WriteLine("Failed. Make sure it's a bot token and you've enabled guild members intent in the developer portal.", Color.Red); }
         }
 
         public static void ChangeAllNicknames(string? token, ulong? gid, string nick)
@@ -68,7 +68,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed. Make sure you've enabled guild members intent.", Color.Red); }
+            catch { Console.WriteLine("Failed. Make sure it's a bot token and you've enabled guild members intent in the developer portal.", Color.Red); }
         }
     }
 }
