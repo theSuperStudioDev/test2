@@ -1,6 +1,6 @@
 # Phoenix Nuker
 
-[![Download](https://img.shields.io/badge/Download-Now-Green?style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/releases/download/v2.1.0/Phoenix.zip)
+[![Download](https://img.shields.io/badge/Download-Now-Green?style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/releases/download/v2.1.1/Phoenix.zip)
 [![Downloads](https://img.shields.io/github/downloads/extatent/Phoenix-Nuker/total?label=Downloads&style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/releases/latest)
 [![Stars](https://img.shields.io/github/stars/extatent/Phoenix-Nuker?label=Stars&style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/stargazers)
 [![Forks](https://img.shields.io/github/forks/extatent/Phoenix-Nuker?label=Forks&style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/network/members)
