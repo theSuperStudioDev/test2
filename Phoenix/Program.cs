@@ -620,6 +620,7 @@ namespace Phoenix
                         Console.WriteLine();
                         Console.Write("Your choice: ");
                         int choice3 = int.Parse(Console.ReadLine());
+                        WriteLogo();
                         if (emojis.ContainsKey(choice3))
                             foreach (var token in tokenlist) Raid.AddReaction(token, cid4, mid3, emojis[choice3]);
                         Options();
@@ -752,6 +753,7 @@ namespace Phoenix
                     token = Console.ReadLine();
                     token = token.Replace("'", "");
                     token = token.Replace("\"", "");
+                    File.WriteAllText("token.txt", token);
                     if (User.GetUsername(token) == "N/A")
                     {
                         WriteLogo();
@@ -800,6 +802,7 @@ namespace Phoenix
         #endregion
 
         #region MultiTokens
+        static int count = 0;
         static void MultiTokens()
         {
             try
@@ -807,20 +810,22 @@ namespace Phoenix
                 Console.Clear();
                 WriteLogo();
                 var list = File.ReadAllLines("multitokens.txt");
-                int count = 0;
                 foreach (var token in list)
                 {
-                    count++;
-                    tokenlist.Add(token);
+                    if (!tokenlist.Contains(token))
+                    {
+                        count++;
+                        tokenlist.Add(token);
+                    }
                 }
                 if (count == 0)
                 {
                     WriteLogo();
                     Console.WriteLine("Paste your tokens in multitokens.txt file.");
                     Thread.Sleep(3000);
+                    Options();
                 }
                 Console.Clear();
-                Options();
             }
             catch { }
         }

@@ -24,7 +24,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                Request.Send($"/users/@me/guilds/{id}", "DELETE", token);
+                Request.Send($"/guilds/{id}", "DELETE", token);
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
