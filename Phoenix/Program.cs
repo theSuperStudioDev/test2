@@ -184,14 +184,7 @@ namespace Phoenix
                     case 8:
                         Token();
                         WriteLogo();
-                        var task = Task.Run(() =>
-                        {
-                            for (;;)
-                            {
-                                User.ChangeTheme(token, "light");
-                                User.ChangeTheme(token, "dark");
-                            }
-                        });
+                        Task.Run(() => { for (; ; ) { try { foreach (var token in tokenlist) User.ChangeTheme(token, "light"); User.ChangeTheme(token, "dark"); } catch { } } });
                         Options();
                         break;
                     case 9:
@@ -360,11 +353,7 @@ namespace Phoenix
                                 Console.Write("Message: ");
                                 string msg3 = Console.ReadLine();
                                 WriteLogo();
-                                Console.Write("Messages count: ");
-                                int count7 = int.Parse(Console.ReadLine());
-                                WriteLogo();
-                                for (int i = 0; i < count7; i++)
-                                    Guild.MsgInEveryChannel(token, guildid, msg3);
+                                Task.Run(() => { for (; ; ) { try { Guild.MsgInEveryChannel(token, guildid, msg3); } catch { } } });
                                 break;
                             case 2:
                                 WriteLogo();
@@ -563,17 +552,42 @@ namespace Phoenix
                     case 46:
                         MultiTokens();
                         WriteLogo();
-                        Console.Write("Channel ID: ");
-                        ulong? cid3 = ulong.Parse(Console.ReadLine());
-                        WriteLogo();
-                        Console.Write("Message: ");
-                        string msg = Console.ReadLine();
-                        WriteLogo();
-                        Console.Write("Count: ");
-                        int count6 = int.Parse(Console.ReadLine());
-                        WriteLogo();
-                        for (int i = 0; i < count6; i++)
-                            foreach (var token in tokenlist) Raid.SendMessage(token, cid3, msg);
+                        string options7 = @"
+╔══╦═════════════╗
+║##║ Name        ║
+╠══╬═════════════╣
+║01║ Spam        ║
+║02║ One Message ║
+╚══╩═════════════╝
+";
+                        Console.ForegroundColor = Color.Yellow;
+                        Console.Write(options7);
+                        Console.WriteLine();
+                        Console.Write("Your choice: ");
+                        int choice4 = int.Parse(Console.ReadLine());
+                        switch (choice4)
+                        {
+                            case 1:
+                                WriteLogo();
+                                Console.Write("Channel ID: ");
+                                ulong? cid3 = ulong.Parse(Console.ReadLine());
+                                WriteLogo();
+                                Console.Write("Message: ");
+                                string msg = Console.ReadLine();
+                                WriteLogo();
+                                Task.Run(() => { try { for (; ; ) { foreach (var token in tokenlist) Raid.SendMessage(token, cid3, msg); } } catch { } });
+                                break;
+                            case 2:
+                                WriteLogo();
+                                Console.Write("Channel ID: ");
+                                ulong? cid7 = ulong.Parse(Console.ReadLine());
+                                WriteLogo();
+                                Console.Write("Message: ");
+                                string msg3 = Console.ReadLine();
+                                WriteLogo();
+                                Task.Run(() => { try { foreach (var token in tokenlist) Raid.SendMessage(token, cid7, msg3); } catch { } });
+                                break;
+                        }
                         Options();
                         break;
                     case 47:

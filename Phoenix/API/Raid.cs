@@ -49,10 +49,9 @@ namespace Phoenix
             try
             {
                 Request.Send($"/channels/{cid}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
-                Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch { Console.WriteLine("Failed: " + token, Color.Red); }
+            catch { }
         }
 
         public static void AddReaction(string token, ulong? cid, ulong? mid, string emoji)

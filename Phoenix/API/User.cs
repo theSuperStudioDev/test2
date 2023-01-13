@@ -188,7 +188,7 @@ namespace Phoenix
                 Request.Send("/users/@me/settings", "PATCH", token, $"{{\"theme\": \"{theme}\"}}");
                 Sleep(Wait.Short);
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch { }
         }
 
         public static void CreateGuild(string? token, string name)
