@@ -1,6 +1,6 @@
 # Phoenix Nuker
 
-[![Download](https://img.shields.io/badge/Download-Now-Green?style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/releases/download/v2.1.1/Phoenix.zip)
+[![Download](https://img.shields.io/badge/Download-Now-Green?style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/releases/download/v2.1.2/Phoenix.zip)
 [![Downloads](https://img.shields.io/github/downloads/extatent/Phoenix-Nuker/total?label=Downloads&style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/releases/latest)
 [![Stars](https://img.shields.io/github/stars/extatent/Phoenix-Nuker?label=Stars&style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/stargazers)
 [![Forks](https://img.shields.io/github/forks/extatent/Phoenix-Nuker?label=Forks&style=for-the-badge)](https://github.com/extatent/Phoenix-Nuker/network/members)
@@ -54,16 +54,16 @@
 <details>
 <summary>Windows</summary>
 
-* [Download x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.1-windows-x64-installer)
-* [Download x86](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.1-windows-x86-installer)
-* [Download Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.1-windows-arm64-installer)
+* [Download x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.2-windows-x64-installer)
+* [Download x86](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.2-windows-x86-installer)
+* [Download Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.2-windows-arm64-installer)
 
 </details>
 <details>
 <summary>macOS</summary>
 
-* [Download x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.1-macos-x64-installer)
-* [Download Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.1-macos-arm64-installer)
+* [Download x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.2-macos-x64-installer)
+* [Download Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.2-macos-arm64-installer)
 
 </details>
 <details>
