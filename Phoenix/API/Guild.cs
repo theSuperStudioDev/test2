@@ -23,7 +23,7 @@ namespace Phoenix
                     }
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void LeaveDeleteGuild(string? token, ulong? gid)
@@ -40,7 +40,7 @@ namespace Phoenix
                     Request.Send($"/users/@me/guilds/{gid}", "DELETE", token);
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void GuildInformation(string? token, ulong? gid)
@@ -126,7 +126,7 @@ namespace Phoenix
                 Console.ReadKey();
                 Console.Clear();
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void CreateChannel(string? token, ulong? gid, string name)
@@ -137,7 +137,7 @@ namespace Phoenix
                 Request.Send($"/guilds/{gid}/channels", "POST", token, $"{{\"name\":\"{name}\"}}", true);
                 Sleep(Wait.Short);
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void CreateRole(string? token, ulong? gid, string name)
@@ -148,7 +148,7 @@ namespace Phoenix
                 Request.Send($"/guilds/{gid}/roles", "POST", token, $"{{\"name\":\"{name}\"}}", true);
                 Sleep(Wait.Short);
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void DeleteInvites(string? token, ulong? gid)
@@ -165,7 +165,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void DeleteEmojis(string? token, ulong? gid)
@@ -182,7 +182,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void DeleteChannels(string? token, ulong? gid)
@@ -199,7 +199,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void RemoveBans(string? token, ulong? gid)
@@ -216,7 +216,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void DeleteRoles(string? token, ulong? gid)
@@ -233,7 +233,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void DeleteStickers(string? token, ulong? gid)
@@ -250,7 +250,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static string GetGuildName(string? token, ulong? gid)
@@ -274,7 +274,7 @@ namespace Phoenix
             {
                 Request.Send($"/guilds/{gid}/prune", "POST", token, $"{{\"days\": 1}}", true);
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void RemoveIntegrations(string? token, ulong? gid)
@@ -291,7 +291,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void DeleteAllReactions(string? token, ulong? cid, ulong? mid)
@@ -301,7 +301,7 @@ namespace Phoenix
             {
                 Request.Send($"/channels/{cid}/messages/{mid}/reactions", "DELETE", token);
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
         public static void DeleteAutoModerationRules(string? token, ulong? gid)
         {
@@ -317,7 +317,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void CreateInvite(string? token, ulong? gid)
@@ -333,7 +333,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void DeleteGuildScheduledEvents(string? token, ulong? gid)
@@ -350,7 +350,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void DeleteGuildTemplate(string? token, ulong? gid)
@@ -367,7 +367,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void DeleteStageInstances(string? token, ulong? gid)
@@ -387,7 +387,7 @@ namespace Phoenix
                     }
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void DeleteWebhooks(string? token, ulong? gid)
@@ -404,7 +404,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void DeleteWebhook(string? token, ulong? wid)
@@ -414,7 +414,7 @@ namespace Phoenix
             {
                 Request.Send($"/webhooks/{wid}", "DELETE", token, null, true);
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void SendWebhookMessage(string? token, ulong? wid, string wtoken, string message)
@@ -425,7 +425,7 @@ namespace Phoenix
                 Request.Send($"/webhooks/{wid}/{wtoken}", "POST", token, $"{{\"content\":\"{message}\"}}");
                 Sleep(Wait.Short);
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void GrantEveryoneAdmin(string? token, ulong? gid)
@@ -443,7 +443,7 @@ namespace Phoenix
                     }
                 }
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
 
         public static void ReportMessage(string? token, ulong? gid, ulong? cid, ulong? mid, int reason)
@@ -453,7 +453,7 @@ namespace Phoenix
             {
                 Request.Send("/report", "POST", token, $"{{\"channel_id\": \"{cid}\", \"guild_id\": \"{gid}\", \"message_id\": \"{mid}\", \"reason\": {reason}}}");
             }
-            catch { Console.WriteLine("Failed", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
         }
     }
 }

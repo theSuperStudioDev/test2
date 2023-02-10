@@ -16,7 +16,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch { Console.WriteLine("Failed: " + token, Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
         }
 
         public static void LeaveGuild(string token, ulong? id)
@@ -28,7 +28,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch { Console.WriteLine("Failed: " + token, Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
         }
 
         public static void AddFriend(string token, string username, uint discriminator)
@@ -40,7 +40,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch { Console.WriteLine("Failed: " + token, Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
         }
 
         public static void SendMessage(string token, ulong? cid, string message)
@@ -51,7 +51,7 @@ namespace Phoenix
                 Request.Send($"/channels/{cid}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
                 Sleep(Wait.Short);
             }
-            catch { }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
         }
 
         public static void AddReaction(string token, ulong? cid, ulong? mid, string emoji)
@@ -63,7 +63,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch { Console.WriteLine("Failed: " + token, Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
         }
 
         public static void BlockUser(string token, ulong? uid)
@@ -75,7 +75,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch { Console.WriteLine("Failed: " + token, Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
         }
 
         public static void LeaveGroup(string token, ulong? gid)
@@ -87,7 +87,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch { Console.WriteLine("Failed: " + token, Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
         }
 
         public static void DMUser(string token, ulong? uid, string message)
@@ -102,7 +102,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch { Console.WriteLine("Failed: " + token, Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
         }
 
         public static void TriggerTyping(string token, ulong? cid)
@@ -114,7 +114,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch { Console.WriteLine("Failed: " + token, Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
         }
 
         public static void ReportMessage(string token, ulong? gid, ulong? cid, ulong? mid, int reason)
@@ -126,7 +126,25 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch { Console.WriteLine("Failed: " + token, Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
+        }
+
+        public static void Boost(string token, ulong? gid)
+        {
+            Console.ReplaceAllColorsWithDefaults();
+            try
+            {
+                var subid = Request.SendGet("/users/@me/guilds/premium/subscription-slots", token);
+                var array = JArray.Parse(subid);
+                int subidcount = 0;
+                foreach (dynamic entry in array)
+                {
+                    subidcount++;
+                    if (subidcount != 0) Request.Send($"/guilds/{gid}/premium/subscriptions", "PUT", token, $"{{\"user_premium_guild_subscription_slot_ids\":\"{subidcount}\"}}");
+                }
+                Sleep(Wait.Short);
+            }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
         }
     }
 }

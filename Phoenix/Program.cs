@@ -84,9 +84,9 @@ namespace Phoenix
 ║08║ Seizure Mode        ║22║ Prune Members        ║36║ Delete All Webhooks           ║50║ Leave Group      ║
 ║09║ Confuse Mode        ║23║ Remove Integrations  ║37║ Webhook Spammer               ║51║ Trigger Typing   ║
 ║10║ Mass DM             ║24║ Remove All Reactions ║38║ Mass Report                   ║52║ Report Message   ║
-║11║ User Info           ║25║ Guild Info           ║39║ Ban All Members               ║53║ Check Tokens     ║
-║12║ Block Relationships ║26║ Leave/Delete Guild   ║40║ Kick All Members              ║54║ Exit             ║
-║13║ Delete DMs          ║27║ Msg In Every Channel ║41║ Rename Everyone               ║55║                  ║
+║11║ User Info           ║25║ Guild Info           ║39║ Ban All Members               ║53║ Boost Server     ║
+║12║ Block Relationships ║26║ Leave/Delete Guild   ║40║ Kick All Members              ║54║ Check Tokens     ║
+║13║ Delete DMs          ║27║ Msg In Every Channel ║41║ Rename Everyone               ║55║ Exit             ║
 ║14║ Login to Account    ║28║ Delete Webhook       ║42║ Change Guild ID               ║56║                  ║
 ╚══╩═════════════════════╩══╩══════════════════════╩══╩═══════════════════════════════╩══╩══════════════════╝
 ";
@@ -600,15 +600,15 @@ namespace Phoenix
                         ulong? mid3 = ulong.Parse(Console.ReadLine());
                         WriteLogo();
                         string options5 = @"
-╔══╦═════════════════════════════════════════════════════════════════════╗
-║##║ Name                                                                ║
-╠══╬══════════════════════╦══╦═════════════════════════════╦══╦══════════╣
-║01║ Heart                ║06║ Billed Cap                  ║11║ Skull    ║
-║02║ White Check Mark     ║07║ Negative Squared Cross Mark ║12║ Clown    ║
-║03║ Regional Indicator L ║08║ Neutral Face                ║13║ No Mouth ║
-║04║ Regional Indicator W ║09║ Nerd Face                   ║14║ Sob      ║
-║05║ Middle Finger        ║10║ Joy                         ║15║ Eggplant ║
-╚══╩══════════════════════╩══╩═════════════════════════════╩══╩══════════╝
+╔══╦═══════════════════════════════════════════════════════════════════════════════════╗
+║##║ Name                                                                              ║
+╠══╬══════════════════════╦══╦═════════════════════════════╦══╦════════════════════════╣
+║01║ Heart                ║06║ Billed Cap                  ║11║ Skull                  ║
+║02║ White Check Mark     ║07║ Negative Squared Cross Mark ║12║ Clown                  ║
+║03║ Regional Indicator L ║08║ Neutral Face                ║13║ No Mouth               ║
+║04║ Regional Indicator W ║09║ Nerd Face                   ║14║ Sob                    ║
+║05║ Middle Finger        ║10║ Joy                         ║15║ Add other/custom emoji ║
+╚══╩══════════════════════╩══╩═════════════════════════════╩══╩════════════════════════╝
 ";
                         Dictionary<int, string> emojis = new()
                         {
@@ -625,10 +625,8 @@ namespace Phoenix
                             {11, "💀"},
                             {12, "🤡"},
                             {13, "😶"},
-                            {14, "😭"},
-                            {15, "🍆"}
+                            {14, "😭"}
                         };
-
                         Console.ForegroundColor = Color.Yellow;
                         Console.Write(options5);
                         Console.WriteLine();
@@ -637,6 +635,27 @@ namespace Phoenix
                         WriteLogo();
                         if (emojis.ContainsKey(choice3))
                             foreach (var token in tokenlist) Raid.AddReaction(token, cid4, mid3, emojis[choice3]);
+                        else if (choice3 == 15)
+                        {
+                            WriteLogo();
+                            Console.ForegroundColor = Color.Yellow;
+                            string options8 = @"
+To add any other Discord emoji:
+1. In Discord server, enter :thumbsup: (change the thumbsup to any emoji you want), copy the emoji.
+2. Go to urlencoder.org, in the first text box paste the emoji you copied and click the ""ENCODE"" button.
+3. Paste the result below. (It should look like %F0%9F%91%8D - the thumbsup emoji)
+To add any custom emoji:
+1. In Discord server, enter \:customimage: (change the customimage to any custom emoji you want), send the message.
+2. The result will look like <:customimage:1071451591124721684>, copy the text without <> (:customimage:1071451591124721684).
+3. Paste the copied text below.
+";
+                            Console.Write(options8);
+                            Console.WriteLine();
+                            Console.Write("Your choice: ");
+                            string emoji = Console.ReadLine();
+                            WriteLogo();
+                            foreach (var token in tokenlist) Raid.AddReaction(token, cid4, mid3, emoji);
+                        }
                         Options();
                         break;
                     case 48:
@@ -713,6 +732,15 @@ namespace Phoenix
                     case 53:
                         MultiTokens();
                         WriteLogo();
+                        Console.Write("Guild ID: ");
+                        ulong? gid4 = ulong.Parse(Console.ReadLine());
+                        WriteLogo();
+                        foreach (var token in tokenlist) Raid.Boost(token, gid4);
+                        Options();
+                        break;
+                    case 54:
+                        MultiTokens();
+                        WriteLogo();
                         Console.ReplaceAllColorsWithDefaults();
                         foreach (var token in tokenlist)
                         {
@@ -730,12 +758,8 @@ namespace Phoenix
                         Thread.Sleep(3000);
                         Options();
                         break;
-                    case 54:
-                        Environment.Exit(0);
-                        break;
                     case 55:
-                        WriteLogo();
-                        Options();
+                        Environment.Exit(0);
                         break;
                     case 56:
                         WriteLogo();
