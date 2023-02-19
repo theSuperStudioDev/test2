@@ -5,6 +5,9 @@ using OpenQA.Selenium;
 using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager.Helpers;
+using static Phoenix.Config;
+using System.Text.RegularExpressions;
+using System.ComponentModel;
 
 /* 
        │ Author       : extatent
@@ -53,6 +56,12 @@ namespace Phoenix
                 var Token = File.ReadAllText("token.txt");
                 if (!string.IsNullOrEmpty(Token))
                     token = Token;
+                if (!string.IsNullOrEmpty(File.ReadAllText("token.txt")))
+                {
+                    string split = File.ReadAllText("token.txt");
+                    string isbot = split.Split(':')[1];
+                    if (isbot == "true") IsBot = true;
+                }
                 Options();
             }
             catch (Exception e)
@@ -100,7 +109,7 @@ namespace Phoenix
                 {
                     default:
                         Console.WriteLine("Not a valid option.");
-                        Thread.Sleep(2000);
+                        Sleep(Wait.Long);
                         Console.Clear();
                         Options();
                         break;
@@ -512,6 +521,7 @@ namespace Phoenix
                         Options();
                         break;
                     case 42:
+                        guildid = null;
                         GuildID();
                         Options();
                         break;
@@ -751,11 +761,11 @@ To add any custom emoji:
                                 File.AppendAllText("WorkingTokens.txt", token + Environment.NewLine);
                             }
                             catch { Console.WriteLine(token, Color.Red); }
-                            Thread.Sleep(200);
+                            Sleep(Wait.Short);
                         }
                         Console.ForegroundColor = Color.Yellow;
                         Console.WriteLine("Working tokens were saved to WorkingTokens.txt");
-                        Thread.Sleep(3000);
+                        Sleep(Wait.Long);
                         Options();
                         break;
                     case 55:
@@ -770,7 +780,7 @@ To add any custom emoji:
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                Thread.Sleep(3000);
+                Sleep(Wait.Long);
                 Options();
             }
         }
@@ -792,15 +802,15 @@ To add any custom emoji:
                     token = token.Replace("'", "");
                     token = token.Replace("\"", "");
                     File.WriteAllText("token.txt", token);
-                    if (User.GetUsername(token) == "N/A")
+                    if (Request.Check(token) != true)
                     {
                         WriteLogo();
                         Console.WriteLine("Invalid token.");
                         token = string.Empty;
-                        Thread.Sleep(3000);
+                        Sleep(Wait.Long);
                         Options();
                     }
-                    try { Request.SendGet("/users/@me", token); } catch { Config.IsBot = true; }
+                    try { Request.SendGet("/users/@me", token); } catch { File.WriteAllText("token.txt", $"{token}:true"); IsBot = true; }
                     Console.Clear();
                 }
                 catch { }
@@ -811,6 +821,7 @@ To add any custom emoji:
         #region Guild ID
         static void GuildID()
         {
+            Token();
             if (guildid == null)
             {
                 try
@@ -828,7 +839,7 @@ To add any custom emoji:
                             WriteLogo();
                             Console.WriteLine("Invalid ID or you're not in the guild.");
                             guildid = ulong.Parse("");
-                            Thread.Sleep(3000);
+                            Sleep(Wait.Long);
                             Options();
                         }
                     }
@@ -860,7 +871,7 @@ To add any custom emoji:
                 {
                     WriteLogo();
                     Console.WriteLine("Paste your tokens in multitokens.txt file.");
-                    Thread.Sleep(3000);
+                    Sleep(Wait.Long);
                     Options();
                 }
                 Console.Clear();
@@ -894,7 +905,7 @@ To add any custom emoji:
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                Thread.Sleep(3000);
+                Sleep(Wait.Long);
                 Options();
             }
         }

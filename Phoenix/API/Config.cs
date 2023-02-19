@@ -18,7 +18,7 @@
                     Thread.Sleep(200);
                     break;
                 case Wait.Long:
-                    Thread.Sleep(2000);
+                    Thread.Sleep(3000);
                     break;
             }
         }

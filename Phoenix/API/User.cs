@@ -21,7 +21,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void DeleteDMs(string? token)
@@ -38,7 +38,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void BlockRelationships(string? token)
@@ -55,7 +55,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void UserInformation(string? token)
@@ -166,7 +166,7 @@ namespace Phoenix
                 Console.WriteLine("\nPress any key to go back.");
                 Console.ReadKey();
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void ConfuseMode(string? token)
@@ -177,7 +177,7 @@ namespace Phoenix
                 Request.Send("/users/@me/settings", "PATCH", token, $"{{\"locale\": \"zh-CN\",\"theme\": \"light\", \"developer_mode\": \"false\", \"message_display_compact\": \"true\", \"explicit_content_filter\": \"0\"}}");
                 Sleep(Wait.Short);
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void ChangeTheme(string? token, string theme)
@@ -199,7 +199,7 @@ namespace Phoenix
                 Request.Send("/guilds", "POST", token, $"{{\"name\": \"{name}\"}}");
                 Sleep(Wait.Short);
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void RemoveConnections(string? token)
@@ -216,7 +216,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void DeauthorizeApps(string? token)
@@ -233,7 +233,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void LeaveHypeSquad(string? token)
@@ -243,7 +243,7 @@ namespace Phoenix
             {
                 Request.Send("/hypesquad/online", "DELETE", token);
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void ClearRelationships(string? token)
@@ -260,7 +260,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void LeaveDeleteGuilds(string? token)
@@ -284,7 +284,7 @@ namespace Phoenix
                     }
                 }
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void EditProfile(string? token, string? hypesquad = null, string? bio = null, string? status = null)
@@ -322,20 +322,7 @@ namespace Phoenix
                     Sleep(Wait.Short);
                 }
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {e}", Color.Red); }
-        }
-
-        public static string GetUsername(string? token)
-        {
-            Console.ReplaceAllColorsWithDefaults();
-            try
-            {
-                string request = Request.SendGet("/users/@me", token);
-                var username = JObject.Parse(request)["username"];
-                var discriminator = JObject.Parse(request)["discriminator"];
-                return $"{username}#{discriminator}";
-            }
-            catch { return "N/A"; }
+            catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
     }
 }

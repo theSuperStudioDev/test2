@@ -41,5 +41,31 @@ namespace Phoenix
             Thread.Sleep(1000);
             return new StreamReader(client.Send(request).Content.ReadAsStream()).ReadToEnd();
         }
+
+        public static bool Check(string token)
+        {
+            try
+            {
+                try
+                {
+                    HttpClient client = new();
+                    client.DefaultRequestHeaders.Add("Authorization", token);
+                    HttpRequestMessage request = new(new HttpMethod("GET"), $"https://discord.com/api/v{Config.APIVersion}/users/@me") { Content = null };
+                    var response = client.GetAsync($"https://discord.com/api/v{Config.APIVersion}/users/@me").GetAwaiter().GetResult();
+                    response.EnsureSuccessStatusCode();
+                    return true;
+                }
+                catch
+                {
+                    HttpClient client = new();
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bot {token}");
+                    HttpRequestMessage request = new(new HttpMethod("GET"), $"https://discord.com/api/v{Config.APIVersion}/users/@me") { Content = null };
+                    var response = client.GetAsync($"https://discord.com/api/v{Config.APIVersion}/users/@me").GetAwaiter().GetResult();
+                    response.EnsureSuccessStatusCode();
+                    return true;
+                }
+            }
+            catch { return false; }
+        }
     }
 }

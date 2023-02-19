@@ -16,7 +16,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void LeaveGuild(string token, ulong? id)
@@ -28,7 +28,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void AddFriend(string token, string username, uint discriminator)
@@ -40,7 +40,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void SendMessage(string token, ulong? cid, string message)
@@ -51,7 +51,7 @@ namespace Phoenix
                 Request.Send($"/channels/{cid}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
                 Sleep(Wait.Short);
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void AddReaction(string token, ulong? cid, ulong? mid, string emoji)
@@ -63,7 +63,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void BlockUser(string token, ulong? uid)
@@ -75,7 +75,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void LeaveGroup(string token, ulong? gid)
@@ -87,7 +87,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void DMUser(string token, ulong? uid, string message)
@@ -102,7 +102,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void TriggerTyping(string token, ulong? cid)
@@ -114,7 +114,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void ReportMessage(string token, ulong? gid, ulong? cid, ulong? mid, int reason)
@@ -126,7 +126,7 @@ namespace Phoenix
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
         public static void Boost(string token, ulong? gid)
@@ -144,7 +144,7 @@ namespace Phoenix
                 }
                 Sleep(Wait.Short);
             }
-            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e}", Color.Red); }
+            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
     }
 }
