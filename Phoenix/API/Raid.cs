@@ -31,18 +31,6 @@ namespace Phoenix
             catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
-        public static void AddFriend(string token, string username, uint discriminator)
-        {
-            Console.ReplaceAllColorsWithDefaults();
-            try
-            {
-                Request.Send("/users/@me/relationships", "POST", token, $"{{\"username\":\"{username}\",\"discriminator\":{discriminator}}}");
-                Console.WriteLine("Succeed: " + token, Color.Lime);
-                Sleep(Wait.Short);
-            }
-            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
-        }
-
         public static void SendMessage(string token, ulong? cid, string message)
         {
             Console.ReplaceAllColorsWithDefaults();
@@ -60,18 +48,6 @@ namespace Phoenix
             try
             {
                 Request.Send($"/channels/{cid}/messages/{mid}/reactions/{emoji}/@me", "PUT", token);
-                Console.WriteLine("Succeed: " + token, Color.Lime);
-                Sleep(Wait.Short);
-            }
-            catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
-        }
-
-        public static void BlockUser(string token, ulong? uid)
-        {
-            Console.ReplaceAllColorsWithDefaults();
-            try
-            {
-                Request.Send($"/users/@me/relationships/{uid}", "PUT", token, $"{{\"type\":\"2\"}}");
                 Console.WriteLine("Succeed: " + token, Color.Lime);
                 Sleep(Wait.Short);
             }

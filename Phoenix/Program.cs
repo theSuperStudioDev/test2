@@ -55,12 +55,9 @@ namespace Phoenix
                     File.Create("multitokens.txt").Dispose();
                 var Token = File.ReadAllText("token.txt");
                 if (!string.IsNullOrEmpty(Token))
-                    token = Token;
-                if (!string.IsNullOrEmpty(File.ReadAllText("token.txt")))
                 {
-                    string split = File.ReadAllText("token.txt");
-                    string isbot = split.Split(':')[1];
-                    if (isbot == "true") IsBot = true;
+                    token = Token;
+                    try { Request.SendGet("/users/@me", token); } catch { IsBot = true; }
                 }
                 Options();
             }
@@ -85,18 +82,18 @@ namespace Phoenix
 ╠══╦═════════════════════╬══╦══════════════════════╦══╦═══════════════════════════════╬══╦══════════════════╣
 ║01║ Edit Profile        ║15║ Delete Roles         ║29║ Delete Stickers               ║43║ Join Guild/Group ║
 ║02║ Leave/Delete Guilds ║16║ Remove All Bans      ║30║ Grant Everyone Admin          ║44║ Leave Guild      ║
-║03║ Clear Relationships ║17║ Delete All Channels  ║31║ Delete Auto Moderation Rules  ║45║ Add Friend       ║
-║04║ Leave HypeSquad     ║18║ Delete All Emojis    ║32║ Mass Create Invites           ║46║ Spam             ║
-║05║ Remove Connections  ║19║ Delete All Invites   ║33║ Delete Guild Scheduled Events ║47║ Add Reaction     ║
-║06║ Deauthorize Apps    ║20║ Mass Create Roles    ║34║ Delete Guild Template         ║48║ Block User       ║
-║07║ Mass Create Guilds  ║21║ Mass Create Channels ║35║ Delete Stage Instances        ║49║ DM User          ║
-║08║ Seizure Mode        ║22║ Prune Members        ║36║ Delete All Webhooks           ║50║ Leave Group      ║
-║09║ Confuse Mode        ║23║ Remove Integrations  ║37║ Webhook Spammer               ║51║ Trigger Typing   ║
-║10║ Mass DM             ║24║ Remove All Reactions ║38║ Mass Report                   ║52║ Report Message   ║
-║11║ User Info           ║25║ Guild Info           ║39║ Ban All Members               ║53║ Boost Server     ║
-║12║ Block Relationships ║26║ Leave/Delete Guild   ║40║ Kick All Members              ║54║ Check Tokens     ║
-║13║ Delete DMs          ║27║ Msg In Every Channel ║41║ Rename Everyone               ║55║ Exit             ║
-║14║ Login to Account    ║28║ Delete Webhook       ║42║ Change Guild ID               ║56║                  ║
+║03║ Clear Relationships ║17║ Delete All Channels  ║31║ Delete Auto Moderation Rules  ║45║ Spam             ║
+║04║ Leave HypeSquad     ║18║ Delete All Emojis    ║32║ Mass Create Invites           ║46║ Add Reaction     ║
+║05║ Remove Connections  ║19║ Delete All Invites   ║33║ Delete Guild Scheduled Events ║47║ DM User          ║
+║06║ Deauthorize Apps    ║20║ Mass Create Roles    ║34║ Delete Guild Template         ║48║ Leave Group      ║
+║07║ Mass Create Guilds  ║21║ Mass Create Channels ║35║ Delete Stage Instances        ║49║ Trigger Typing   ║
+║08║ Seizure Mode        ║22║ Prune Members        ║36║ Delete All Webhooks           ║50║ Report Message   ║
+║09║ Confuse Mode        ║23║ Remove Integrations  ║37║ Webhook Spammer               ║51║ Boost Server     ║
+║10║ Mass DM             ║24║ Remove All Reactions ║38║ Mass Report                   ║52║ Check Tokens     ║
+║11║ User Info           ║25║ Guild Info           ║39║ Ban All Members               ║53║ Exit             ║
+║12║ Delete DMs          ║26║ Leave/Delete Guild   ║40║ Kick All Members              ║54║                  ║
+║13║ Login to Account    ║27║ Msg In Every Channel ║41║ Rename Everyone               ║55║                  ║
+║14║                     ║28║ Delete Webhook       ║42║ Change Guild ID               ║56║                  ║
 ╚══╩═════════════════════╩══╩══════════════════════╩══╩═══════════════════════════════╩══╩══════════════════╝
 ";
 
@@ -220,19 +217,17 @@ namespace Phoenix
                     case 12:
                         Token();
                         WriteLogo();
-                        User.BlockRelationships(token);
+                        User.DeleteDMs(token);
                         Options();
                         break;
                     case 13:
                         Token();
                         WriteLogo();
-                        User.DeleteDMs(token);
+                        SeleniumLogin();
                         Options();
                         break;
                     case 14:
-                        Token();
                         WriteLogo();
-                        SeleniumLogin();
                         Options();
                         break;
                     case 15:
@@ -551,17 +546,6 @@ namespace Phoenix
                     case 45:
                         MultiTokens();
                         WriteLogo();
-                        Console.Write("Full Username: ");
-                        string full = Console.ReadLine();
-                        string user = full.Split('#')[0];
-                        uint discriminator = uint.Parse(full.Split('#')[1]);
-                        WriteLogo();
-                        foreach (var token in tokenlist) Raid.AddFriend(token, user, discriminator);
-                        Options();
-                        break;
-                    case 46:
-                        MultiTokens();
-                        WriteLogo();
                         string options7 = @"
 ╔══╦═════════════╗
 ║##║ Name        ║
@@ -600,7 +584,7 @@ namespace Phoenix
                         }
                         Options();
                         break;
-                    case 47:
+                    case 46:
                         MultiTokens();
                         WriteLogo();
                         Console.Write("Channel ID: ");
@@ -668,16 +652,7 @@ To add any custom emoji:
                         }
                         Options();
                         break;
-                    case 48:
-                        MultiTokens();
-                        WriteLogo();
-                        Console.Write("User ID: ");
-                        ulong? uid2 = ulong.Parse(Console.ReadLine());
-                        WriteLogo();
-                        foreach (var token in tokenlist) Raid.BlockUser(token, uid2);
-                        Options();
-                        break;
-                    case 49:
+                    case 47:
                         MultiTokens();
                         WriteLogo();
                         Console.Write("User ID: ");
@@ -689,7 +664,7 @@ To add any custom emoji:
                         foreach (var token in tokenlist) Raid.DMUser(token, uid, msg2);
                         Options();
                         break;
-                    case 50:
+                    case 48:
                         MultiTokens();
                         WriteLogo();
                         Console.Write("Group ID: ");
@@ -698,7 +673,7 @@ To add any custom emoji:
                         foreach (var token in tokenlist) Raid.LeaveGroup(token, gid2);
                         Options();
                         break;
-                    case 51:
+                    case 49:
                         MultiTokens();
                         WriteLogo();
                         Console.Write("Channel ID: ");
@@ -707,7 +682,7 @@ To add any custom emoji:
                         foreach (var token in tokenlist) Raid.TriggerTyping(token, cid5);
                         Options();
                         break;
-                    case 52:
+                    case 50:
                         MultiTokens();
                         WriteLogo();
                         Console.Write("Guild ID: ");
@@ -739,7 +714,7 @@ To add any custom emoji:
                         foreach (var token in tokenlist) Raid.ReportMessage(token, gid3, cid6, mid4, reason2);
                         Options();
                         break;
-                    case 53:
+                    case 51:
                         MultiTokens();
                         WriteLogo();
                         Console.Write("Guild ID: ");
@@ -748,7 +723,7 @@ To add any custom emoji:
                         foreach (var token in tokenlist) Raid.Boost(token, gid4);
                         Options();
                         break;
-                    case 54:
+                    case 52:
                         MultiTokens();
                         WriteLogo();
                         Console.ReplaceAllColorsWithDefaults();
@@ -768,8 +743,16 @@ To add any custom emoji:
                         Sleep(Wait.Long);
                         Options();
                         break;
-                    case 55:
+                    case 53:
                         Environment.Exit(0);
+                        break;
+                    case 54:
+                        WriteLogo();
+                        Options();
+                        break;
+                    case 55:
+                        WriteLogo();
+                        Options();
                         break;
                     case 56:
                         WriteLogo();
@@ -810,7 +793,7 @@ To add any custom emoji:
                         Sleep(Wait.Long);
                         Options();
                     }
-                    try { Request.SendGet("/users/@me", token); } catch { File.WriteAllText("token.txt", $"{token}:true"); IsBot = true; }
+                    try { Request.SendGet("/users/@me", token); } catch { IsBot = true; }
                     Console.Clear();
                 }
                 catch { }

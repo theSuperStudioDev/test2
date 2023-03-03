@@ -41,23 +41,6 @@ namespace Phoenix
             catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
-        public static void BlockRelationships(string? token)
-        {
-            Console.ReplaceAllColorsWithDefaults();
-            try
-            {
-                var request = Request.SendGet("/users/@me/relationships", token);
-                var array = JArray.Parse(request);
-                foreach (dynamic entry in array)
-                {
-                    Request.Send($"/users/@me/relationships/{entry.id}", "PUT", token, $"{{\"type\":\"2\"}}");
-                    Console.WriteLine($"Blocked: {entry.user.username}#{entry.user.discriminator}", Color.Lime);
-                    Sleep(Wait.Short);
-                }
-            }
-            catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
-        }
-
         public static void UserInformation(string? token)
         {
             Console.ReplaceAllColorsWithDefaults();
