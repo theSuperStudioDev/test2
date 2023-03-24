@@ -7,7 +7,7 @@ namespace Phoenix
 {
     public class Raid
     {
-        public static void JoinGuild(string token, string code)
+        public static void JoinGroup(string token, string code)
         {
             Console.ReplaceAllColorsWithDefaults();
             try

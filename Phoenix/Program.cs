@@ -6,8 +6,6 @@ using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager.Helpers;
 using static Phoenix.Config;
-using System.Text.RegularExpressions;
-using System.ComponentModel;
 
 /* 
        │ Author       : extatent
@@ -80,7 +78,7 @@ namespace Phoenix
 ╔════════════════════════╦════════════════════════════════════════════════════════════╦═════════════════════╗
 ║ > Account Nuker        ║ > Server Nuker                                             ║ > MultiToken Raider ║
 ╠══╦═════════════════════╬══╦══════════════════════╦══╦═══════════════════════════════╬══╦══════════════════╣
-║01║ Edit Profile        ║15║ Delete Roles         ║29║ Delete Stickers               ║43║ Join Guild/Group ║
+║01║ Edit Profile        ║15║ Delete Roles         ║29║ Delete Stickers               ║43║ Join Group       ║
 ║02║ Leave/Delete Guilds ║16║ Remove All Bans      ║30║ Grant Everyone Admin          ║44║ Leave Guild      ║
 ║03║ Clear Relationships ║17║ Delete All Channels  ║31║ Delete Auto Moderation Rules  ║45║ Spam             ║
 ║04║ Leave HypeSquad     ║18║ Delete All Emojis    ║32║ Mass Create Invites           ║46║ Add Reaction     ║
@@ -93,7 +91,7 @@ namespace Phoenix
 ║11║ User Info           ║25║ Guild Info           ║39║ Ban All Members               ║53║ Exit             ║
 ║12║ Delete DMs          ║26║ Leave/Delete Guild   ║40║ Kick All Members              ║54║                  ║
 ║13║ Login to Account    ║27║ Msg In Every Channel ║41║ Rename Everyone               ║55║                  ║
-║14║                     ║28║ Delete Webhook       ║42║ Change Guild ID               ║56║                  ║
+║14║ Change Token        ║28║ Delete Webhook       ║42║ Change Guild ID               ║56║                  ║
 ╚══╩═════════════════════╩══╩══════════════════════╩══╩═══════════════════════════════╩══╩══════════════════╝
 ";
 
@@ -171,8 +169,9 @@ namespace Phoenix
                     case 7:
                         Token();
                         WriteLogo();
-                        Console.Write("Guild name: ");
+                        Console.Write("Guild name (leave blank for random): ");
                         string name = Console.ReadLine();
+                        if (string.IsNullOrEmpty(name)) name = "øæåäöüéíóúüñçčćđšžàèąęėįšųūøßłțșîâăơưãѩѭѧѫѱѯюыщчв的我ㄱㄴㄷ";
                         WriteLogo();
                         Console.Write("Count (max 100): ");
                         int count = int.Parse(Console.ReadLine());
@@ -228,6 +227,9 @@ namespace Phoenix
                         break;
                     case 14:
                         WriteLogo();
+                        Console.Write("Token: ");
+                        string? newtoken = Console.ReadLine();
+                        token = newtoken;
                         Options();
                         break;
                     case 15:
@@ -263,8 +265,9 @@ namespace Phoenix
                     case 20:
                         GuildID();
                         WriteLogo();
-                        Console.Write("Role name: ");
+                        Console.Write("Role name (leave blank for random): ");
                         string name2 = Console.ReadLine();
+                        if (string.IsNullOrEmpty(name2)) name2 = "øæåäöüéíóúüñçčćđšžàèąęėįšųūøßłțșîâăơưãѩѭѧѫѱѯюыщчв的我ㄱㄴㄷ";
                         WriteLogo();
                         Console.Write("Count (max 250): ");
                         int count3 = int.Parse(Console.ReadLine());
@@ -282,8 +285,9 @@ namespace Phoenix
                     case 21:
                         GuildID();
                         WriteLogo();
-                        Console.Write("Channel name: ");
+                        Console.Write("Channel name (leave blank for random): ");
                         string name3 = Console.ReadLine();
+                        if (string.IsNullOrEmpty(name3)) name3 = "øæåäöüéíóúüñçčćđšžàèąęėįšųūøßłțșîâăơưãѩѭѧѫѱѯюыщчв的我ㄱㄴㄷ";
                         WriteLogo();
                         Console.Write("Count (max 500): ");
                         int count4 = int.Parse(Console.ReadLine());
@@ -509,8 +513,9 @@ namespace Phoenix
                     case 41:
                         GuildID();
                         WriteLogo();
-                        Console.Write("Nickname: ");
+                        Console.Write("Nickname (leave blank for random): ");
                         string nick = Console.ReadLine();
+                        if (string.IsNullOrEmpty(nick)) nick = "øæåäöüéíóúüñçčćđšžàèąęėįšųūøßłțșîâăơưãѩѭѧѫѱѯюыщчв的我ㄱㄴㄷ";
                         WriteLogo();
                         Bot.ChangeAllNicknames(token, guildid, nick);
                         Options();
@@ -523,7 +528,6 @@ namespace Phoenix
                     case 43:
                         MultiTokens();
                         WriteLogo();
-                        Console.WriteLine("If your tokens isn't phone verified, Discord may lock them.\n");
                         Console.Write("Invite code: ");
                         string code = Console.ReadLine();
                         if (code.Contains("https://discord.gg/"))
@@ -531,7 +535,7 @@ namespace Phoenix
                         if (code.Contains("https://discord.com/invite/"))
                             code = code.Replace("https://discord.com/invite/", "");
                         WriteLogo();
-                        foreach (var token in tokenlist) Raid.JoinGuild(token, code);
+                        foreach (var token in tokenlist) Raid.JoinGroup(token, code);
                         Options();
                         break;
                     case 44:
@@ -724,10 +728,11 @@ To add any custom emoji:
                         Options();
                         break;
                     case 52:
-                        MultiTokens();
                         WriteLogo();
                         Console.ReplaceAllColorsWithDefaults();
-                        foreach (var token in tokenlist)
+                        if (File.Exists("WorkingTokens.txt")) File.Delete("WorkingTokens.txt");
+                        var list = File.ReadAllLines("multitokens.txt");
+                        foreach (var token in list)
                         {
                             try
                             {
@@ -784,7 +789,6 @@ To add any custom emoji:
                     token = Console.ReadLine();
                     token = token.Replace("'", "");
                     token = token.Replace("\"", "");
-                    File.WriteAllText("token.txt", token);
                     if (Request.Check(token) != true)
                     {
                         WriteLogo();
@@ -793,6 +797,7 @@ To add any custom emoji:
                         Sleep(Wait.Long);
                         Options();
                     }
+                    File.WriteAllText("token.txt", token);
                     try { Request.SendGet("/users/@me", token); } catch { IsBot = true; }
                     Console.Clear();
                 }
@@ -878,7 +883,7 @@ To add any custom emoji:
                 service.HideCommandPromptWindow = true;
 
                 ChromeOptions options = new();
-                options.AddArguments(new string[] { "--disable-logging", "--mute-audio", "--disable-extensions", "--disable-notifications", "--disable-application-cache", "--no-sandbox", "--disable-crash-reporter", "--disable-dev-shm-usage", "--disable-gpu", "--ignore-certificate-errors", "--disable-infobars", "--silent" });
+                options.AddArguments(new string[] { "--disable-logging", "--disable-extensions", "--disable-notifications", "--disable-application-cache", "--no-sandbox", "--disable-crash-reporter", "--disable-dev-shm-usage", "--ignore-certificate-errors", "--disable-infobars", "--silent" });
 
                 IWebDriver driver = new ChromeDriver(service, options) { Url = "https://discord.com/login" };
 

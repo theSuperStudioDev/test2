@@ -279,25 +279,25 @@ namespace Phoenix
                 {
                     case "0":
                         Request.Send("/hypesquad/online", "DELETE", token);
-                        Sleep(Wait.Short);
+                        Thread.Sleep(5000);
                         break;
                     case "1":
                         Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 1}}");
-                        Sleep(Wait.Short);
+                        Thread.Sleep(5000);
                         break;
                     case "2":
                         Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 2}}");
-                        Sleep(Wait.Short);
+                        Thread.Sleep(5000);
                         break;
                     case "3":
                         Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 3}}");
-                        Sleep(Wait.Short);
+                        Thread.Sleep(5000);
                         break;
                 }
                 if (!string.IsNullOrEmpty(bio))
                 {
                     Request.Send("/users/@me", "PATCH", token, $"{{\"bio\": \"{bio}\"}}");
-                    Sleep(Wait.Short);
+                    Thread.Sleep(5000);
                 }
                 if (!string.IsNullOrEmpty(status))
                 {
