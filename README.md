@@ -8,6 +8,8 @@
 
 ---
 
+**[The Discord server is alive again!](https://dsc.gg/extatent)**
+
 > If you like the project, consider dropping a star ⭐
   
 > If you caught any issues, please report it in [issues](https://github.com/extatent/Phoenix-Nuker/issues).
