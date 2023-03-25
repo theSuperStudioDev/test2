@@ -33,7 +33,7 @@ namespace Phoenix
                                   ██████╔╝███████║██║   ██║█████╗  ██╔██╗ ██║██║ ╚███╔╝ 
                                   ██╔═══╝ ██╔══██║██║   ██║██╔══╝  ██║╚██╗██║██║ ██╔██╗ 
 " + " > GitHub: github.com/extatent" + @"    ██║     ██║  ██║╚██████╔╝███████╗██║ ╚████║██║██╔╝ ██╗
-                                  ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
+" + " > Discord: dsc.gg/extatent" + @"       ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
                                                       ";
             Console.WriteWithGradient(phoenix, Color.OrangeRed, Color.Yellow, 6);
             Console.WriteLine();
@@ -124,16 +124,14 @@ namespace Phoenix
                         Console.ForegroundColor = Color.Yellow;
                         Console.Write(options2);
                         Console.WriteLine();
-                        Console.Write("Your choice: ");
+                        Console.Write("Your choice (leave blank to skip): ");
                         string hypesquad = Console.ReadLine();
+                        if (!string.IsNullOrEmpty(hypesquad)) User.ChangeHypeSquad(token, hypesquad);
                         WriteLogo();
-                        Console.Write("Biography: ");
-                        string bio = Console.ReadLine();
-                        WriteLogo();
-                        Console.Write("Custom Status: ");
+                        Console.ForegroundColor = Color.Yellow;
+                        Console.Write("Custom Status (leave blank to skip): ");
                         string status = Console.ReadLine();
-                        WriteLogo();
-                        User.EditProfile(token, hypesquad, bio, status);
+                        if (!string.IsNullOrEmpty(status)) User.ChangeStatus(token, status);
                         Options();
                         break;
                     case 2:

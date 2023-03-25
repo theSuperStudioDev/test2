@@ -270,40 +270,38 @@ namespace Phoenix
             catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
 
-        public static void EditProfile(string? token, string? hypesquad = null, string? bio = null, string? status = null)
+        public static void ChangeHypeSquad(string? token, string? hypesquad)
         {
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                switch(hypesquad)
+                switch (hypesquad)
                 {
                     case "0":
                         Request.Send("/hypesquad/online", "DELETE", token);
-                        Thread.Sleep(5000);
                         break;
                     case "1":
                         Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 1}}");
-                        Thread.Sleep(5000);
                         break;
                     case "2":
                         Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 2}}");
-                        Thread.Sleep(5000);
                         break;
                     case "3":
                         Request.Send("/hypesquad/online", "POST", token, $"{{\"house_id\": 3}}");
-                        Thread.Sleep(5000);
                         break;
                 }
-                if (!string.IsNullOrEmpty(bio))
-                {
-                    Request.Send("/users/@me", "PATCH", token, $"{{\"bio\": \"{bio}\"}}");
-                    Thread.Sleep(5000);
-                }
-                if (!string.IsNullOrEmpty(status))
-                {
-                    Request.Send("/users/@me/settings", "PATCH", token, $"{{\"custom_status\": {{\"text\": \"{status}\"}}}}");
-                    Sleep(Wait.Short);
-                }
+                Sleep(Wait.Short);
+            }
+            catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
+        }
+
+        public static void ChangeStatus(string? token, string? status)
+        {
+            Console.ReplaceAllColorsWithDefaults();
+            try
+            {
+                Request.Send("/users/@me/settings", "PATCH", token, $"{{\"custom_status\": {{\"text\": \"{status}\"}}}}");
+                Sleep(Wait.Short);
             }
             catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
