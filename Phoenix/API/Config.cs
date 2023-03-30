@@ -1,4 +1,4 @@
-﻿namespace Phoenix
+﻿namespace Phoenix.API
 {
     public class Config
     {
@@ -12,7 +12,7 @@
 
         public static void Sleep(Wait option)
         {
-            switch(option)
+            switch (option)
             {
                 case Wait.Short:
                     Thread.Sleep(200);

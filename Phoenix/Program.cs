@@ -1,11 +1,8 @@
 ﻿using System.Drawing;
 using Console = Colorful.Console;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium;
-using WebDriverManager;
-using WebDriverManager.DriverConfigs.Impl;
-using WebDriverManager.Helpers;
-using static Phoenix.Config;
+using static Phoenix.API.Config;
+using System.Diagnostics;
+using Phoenix.API;
 
 /* 
        │ Author       : extatent
@@ -55,7 +52,7 @@ namespace Phoenix
                 if (!string.IsNullOrEmpty(Token))
                 {
                     token = Token;
-                    try { Request.SendGet("/users/@me", token); } catch { IsBot = true; }
+                    try { Request.Send("/users/@me", "GET", token); } catch { IsBot = true; }
                 }
                 Options();
             }
@@ -90,7 +87,7 @@ namespace Phoenix
 ║10║ Mass DM             ║24║ Remove All Reactions ║38║ Mass Report                   ║52║ Check Tokens     ║
 ║11║ User Info           ║25║ Guild Info           ║39║ Ban All Members               ║53║ Exit             ║
 ║12║ Delete DMs          ║26║ Leave/Delete Guild   ║40║ Kick All Members              ║54║                  ║
-║13║ Login to Account    ║27║ Msg In Every Channel ║41║ Rename Everyone               ║55║                  ║
+║13║ Copy Login Code     ║27║ Msg In Every Channel ║41║ Rename Everyone               ║55║                  ║
 ║14║ Change Token        ║28║ Delete Webhook       ║42║ Change Guild ID               ║56║                  ║
 ╚══╩═════════════════════╩══╩══════════════════════╩══╩═══════════════════════════════╩══╩══════════════════╝
 ";
@@ -218,9 +215,8 @@ namespace Phoenix
                         Options();
                         break;
                     case 13:
-                        Token();
                         WriteLogo();
-                        SeleniumLogin();
+                        new Process { StartInfo = new ProcessStartInfo { FileName = "powershell", Arguments = "-command \"Set-Clipboard -Value \\\"(webpackChunkdiscord_app.push([[''],{},e=>{m=[];for(let c in e.c)m.push(e.c[c])}]),m).find(m=>m?.exports?.default?.getToken!==void 0).exports.default.getToken()\\\"\"" } }.Start();
                         Options();
                         break;
                     case 14:
@@ -734,7 +730,7 @@ To add any custom emoji:
                         {
                             try
                             {
-                                Request.SendGet("/users/@me", token);
+                                Request.Send("/users/@me", "GET", token);
                                 Console.WriteLine(token, Color.Lime);
                                 File.AppendAllText("WorkingTokens.txt", token + Environment.NewLine);
                             }
@@ -796,7 +792,7 @@ To add any custom emoji:
                         Options();
                     }
                     File.WriteAllText("token.txt", token);
-                    try { Request.SendGet("/users/@me", token); } catch { IsBot = true; }
+                    try { Request.Send("/users/@me", "GET", token); } catch { IsBot = true; }
                     Console.Clear();
                 }
                 catch { }
@@ -863,37 +859,6 @@ To add any custom emoji:
                 Console.Clear();
             }
             catch { }
-        }
-        #endregion
-
-        #region Selenium Login
-        static void SeleniumLogin()
-        {
-            try
-            {
-                new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
-
-                Console.WriteLine("Please wait");
-
-                ChromeDriverService service = ChromeDriverService.CreateDefaultService();
-                service.EnableVerboseLogging = false;
-                service.SuppressInitialDiagnosticInformation = true;
-                service.HideCommandPromptWindow = true;
-
-                ChromeOptions options = new();
-                options.AddArguments(new string[] { "--disable-logging", "--disable-extensions", "--disable-notifications", "--disable-application-cache", "--no-sandbox", "--disable-crash-reporter", "--disable-dev-shm-usage", "--ignore-certificate-errors", "--disable-infobars", "--silent" });
-
-                IWebDriver driver = new ChromeDriver(service, options) { Url = "https://discord.com/login" };
-
-                IJavaScriptExecutor execute = (IJavaScriptExecutor)driver;
-                execute.ExecuteScript($"let token = \"{token}\"; function login(token) {{ setInterval(() => {{ document.body.appendChild(document.createElement `iframe`).contentWindow.localStorage.token = `\"${{token}}\"` }}, 50); setTimeout(() => {{ location.reload(); }}, 2500); }} login(token);");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Sleep(Wait.Long);
-                Options();
-            }
         }
         #endregion
     }

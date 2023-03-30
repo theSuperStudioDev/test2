@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
 using Console = Colorful.Console;
 using System.Drawing;
-using static Phoenix.Config;
+using static Phoenix.API.Config;
 
-namespace Phoenix
+namespace Phoenix.API
 {
     public class User
     {
@@ -12,7 +12,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet("/users/@me/channels", token);
+                var request = Request.Send("/users/@me/channels", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -29,7 +29,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet("/users/@me/channels", token);
+                var request = Request.Send("/users/@me/channels", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -46,13 +46,13 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet("/users/@me", token);
+                var request = Request.Send("/users/@me", "GET", token);
                 var id = JObject.Parse(request)["id"];
-                var id2 = (id == null || string.IsNullOrEmpty(id.ToString())) ? "" : id.ToString();
+                var id2 = id == null || string.IsNullOrEmpty(id.ToString()) ? "" : id.ToString();
                 var getbadges = JObject.Parse(request)["flags"];
-                var getbadges2 = (getbadges == null || string.IsNullOrEmpty(getbadges.ToString())) ? "" : getbadges.ToString();
+                var getbadges2 = getbadges == null || string.IsNullOrEmpty(getbadges.ToString()) ? "" : getbadges.ToString();
                 string badges = "";
-                switch(getbadges2)
+                switch (getbadges2)
                 {
                     case "1":
                         badges += "Discord Employee, ";
@@ -93,13 +93,13 @@ namespace Phoenix
                 var nsfw = JObject.Parse(request)["nsfw_allowed"];
                 var mfa = JObject.Parse(request)["mfa_enabled"];
                 var avatarid = JObject.Parse(request)["avatar"];
-                var avatarid2 = (avatarid == null || string.IsNullOrEmpty(avatarid.ToString())) ? "" : avatarid.ToString();
+                var avatarid2 = avatarid == null || string.IsNullOrEmpty(avatarid.ToString()) ? "" : avatarid.ToString();
                 string avatar;
                 if (string.IsNullOrEmpty(avatarid2))
                     avatar = "N/A";
                 else
                     avatar = $"https://cdn.discordapp.com/avatars/{id}/{avatarid}.webp";
-                var request2 = Request.SendGet("/users/@me/settings", token);
+                var request2 = Request.Send("/users/@me/settings", "GET", token);
                 var theme = JObject.Parse(request2)["theme"];
                 var devmode = JObject.Parse(request2)["developer_mode"];
                 var status = JObject.Parse(request2)["status"];
@@ -108,10 +108,10 @@ namespace Phoenix
                 Console.WriteLine("User Information:\n");
                 Console.WriteLine($"User ID: {id}\nEmail: {email}\nPhone Number: {phone}\nBiography: {bio}\nLocale: {locale}\nNSFW Allowed: {nsfw}\n2FA Enabled: {mfa}\nBadges: {badges}\nTheme: {theme}\nDeveloper Mode: {devmode}\nStatus: {status}\nAvatar: {avatar}");
 
-                if (Request.SendGet("/users/@me/billing/payment-sources", token).Length > 2)
+                if (Request.Send("/users/@me/billing/payment-sources", "GET", token).Length > 2)
                 {
                     Console.WriteLine("\nBilling Information:\n");
-                    var request3 = Request.SendGet("/users/@me/billing/payment-sources", token);
+                    var request3 = Request.Send("/users/@me/billing/payment-sources", "GET", token);
                     var array = JArray.Parse(request3);
                     foreach (dynamic entry in array)
                     {
@@ -190,7 +190,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet("/users/@me/connections", token);
+                var request = Request.Send("/users/@me/connections", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -207,7 +207,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet("/oauth2/tokens", token);
+                var request = Request.Send("/oauth2/tokens", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -234,7 +234,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet("/users/@me/relationships", token);
+                var request = Request.Send("/users/@me/relationships", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -251,7 +251,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet("/users/@me/guilds", token);
+                var request = Request.Send("/users/@me/guilds", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {

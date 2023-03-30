@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Drawing;
 using Console = Colorful.Console;
-using static Phoenix.Config;
+using static Phoenix.API.Config;
 
-namespace Phoenix
+namespace Phoenix.API
 {
     public class Raid
     {
@@ -13,7 +13,7 @@ namespace Phoenix
             try
             {
                 Request.Send($"/invites/{code}", "POST", token);
-                Console.WriteLine("Succeed: " + token, Color.Lime);
+                Console.WriteLine($"Succeed: {token}", Color.Lime);
                 Sleep(Wait.Short);
             }
             catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
@@ -25,7 +25,7 @@ namespace Phoenix
             try
             {
                 Request.Send($"/guilds/{id}", "DELETE", token);
-                Console.WriteLine("Succeed: " + token, Color.Lime);
+                Console.WriteLine($"Succeed: {token}", Color.Lime);
                 Sleep(Wait.Short);
             }
             catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
@@ -48,7 +48,7 @@ namespace Phoenix
             try
             {
                 Request.Send($"/channels/{cid}/messages/{mid}/reactions/{emoji}/@me", "PUT", token);
-                Console.WriteLine("Succeed: " + token, Color.Lime);
+                Console.WriteLine($"Succeed: {token}", Color.Lime);
                 Sleep(Wait.Short);
             }
             catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
@@ -60,7 +60,7 @@ namespace Phoenix
             try
             {
                 Request.Send($"/channels/{gid}", "DELETE", token);
-                Console.WriteLine("Succeed: " + token, Color.Lime);
+                Console.WriteLine($"Succeed: {token}", Color.Lime);
                 Sleep(Wait.Short);
             }
             catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
@@ -71,11 +71,11 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet("/users/@me/channels", token, "POST", $"{{\"recipient_id\":\"{uid}\"}}");
+                var request = Request.Send("/users/@me/channels", "POST", token, $"{{\"recipient_id\":\"{uid}\"}}");
                 var array = JObject.Parse(request);
                 dynamic entry = array;
                 Request.Send($"/channels/{entry.id}/messages", "POST", token, $"{{\"content\":\"{message}\"}}");
-                Console.WriteLine("Succeed: " + token, Color.Lime);
+                Console.WriteLine($"Succeed: {token}", Color.Lime);
                 Sleep(Wait.Short);
             }
             catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
@@ -87,7 +87,7 @@ namespace Phoenix
             try
             {
                 Request.Send($"/channels/{cid}/typing", "POST", token);
-                Console.WriteLine("Succeed: " + token, Color.Lime);
+                Console.WriteLine($"Succeed: {token}", Color.Lime);
                 Sleep(Wait.Short);
             }
             catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
@@ -99,7 +99,7 @@ namespace Phoenix
             try
             {
                 Request.Send("/report", "POST", token, $"{{\"channel_id\": \"{cid}\", \"guild_id\": \"{gid}\", \"message_id\": \"{mid}\", \"reason\": {reason}}}");
-                Console.WriteLine("Succeed: " + token, Color.Lime);
+                Console.WriteLine($"Succeed: {token}", Color.Lime);
                 Sleep(Wait.Short);
             }
             catch (Exception e) { Console.WriteLine($"Failed: {token}\nError: {e.Message}", Color.Red); Sleep(Wait.Long); }
@@ -110,7 +110,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var subid = Request.SendGet("/users/@me/guilds/premium/subscription-slots", token);
+                var subid = Request.Send("/users/@me/guilds/premium/subscription-slots", "GET", token);
                 var array = JArray.Parse(subid);
                 int subidcount = 0;
                 foreach (dynamic entry in array)

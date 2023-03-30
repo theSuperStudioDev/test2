@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
 using Console = Colorful.Console;
 using System.Drawing;
-using static Phoenix.Config;
+using static Phoenix.API.Config;
 
-namespace Phoenix
+namespace Phoenix.API
 {
     public class Guild
     {
@@ -12,7 +12,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/channels", token);
+                var request = Request.Send($"/guilds/{gid}/channels", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -31,14 +31,8 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                try
-                {
-                    Request.Send($"/guilds/{gid}", "DELETE", token);
-                } 
-                catch 
-                {
-                    Request.Send($"/users/@me/guilds/{gid}", "DELETE", token);
-                }
+                try { Request.Send($"/guilds/{gid}", "DELETE", token); }
+                catch { Request.Send($"/users/@me/guilds/{gid}", "DELETE", token); }
             }
             catch (Exception e) { Console.WriteLine($"Failed: {e.Message}", Color.Red); Sleep(Wait.Long); }
         }
@@ -48,27 +42,23 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}", token);
+                var request = Request.Send($"/guilds/{gid}", "GET", token);
                 var id = JObject.Parse(request)["id"];
                 var ownerid = JObject.Parse(request)["owner_id"];
                 var region = JObject.Parse(request)["region"];
                 var vanityurl = JObject.Parse(request)["vanity_url_code"];
                 var iconid = JObject.Parse(request)["icon"];
-                var iconid2 = (iconid == null || string.IsNullOrEmpty(iconid.ToString())) ? "" : iconid.ToString();
+                var iconid2 = iconid == null || string.IsNullOrEmpty(iconid.ToString()) ? "" : iconid.ToString();
                 var bannerid = JObject.Parse(request)["banner"];
-                var bannerid2 = (bannerid == null || string.IsNullOrEmpty(bannerid.ToString())) ? "" : bannerid.ToString();
+                var bannerid2 = bannerid == null || string.IsNullOrEmpty(bannerid.ToString()) ? "" : bannerid.ToString();
                 string icon;
-                if (string.IsNullOrEmpty(iconid2))
-                    icon = "N/A";
-                else
-                    icon = $"https://cdn.discordapp.com/icons/{id}/{iconid}.webp";
+                if (string.IsNullOrEmpty(iconid2)) icon = "N/A";
+                else icon = $"https://cdn.discordapp.com/icons/{id}/{iconid}.webp";
                 string banner;
-                if (string.IsNullOrEmpty(bannerid2))
-                    banner = "N/A";
-                else
-                    banner = $"https://cdn.discordapp.com/banners/{id}/{bannerid}.webp?size=240";
+                if (string.IsNullOrEmpty(bannerid2)) banner = "N/A";
+                else banner = $"https://cdn.discordapp.com/banners/{id}/{bannerid}.webp?size=240";
                 dynamic? verificationlevel = JObject.Parse(request)["verification_level"];
-                switch(verificationlevel)
+                switch (verificationlevel)
                 {
                     case "0":
                         verificationlevel = "None";
@@ -88,38 +78,31 @@ namespace Phoenix
                 }
                 var preferredlocale = JObject.Parse(request)["preferred_locale"];
                 var nsfw = JObject.Parse(request)["nsfw"];
-                var roles = Request.SendGet($"/guilds/{gid}/roles", token);
+                var roles = Request.Send($"/guilds/{gid}/roles", "GET", token);
                 var array = JArray.Parse(roles);
                 int rolescount = 0;
-                foreach (dynamic entry in array)
-                    rolescount++;
-                var channels = Request.SendGet($"/guilds/{gid}/channels", token);
+                foreach (dynamic entry in array) rolescount++;
+                var channels = Request.Send($"/guilds/{gid}/channels", "GET", token);
                 var array2 = JArray.Parse(channels);
                 int channelscount = 0;
-                foreach (dynamic entry in array2)
-                    channelscount++;
-                var emojis = Request.SendGet($"/guilds/{gid}/emojis", token);
+                foreach (dynamic entry in array2) channelscount++;
+                var emojis = Request.Send($"/guilds/{gid}/emojis", "GET", token);
                 var array3 = JArray.Parse(emojis);
                 int emojiscount = 0;
-                foreach (dynamic entry in array3)
-                    emojiscount++;
-                var stickers = Request.SendGet($"/guilds/{gid}/stickers", token);
+                foreach (dynamic entry in array3) emojiscount++;
+                var stickers = Request.Send($"/guilds/{gid}/stickers", "GET", token);
                 var array4 = JArray.Parse(stickers);
                 int stickerscount = 0;
-                foreach (dynamic entry in array4)
-                    stickerscount++;
-                var bans = Request.SendGet($"/guilds/{gid}/bans", token);
+                foreach (dynamic entry in array4) stickerscount++;
+                var bans = Request.Send($"/guilds/{gid}/bans", "GET", token);
                 var array5 = JArray.Parse(bans);
                 int banscount = 0;
-                foreach (dynamic entry in array5)
-                    banscount++;
-                var invites = Request.SendGet($"/guilds/{gid}/invites", token);
+                foreach (dynamic entry in array5) banscount++;
+                var invites = Request.Send($"/guilds/{gid}/invites", "GET", token);
                 var array6 = JArray.Parse(invites);
                 int invitescount = 0;
-                foreach (dynamic entry in array6)
-                    invitescount++;
+                foreach (dynamic entry in array6) invitescount++;
                 Console.ForegroundColor = Color.Yellow;
-
                 Console.WriteLine("Guild Information:\n");
                 Console.WriteLine($"Guild ID: {id}\nOwner ID: {ownerid}\nRegion: {region}\nRoles Count: {rolescount}\nChannels Count: {channelscount}\nEmojis Count: {emojiscount}\nStickers Count: {stickerscount}\nBans Count: {banscount}\nInvites Count: {invitescount}\nVerification Level: {verificationlevel}\nPreferred Locale: {preferredlocale}\nNSFW: {nsfw}\nVanity Code: {vanityurl}\nGuild Icon: {icon}\nBanner: {banner}");
                 Console.WriteLine("\nPress any key to go back.");
@@ -156,7 +139,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/invites", token);
+                var request = Request.Send($"/guilds/{gid}/invites", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -173,7 +156,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/emojis", token);
+                var request = Request.Send($"/guilds/{gid}/emojis", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -190,7 +173,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/channels", token);
+                var request = Request.Send($"/guilds/{gid}/channels", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -207,12 +190,12 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/bans", token);
+                var request = Request.Send($"/guilds/{gid}/bans", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     Request.Send($"/guilds/{gid}/bans/" + entry.user["id"], "DELETE", token, null, true);
-                    Console.WriteLine("Removed: " + entry.user["username"] + "#" + entry.user["discriminator"], Color.Lime);
+                    Console.WriteLine($"Removed: {entry.user["username"]}#{entry.user["discriminator"]}", Color.Lime);
                     Sleep(Wait.Short);
                 }
             }
@@ -224,12 +207,12 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/roles", token);
+                var request = Request.Send($"/guilds/{gid}/roles", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     Request.Send($"/guilds/{gid}/roles/" + entry["id"], "DELETE", token, null, true);
-                    Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Console.WriteLine($"Deleted: {entry["name"]}", Color.Lime);
                     Sleep(Wait.Short);
                 }
             }
@@ -241,12 +224,12 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/stickers", token);
+                var request = Request.Send($"/guilds/{gid}/stickers", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     Request.Send($"/guilds/{gid}/stickers/" + entry["id"], "DELETE", token, null, true);
-                    Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Console.WriteLine($"Deleted: {entry["name"]}", Color.Lime);
                     Sleep(Wait.Short);
                 }
             }
@@ -258,10 +241,9 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                string request = Request.SendGet($"/guilds/{gid}", token);
+                string request = Request.Send($"/guilds/{gid}", "GET", token);
                 var name = JObject.Parse(request)["name"];
-                if (name != null)
-                    return name.ToString();
+                if (name != null) return name.ToString();
                 return "N/A";
             }
             catch { return "N/A"; }
@@ -282,12 +264,12 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/integrations", token);
+                var request = Request.Send($"/guilds/{gid}/integrations", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     Request.Send($"/guilds/{gid}/integrations/" + entry["id"], "DELETE", token, null, true);
-                    Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Console.WriteLine($"Deleted: {entry["name"]}", Color.Lime);
                     Sleep(Wait.Short);
                 }
             }
@@ -308,12 +290,12 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/auto-moderation/rules", token);
+                var request = Request.Send($"/guilds/{gid}/auto-moderation/rules", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     Request.Send($"/guilds/{gid}/auto-moderation/rules/" + entry["id"], "DELETE", token, null, true);
-                    Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Console.WriteLine($"Deleted: {entry["name"]}", Color.Lime);
                     Sleep(Wait.Short);
                 }
             }
@@ -325,7 +307,7 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/channels", token);
+                var request = Request.Send($"/guilds/{gid}/channels", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
@@ -341,12 +323,12 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/scheduled-events", token);
+                var request = Request.Send($"/guilds/{gid}/scheduled-events", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     Request.Send($"/guilds/{gid}/scheduled-events/{entry.id}", "DELETE", token, null, true);
-                    Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Console.WriteLine($"Deleted: {entry["name"]}", Color.Lime);
                     Sleep(Wait.Short);
                 }
             }
@@ -358,12 +340,12 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/templates", token);
+                var request = Request.Send($"/guilds/{gid}/templates", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     Request.Send($"/guilds/{gid}/templates/{entry.code}", "DELETE", token, null, true);
-                    Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Console.WriteLine($"Deleted: {entry["name"]}", Color.Lime);
                     Sleep(Wait.Short);
                 }
             }
@@ -375,14 +357,14 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/channels", token);
+                var request = Request.Send($"/guilds/{gid}/channels", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     if (entry.type == "13")
                     {
                         Request.Send($"/stage-instances/{entry.id}", "DELETE", token, null, true);
-                        Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                        Console.WriteLine($"Deleted: {entry["name"]}", Color.Lime);
                         Sleep(Wait.Short);
                     }
                 }
@@ -395,12 +377,12 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/webhooks", token);
+                var request = Request.Send($"/guilds/{gid}/webhooks", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     Request.Send($"/webhooks/{entry.id}", "DELETE", token, null, true);
-                    Console.WriteLine("Deleted: " + entry["name"], Color.Lime);
+                    Console.WriteLine($"Deleted: {entry["name"]}", Color.Lime);
                     Sleep(Wait.Short);
                 }
             }
@@ -433,13 +415,13 @@ namespace Phoenix
             Console.ReplaceAllColorsWithDefaults();
             try
             {
-                var request = Request.SendGet($"/guilds/{gid}/roles", token);
+                var request = Request.Send($"/guilds/{gid}/roles", "GET", token);
                 var array = JArray.Parse(request);
                 foreach (dynamic entry in array)
                 {
                     if (entry.name == "@everyone")
                     {
-                        Request.Send($"/guilds/{gid}/roles/{entry.id}", "PATCH", token, $"{{\"permissions\":\"6546771529\"}}", true);
+                        Request.Send($"/guilds/{gid}/roles/{entry.id}", "PATCH", token, $"{{\"permissions\":\"8\"}}", true);
                     }
                 }
             }
