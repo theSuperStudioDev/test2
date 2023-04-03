@@ -72,3 +72,11 @@
 * [Install .NET on Linux](https://learn.microsoft.com/dotnet/core/install/linux?WT.mc_id=dotnet-35129-website)
 
 </details>
+
+---
+
+**It's been almost a year since this project was created (May 17, 2022) and there are still some mentally ill human beings, who say it's a malware.**
+> How to fix this illness?
+* Check the whole repository to be 100% confident that there is no hidden malware.
+* The results you see in online malware scanners are false positives.
+* If you are reading this, you are smart, so think twice before creating tickets and issues that make no sense.
