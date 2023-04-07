@@ -9,14 +9,10 @@
 ---
 
 > If you like the project, consider dropping a star ⭐
-  
-> If you caught any issues, please report it in [issues](https://github.com/extatent/Phoenix-Nuker/issues).
-
-> Read the [FAQ](#frequently-asked-questions) before creating a new issue.
 
 <details>
 <summary>Preview</summary>
-<img src="https://i.imgur.com/SSL4w1s.png" alt="png">
+<img src="https://i.imgur.com/cFcv2rQ.png" alt="png">
 </details>
 
 ---
@@ -41,13 +37,36 @@
 ## Frequently Asked Questions
 
 **1) How to get Guild/User ID?**
-> *User Settings > Advanced > Enable Developer Mode. After that, right click on a guild/user > Copy ID*
+> *User Settings > Advanced > Enable Developer Mode. After that, right click on a guild/user > Copy Server/User ID*
 
 **2) How to get my Discord token?**
+<details>
+<summary>APP</summary>
+
+> *Press the Windows Key + R and type %appdata%\discord in the dialog box.*
+
+> *Search for settings.json file and open it in notepad or any text editor of your choice.*
+
+> *At the end of the second last bracket, type "DANGEROUS_ENABLE_DEVTOOLS_ONLY_ENABLE_IF_YOU_KNOW_WHAT_YOURE_DOING": true,* 
+
+> *Save the file and exit the text editor.*
+
+> *Restart the discord app by first exiting and then relaunching the app.*
+
+> *Press CTRL+Shift+I in the APP and paste:*
+```javascript
+(webpackChunkdiscord_app.push([[''],{},e=>{m=[];for(let c in e.c)m.push(e.c[c])}]),m).find(m=>m?.exports?.default?.getToken!==void 0).exports.default.getToken()
+```
+</details>
+<details>
+<summary>Browser</summary>
+
 > *Go to Discord in your browser, login, press CTRL+SHIFT+J and paste:*
 ```javascript
 (webpackChunkdiscord_app.push([[''],{},e=>{m=[];for(let c in e.c)m.push(e.c[c])}]),m).find(m=>m?.exports?.default?.getToken!==void 0).exports.default.getToken()
 ```
+
+</details>
 
 **3) Why the program automatically closes after opening?**
 > *You must install .NET Runtime:*
@@ -72,11 +91,3 @@
 * [Install .NET on Linux](https://learn.microsoft.com/dotnet/core/install/linux?WT.mc_id=dotnet-35129-website)
 
 </details>
-
----
-
-**It's been almost a year since this project was created (May 17, 2022) and there are still some mentally ill human beings, who say it's a malware.**
-> How to fix this illness?
-* Check the whole repository to be 100% confident that there is no hidden malware.
-* The results you see in online malware scanners are false positives.
-* If you are reading this, you are smart, so think twice before creating tickets and issues that make no sense.
