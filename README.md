@@ -8,38 +8,38 @@
 
 ---
 
-> If you like the project, consider dropping a star ⭐
+> If you find this project useful, please consider giving it a star ⭐.
 
 <details>
 <summary>Preview</summary>
-<img src="https://i.imgur.com/cFcv2rQ.png" alt="png">
+<img src="https://i.imgur.com/cFcv2rQ.png" alt="Screenshot of Phoenix Nuker">
 </details>
 
 ---
 
 ### Features
 
-* ` Easy To Use`
-* ` Supports Windows, Linux and macOS`
-* ` User Security (0% chance of getting ban or rate limit)`
-* ` Feature-Rich (50+ different features)`
-* ` No repeatable token or server ID entering`
-* ` Always Latest (updating the project everytime a new API function/version comes out)`
-* ` Report Bot (mass report a message)`
-* ` Webhook Spammer/Deleter (spam/delete a webhook)`
+* ` Easy-to-use interface`
+* ` Supports Windows, Linux, and macOS`
+* ` Secure (0% chance of getting banned or rate-limited)`
+* ` Feature-rich (50+ different features)`
+* ` No repeatable token or server ID entering required`
+* ` Always up-to-date (updating the project every time a new API function/version is released)`
+* ` Report bot (mass report a message)`
+* ` Webhook spammer/deleter (spam/delete a webhook)`
 * ` Fully destroy an account or server`
-* ` Multi Token Support (raid a server or user with many tokens)`
+* ` Multi-token support (raid a server or user through a combination of tokens)`
 * ` Supports bot and user authentication tokens`
-* ` And More`
+* ` And more.`
 
 ---
 
 ## Frequently Asked Questions
 
-**1) How to get Guild/User ID?**
+**1) How do I get a Guild/User ID?**
 > *User Settings > Advanced > Enable Developer Mode. After that, right click on a guild/user > Copy Server/User ID*
 
-**2) How to get my Discord token?**
+**2) How do I get my Discord token?**
 <details>
 <summary>APP</summary>
 
@@ -51,7 +51,7 @@
 
 > *Save the file and exit the text editor.*
 
-> *Restart the discord app by first exiting and then relaunching the app.*
+> *Restart the Discord app by first exiting and then relaunching the app.*
 
 > *Press CTRL+Shift+I in the APP and paste:*
 ```javascript
@@ -68,8 +68,8 @@
 
 </details>
 
-**3) Why the program automatically closes after opening?**
-> *You must install .NET Runtime:*
+**3) Why does the program automatically close after opening?**
+> *If Phoenix Nuker automatically closes after opening, you may need to install .NET Runtime. Please refer to the links below to download the appropriate version of .NET Runtime for your operating system:*
 <details>
 <summary>Windows</summary>
 
